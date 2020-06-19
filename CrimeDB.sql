@@ -1,0 +1,5 @@
+CREATE DATABASE CrimeDB
+GO
+
+USE CrimeDB
+GO
