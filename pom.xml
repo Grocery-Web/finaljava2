@@ -3,4 +3,11 @@
   <groupId>APTECH</groupId>
   <artifactId>CrimeManagementSystem</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+  	<dependency>
+	    <groupId>com.microsoft.sqlserver</groupId>
+	    <artifactId>mssql-jdbc</artifactId>
+	    <version>8.2.2.jre13</version>
+	</dependency>
+  </dependencies>
 </project>
