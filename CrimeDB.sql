@@ -3,3 +3,36 @@ GO
 
 USE CrimeDB
 GO
+
+-- Create table for Account login
+CREATE TABLE Account (
+	UserID varchar(20) PRIMARY KEY NOT NULL,
+	FullName nvarchar(50) NOT NULL,
+	Email varchar(50) NOT NULL,
+	PasswordHash BINARY(64) NOT NULL,
+	Privilege INT NOT NULL CHECK (Privilege IN (1, 2, 3))
+)
+GO
+
+-- Create proc to add new Account
+CREATE PROCEDURE addAccount
+	@UserID varchar(20),
+	@FullName nvarchar(50),
+	@Email varchar(50),
+	@Password varchar(50),
+	@Privilege INT
+AS
+BEGIN
+	INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
+	VALUES(@UserID, @FullName, @Email ,HASHBYTES('SHA2_512', @Password), @Privilege)
+END
+GO
+
+-- Add a new Admin account
+EXEC addAccount
+	@UserID = 'admin',
+	@FullName = 'ADMINISTRATOR',
+	@Email = 'leliem28@gmail.com',
+	@Password = 'admin',
+	@Privilege = 1
+GO
