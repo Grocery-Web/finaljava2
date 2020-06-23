@@ -23,6 +23,9 @@ import java.awt.Label;
 import java.awt.Cursor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Font;
 
 public class Login extends JFrame {
 
@@ -81,6 +84,17 @@ public class Login extends JFrame {
 		panel.add(lblTopLeft);
 		
 		btnLogIn = new Button("LOG IN");
+		btnLogIn.setFont(new Font("Dialog", Font.BOLD, 12));
+		btnLogIn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnLogIn_mouseEntered(e);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnLogIn_mouseExited(e);
+			}
+		});
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnLogIn_actionPerformed(e);
@@ -123,7 +137,7 @@ public class Login extends JFrame {
 		ckbxShowHide.addItemListener(new ItemListener() {
 		    public void itemStateChanged(ItemEvent e) {
 		        if (e.getStateChange() != ItemEvent.SELECTED) {
-		            passwordField.setEchoChar('•');
+		            passwordField.setEchoChar("\u2022".toCharArray()[0]);
 		        } else {
 		            passwordField.setEchoChar((char) 0);
 		        }
@@ -134,6 +148,15 @@ public class Login extends JFrame {
 		lblLogin = new JLabel("");
 		lblLogin.setBounds(379, 322, 230, 14);
 		contentPane.add(lblLogin);
+	}
+	
+	// Create function to change color of btnLogIn on mouseEntered and mouseExited
+	protected void btnLogIn_mouseEntered(MouseEvent e) {
+		btnLogIn.setBackground(new Color(0, 51, 204));
+	}
+	
+	protected void btnLogIn_mouseExited(MouseEvent e) {
+		btnLogIn.setBackground(SystemColor.textHighlight);
 	}
 	
 	protected void btnLogIn_actionPerformed(ActionEvent e) {
@@ -152,8 +175,10 @@ public class Login extends JFrame {
 			}
 			
 			case 1: {
-				lblLogin.setText("Welcome admin");
-				lblLogin.setForeground(new Color(0, 128, 0));
+				Admin admin = new Admin();
+				admin.setLocationRelativeTo(null);
+				admin.setVisible(true);
+				this.setVisible(false);
 				break;
 			}
 			
@@ -170,4 +195,6 @@ public class Login extends JFrame {
 			}
 		}
 	}
+	
+	
 }
