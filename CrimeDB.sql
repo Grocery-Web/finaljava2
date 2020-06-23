@@ -36,3 +36,15 @@ EXEC addAccount
 	@Password = 'admin',
 	@Privilege = 1
 GO
+
+-- Create proc to check for Account login
+CREATE PROC checkAcc
+	@UserID varchar(20),
+	@Password varchar(50)
+AS
+BEGIN
+	SELECT * FROM Account
+	WHERE UserID = @UserID COLLATE Latin1_General_CS_AS
+	and PasswordHash = HASHBYTES('SHA2_512', @Password) 
+END
+GO

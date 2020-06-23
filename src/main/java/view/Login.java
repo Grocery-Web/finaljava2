@@ -9,6 +9,7 @@ import java.awt.Button;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
 
+import dao.AccountDAO;
 import entity.Account;
 
 import javax.swing.JLabel;
@@ -36,6 +37,7 @@ public class Login extends JFrame {
 	public Checkbox ckbxShowHide;
 	public Label labelTopLeft;
 	public JLabel lblTopLeft;
+	public JLabel lblLogin;
 
 	/**
 	 * Launch the application.
@@ -128,6 +130,10 @@ public class Login extends JFrame {
 		    }
 		});
 		contentPane.add(ckbxShowHide);
+		
+		lblLogin = new JLabel("");
+		lblLogin.setBounds(379, 322, 230, 14);
+		contentPane.add(lblLogin);
 	}
 	
 	protected void btnLogIn_actionPerformed(ActionEvent e) {
@@ -135,6 +141,33 @@ public class Login extends JFrame {
 		acc.setUserID(txtUserID.getText());
 		acc.setPassword(new String(passwordField.getPassword()));
 		
+		AccountDAO accDao = new AccountDAO();
+		int checked = accDao.checkAcc(acc);
 		
+		switch (checked) {
+			case -1: {
+				lblLogin.setText("User not found or incorrect password!");
+				lblLogin.setForeground(Color.RED);
+				break;
+			}
+			
+			case 1: {
+				lblLogin.setText("Welcome admin");
+				lblLogin.setForeground(new Color(0, 128, 0));
+				break;
+			}
+			
+			case 2: {
+				lblLogin.setText("Welcome Master");
+				lblLogin.setForeground(new Color(0, 128, 0));
+				break;
+			}
+			
+			case 3: {
+				lblLogin.setText(String.format("Welcome %s", acc.getUserID()));
+				lblLogin.setForeground(new Color(0, 128, 0));
+				break;
+			}
+		}
 	}
 }
