@@ -185,6 +185,7 @@ public class Login extends JFrame {
 				admin.setLocationRelativeTo(null);
 				admin.setVisible(true);
 				this.setVisible(false);
+				admin.loadData();
 				break;
 			}
 			

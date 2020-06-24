@@ -51,3 +51,13 @@ BEGIN
 	and PasswordHash = HASHBYTES('SHA2_512', @Password) 
 END
 GO
+
+-- Create proc to get all Enabled Accounts
+CREATE PROC getAllAcc
+
+AS
+BEGIN
+	SELECT UserID, FullName, Email, Privilege FROM Account
+	WHERE Status = 1;
+END
+GO

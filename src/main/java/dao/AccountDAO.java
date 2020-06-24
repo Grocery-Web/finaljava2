@@ -1,6 +1,8 @@
 package dao;
 
 import java.sql.*;
+import java.util.*;
+
 import javax.swing.JOptionPane;
 import common.ConnectToProperties;
 import entity.Account;
@@ -32,5 +34,27 @@ public class AccountDAO {
 		}
 		
 		return -1;
+	}
+	
+	public List<Account> getAllAccount() {
+		List<Account> list = new ArrayList<Account>();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getAllAcc}");
+				ResultSet rs = ps.executeQuery();
+			) 
+		{
+			while (rs.next()) {
+				Account acc = new Account();
+				acc.setUserID(rs.getString(1));
+				acc.setFullName(rs.getString(2));
+				acc.setEmail(rs.getString(3));
+				acc.setPrivilege(rs.getInt(4));
+				list.add(acc);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+		return list;
 	}
 }
