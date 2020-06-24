@@ -10,7 +10,8 @@ CREATE TABLE Account (
 	FullName nvarchar(50) NOT NULL,
 	Email varchar(50) NOT NULL,
 	PasswordHash BINARY(64) NOT NULL,
-	Privilege INT NOT NULL CHECK (Privilege IN (1, 2, 3))
+	Privilege INT NOT NULL CHECK (Privilege IN (1, 2, 3)),
+	Status BIT NOT NULL
 )
 GO
 
@@ -20,11 +21,12 @@ CREATE PROCEDURE addAccount
 	@FullName nvarchar(50),
 	@Email varchar(50),
 	@Password varchar(50),
-	@Privilege INT
+	@Privilege INT,
+	@Status BIT
 AS
 BEGIN
-	INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
-	VALUES(@UserID, @FullName, @Email ,HASHBYTES('SHA2_512', @Password), @Privilege)
+	INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege, Status)
+	VALUES(@UserID, @FullName, @Email, HASHBYTES('SHA2_512', @Password), @Privilege, @Status)
 END
 GO
 
@@ -34,7 +36,8 @@ EXEC addAccount
 	@FullName = 'ADMINISTRATOR',
 	@Email = 'leliem28@gmail.com',
 	@Password = 'admin',
-	@Privilege = 1
+	@Privilege = 1,
+	@Status = 1
 GO
 
 -- Create proc to check for Account login

@@ -104,28 +104,28 @@ public class Login extends JFrame {
 		btnLogIn.setFocusable(false);
 		btnLogIn.setForeground(Color.WHITE);
 		btnLogIn.setBackground(SystemColor.textHighlight);
-		btnLogIn.setBounds(379, 340, 230, 39);
+		btnLogIn.setBounds(379, 330, 230, 39);
 		contentPane.add(btnLogIn);
 		
 		txtUserID = new JTextField();
-		txtUserID.setBounds(379, 170, 230, 32);
+		txtUserID.setBounds(379, 147, 230, 32);
 		contentPane.add(txtUserID);
 		txtUserID.setColumns(10);
 		
 		lblNewLabel = new JLabel("Username");
-		lblNewLabel.setBounds(379, 135, 65, 14);
+		lblNewLabel.setBounds(379, 122, 65, 14);
 		contentPane.add(lblNewLabel);
 		
 		lblPassword = new JLabel("Password");
-		lblPassword.setBounds(379, 231, 65, 14);
+		lblPassword.setBounds(379, 205, 65, 14);
 		contentPane.add(lblPassword);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(379, 256, 230, 32);
+		passwordField.setBounds(379, 230, 230, 32);
 		contentPane.add(passwordField);
 		
 		lblTop = new JLabel("");
-		lblTop.setBounds(463, 46, 64, 64);
+		lblTop.setBounds(463, 39, 64, 64);
 		ImageIcon img1 = new ImageIcon(getClass().getResource("/images/police-icon.png"));
 		lblTop.setIcon(img1);
 		contentPane.add(lblTop);
@@ -133,7 +133,7 @@ public class Login extends JFrame {
 		
 		ckbxShowHide = new Checkbox("Show / Hide");
 		ckbxShowHide.setFocusable(false);
-		ckbxShowHide.setBounds(379, 294, 95, 22);
+		ckbxShowHide.setBounds(379, 274, 95, 22);
 		ckbxShowHide.addItemListener(new ItemListener() {
 		    public void itemStateChanged(ItemEvent e) {
 		        if (e.getStateChange() != ItemEvent.SELECTED) {
@@ -146,7 +146,7 @@ public class Login extends JFrame {
 		contentPane.add(ckbxShowHide);
 		
 		lblLogin = new JLabel("");
-		lblLogin.setBounds(379, 322, 230, 14);
+		lblLogin.setBounds(379, 302, 230, 14);
 		contentPane.add(lblLogin);
 	}
 	
@@ -174,6 +174,12 @@ public class Login extends JFrame {
 				break;
 			}
 			
+			case -2: {
+				lblLogin.setText("Your account has been disabled.");
+				lblLogin.setForeground(Color.RED);
+				break;
+			}
+
 			case 1: {
 				Admin admin = new Admin();
 				admin.setLocationRelativeTo(null);

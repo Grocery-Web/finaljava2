@@ -6,15 +6,17 @@ public class Account {
 	private String email;
 	private String password;
 	private int privilege;
+	private boolean status;
 	
 	public Account() {}
-	
-	public Account(String userID, String fullName, String email, String password, int privilege) {
+
+	public Account(String userID, String fullName, String email, String password, int privilege, boolean status) {
 		this.userID = userID;
 		this.fullName = fullName;
 		this.email = email;
 		this.password = password;
 		this.privilege = privilege;
+		this.status = status;
 	}
 
 	public String getUserID() {
@@ -56,6 +58,13 @@ public class Account {
 	public void setPrivilege(int privilege) {
 		this.privilege = privilege;
 	}
-	
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 	
 }

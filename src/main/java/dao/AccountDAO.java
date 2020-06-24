@@ -20,8 +20,11 @@ public class AccountDAO {
 			} else {
 				while (rs.next()) {
 					acc.setPrivilege(rs.getInt(5));
+					acc.setStatus(rs.getBoolean(6));
 				}
-				
+				if (!acc.isStatus()) {
+					return -2;
+				}
 				return acc.getPrivilege();
 			}
 		} catch (Exception e) {
