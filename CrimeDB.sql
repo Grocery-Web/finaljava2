@@ -57,3 +57,13 @@ BEGIN
 	SELECT UserID, FullName, Email, Privilege FROM Account
 END
 GO
+
+-- Create proc to delete Account
+CREATE PROC deleteAcc
+	@UserID varchar(20)
+AS
+BEGIN
+	DELETE FROM Account
+	WHERE UserID = @UserID
+END
+GO

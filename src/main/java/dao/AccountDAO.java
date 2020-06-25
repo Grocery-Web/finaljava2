@@ -53,4 +53,39 @@ public class AccountDAO {
 		}
 		return list;
 	}
+	
+	public void addAccount(Account acc) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call addAccount(?,?,?,?,?)}");
+			) 
+		{
+			ps.setString(1, acc.getUserID());
+			ps.setString(2, acc.getFullName());
+			ps.setString(3, acc.getEmail());
+			ps.setString(4, acc.getPassword());
+			ps.setInt(5, acc.getPrivilege());
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Insert new account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public void deleteAccount(Account acc) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call deleteAcc(?)}");
+			) 
+		{
+			ps.setString(1, acc.getUserID());
+			if (ps.executeUpdate() > 0) {
+				JOptionPane.showMessageDialog(null, "Delete account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "UserID not found", "Falied", JOptionPane.ERROR_MESSAGE);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }
