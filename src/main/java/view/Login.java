@@ -173,19 +173,13 @@ public class Login extends JFrame {
 				lblLogin.setForeground(Color.RED);
 				break;
 			}
-			
-			case -2: {
-				lblLogin.setText("Your account has been disabled.");
-				lblLogin.setForeground(Color.RED);
-				break;
-			}
 
 			case 1: {
 				Admin admin = new Admin();
 				admin.setLocationRelativeTo(null);
 				admin.setVisible(true);
 				this.setVisible(false);
-				admin.loadData();
+//				admin.loadData();
 				break;
 			}
 			
