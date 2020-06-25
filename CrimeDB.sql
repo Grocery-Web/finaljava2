@@ -32,7 +32,7 @@ GO
 EXEC addAccount
 	@UserID = 'admin',
 	@FullName = 'ADMINISTRATOR',
-	@Email = 'leliem28@gmail.com',
+	@Email = 'admin@gmail.com',
 	@Password = 'admin',
 	@Privilege = 1
 GO
