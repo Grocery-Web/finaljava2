@@ -71,6 +71,8 @@ public class Admin extends JFrame {
 	public JLabel lblTotalAcc;
 	public JTextField txtSearch;
 	public JLabel lblAdmin;
+	public JLabel lblAsterisk;
+	public Button btnClear;
 	
 	/**
 	 * Launch the application.
@@ -101,77 +103,83 @@ public class Admin extends JFrame {
 		panelL.setLayout(null);
 		
 		lblNewLabel = new JLabel("Username");
-		lblNewLabel.setBounds(10, 31, 86, 14);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblNewLabel.setBounds(10, 59, 53, 14);
 		panelL.add(lblNewLabel);
 		
 		txtUserID = new JTextField();
 		txtUserID.setBorder(null);
-		txtUserID.setBounds(10, 56, 180, 20);
+		txtUserID.setBounds(10, 84, 188, 20);
 		panelL.add(txtUserID);
 		txtUserID.setColumns(10);
 		
 		lblNewLabel_1 = new JLabel("Password");
-		lblNewLabel_1.setBounds(10, 209, 86, 14);
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblNewLabel_1.setBounds(10, 233, 86, 14);
 		panelL.add(lblNewLabel_1);
 		
 		lblNewLabel_2 = new JLabel("Full Name");
-		lblNewLabel_2.setBounds(10, 87, 86, 14);
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblNewLabel_2.setBounds(10, 117, 86, 14);
 		panelL.add(lblNewLabel_2);
 		
 		txtFullName = new JTextField();
 		txtFullName.setBorder(null);
-		txtFullName.setBounds(10, 112, 180, 20);
+		txtFullName.setBounds(10, 142, 188, 20);
 		panelL.add(txtFullName);
 		txtFullName.setColumns(10);
 		
 		separator = new JSeparator();
 		separator.setBackground(new Color(0, 255, 0));
-		separator.setBounds(10, 76, 188, 2);
+		separator.setBounds(10, 104, 188, 2);
 		panelL.add(separator);
 		
 		passwordField = new JPasswordField();
 		passwordField.setBorder(null);
-		passwordField.setBounds(10, 234, 180, 20);
+		passwordField.setBounds(10, 258, 188, 20);
 		panelL.add(passwordField);
 		
 		separator_1 = new JSeparator();
 		separator_1.setBackground(new Color(0, 255, 0));
-		separator_1.setBounds(10, 254, 188, 2);
+		separator_1.setBounds(10, 278, 188, 2);
 		panelL.add(separator_1);
 		
 		separator_2 = new JSeparator();
 		separator_2.setBackground(new Color(0, 255, 0));
-		separator_2.setBounds(10, 132, 188, 2);
+		separator_2.setBounds(10, 162, 188, 2);
 		panelL.add(separator_2);
 		
 		lblNewLabel_3 = new JLabel("Email");
-		lblNewLabel_3.setBounds(10, 143, 86, 14);
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblNewLabel_3.setBounds(10, 175, 86, 14);
 		panelL.add(lblNewLabel_3);
 		
 		txtEmail = new JTextField();
 		txtEmail.setColumns(10);
 		txtEmail.setBorder(null);
-		txtEmail.setBounds(10, 168, 180, 20);
+		txtEmail.setBounds(10, 200, 188, 20);
 		panelL.add(txtEmail);
 		
 		separator_3 = new JSeparator();
 		separator_3.setBackground(new Color(0, 255, 0));
-		separator_3.setBounds(10, 188, 188, 2);
+		separator_3.setBounds(10, 220, 188, 2);
 		panelL.add(separator_3);
 		
 		lblNewLabel_4 = new JLabel("Privilege");
-		lblNewLabel_4.setBounds(10, 300, 86, 14);
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblNewLabel_4.setBounds(10, 314, 86, 14);
 		panelL.add(lblNewLabel_4);
 		
 		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Master", "User", "Admin"}));
 		comboBox.setFocusable(false);
-		comboBox.setBounds(10, 325, 188, 22);
+		comboBox.setBounds(10, 339, 188, 22);
 		panelL.add(comboBox);
 		
 		ckbxShowHide = new Checkbox("Show / Hide");
+		ckbxShowHide.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		ckbxShowHide.setFocusable(false);
-		ckbxShowHide.setBounds(10, 272, 95, 22);
+		ckbxShowHide.setBounds(10, 286, 95, 22);
 		ckbxShowHide.addItemListener(new ItemListener() {
 		    public void itemStateChanged(ItemEvent e) {
 		        if (e.getStateChange() != ItemEvent.SELECTED) {
@@ -190,12 +198,17 @@ public class Admin extends JFrame {
 			}
 		});
 		btnAdd.setFocusPainted(false);
-		btnAdd.setBounds(10, 378, 89, 23);
+		btnAdd.setBounds(10, 389, 89, 23);
 		panelL.add(btnAdd);
 		
 		btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnUpdate_actionPerformed(e);
+			}
+		});
 		btnUpdate.setFocusPainted(false);
-		btnUpdate.setBounds(109, 378, 89, 23);
+		btnUpdate.setBounds(109, 389, 89, 23);
 		panelL.add(btnUpdate);
 		
 		btnDelete = new JButton("Delete");
@@ -205,8 +218,37 @@ public class Admin extends JFrame {
 			}
 		});
 		btnDelete.setFocusPainted(false);
-		btnDelete.setBounds(10, 412, 89, 23);
+		btnDelete.setBounds(10, 423, 89, 23);
 		panelL.add(btnDelete);
+		
+		lblAsterisk = new JLabel("*");
+		lblAsterisk.setForeground(new Color(255, 0, 0));
+		lblAsterisk.setBounds(62, 59, 53, 14);
+		panelL.add(lblAsterisk);
+		
+		btnClear = new Button("CLEAR");
+		btnClear.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnClear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnClear_mouseEntered(e);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnClear_mouseExited(e);
+			}
+		});
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnClear_actionPerformed(e);
+			}
+		});
+		btnClear.setFont(new Font("Dialog", Font.BOLD, 12));
+		btnClear.setFocusable(false);
+		btnClear.setForeground(Color.WHITE);
+		btnClear.setBackground(new Color(143, 188, 143));
+		btnClear.setBounds(198, 10, 69, 35);
+		panelL.add(btnClear);
 		
 		panelR = new JPanel();
 		panelR.setBackground(new Color(248, 248, 255));
@@ -252,7 +294,7 @@ public class Admin extends JFrame {
 		btnLogOut.setFont(new Font("Verdana", Font.BOLD, 12));
 		btnLogOut.setForeground(new Color(255, 255, 255));
 		btnLogOut.setBackground(new Color(240, 128, 128));
-		btnLogOut.setBounds(388, 10, 87, 33);
+		btnLogOut.setBounds(391, 10, 84, 33);
 		panelR.add(btnLogOut);
 		
 		lblNewLabel_5 = new JLabel("Total accounts :");
@@ -335,7 +377,7 @@ public class Admin extends JFrame {
 			return;
 		}
 		acc.setPassword(new String(passwordField.getPassword()));
-		acc.setPrivilege(comboBox.getSelectedItem() == "Master" ? 2 : 3);
+		acc.setPrivilege(comboBox.getSelectedItem() == "Admin" ? 1 : comboBox.getSelectedItem() == "Master" ? 2 : 3);
 		
 		AccountDAO accDao = new AccountDAO();
 		accDao.addAccount(acc);
@@ -371,5 +413,50 @@ public class Admin extends JFrame {
 		txtFullName.setText(table.getValueAt(selectRow, 1).toString());
 		txtEmail.setText(table.getValueAt(selectRow, 2).toString());
 		comboBox.setSelectedItem(table.getValueAt(selectRow, 3));
+	}
+	
+	protected void btnUpdate_actionPerformed(ActionEvent e) {
+		Account acc = new Account();
+		if (txtUserID.getText().equals("")) {
+			JOptionPane.showMessageDialog(null, "Please enter an UserID", "Empty input field", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		acc.setUserID(txtUserID.getText());
+		if (!txtFullName.getText().matches("[\\D ]{4,50}")) {
+			JOptionPane.showMessageDialog(null, "Please enter a legit name: 4 - 50 alphabet characters", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		acc.setFullName(txtFullName.getText());
+		if (!txtEmail.getText().matches("^[a-z][a-z0-9_\\.]{4,32}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$")) {
+			JOptionPane.showMessageDialog(null, "Please enter a valid email address", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		acc.setEmail(txtEmail.getText());
+		if (new String(passwordField.getPassword()).equals("")) {
+			acc.setPassword(null);
+		} else {
+			acc.setPassword(new String(passwordField.getPassword()));
+		}
+		acc.setPrivilege(comboBox.getSelectedItem() == "Admin" ? 1 : comboBox.getSelectedItem() == "Master" ? 2 : 3);
+		
+		AccountDAO accDao = new AccountDAO();
+		accDao.updateAccount(acc);
+		loadData();
+	}
+	
+	protected void btnClear_actionPerformed(ActionEvent e) {
+		txtUserID.setText(null);
+		txtFullName.setText(null);
+		txtEmail.setText(null);
+		passwordField.setText(null);
+		comboBox.setSelectedItem("Master");
+	}
+	
+	protected void btnClear_mouseEntered(MouseEvent e) {
+		btnClear.setBackground(new Color(51, 204, 51));
+	}
+	
+	protected void btnClear_mouseExited(MouseEvent e) {
+		btnClear.setBackground(new Color(143, 188, 143));
 	}
 }

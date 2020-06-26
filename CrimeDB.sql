@@ -67,3 +67,21 @@ BEGIN
 	WHERE UserID = @UserID
 END
 GO
+
+-- Create proc to update Account
+CREATE PROC updateAcc
+	@FullName nvarchar(50),
+	@Email varchar(50),
+	@Password varchar(50) = NULL,
+	@Privilege INT,
+	@UserID varchar(20)
+AS
+BEGIN
+	UPDATE Account
+	SET FullName = @FullName,
+		Email = @Email,
+		PasswordHash = ISNULL(HASHBYTES('SHA2_512', @Password), PasswordHash),
+		Privilege = @Privilege
+	WHERE UserID = @UserID
+END
+GO

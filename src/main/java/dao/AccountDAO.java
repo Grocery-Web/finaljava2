@@ -82,7 +82,32 @@ public class AccountDAO {
 			if (ps.executeUpdate() > 0) {
 				JOptionPane.showMessageDialog(null, "Delete account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				JOptionPane.showMessageDialog(null, "UserID not found", "Falied", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "UserID not found", "Failed", JOptionPane.ERROR_MESSAGE);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public void updateAccount(Account acc) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call updateAcc(?,?,?,?,?)}");
+			) 
+		{
+			ps.setString(1, acc.getFullName());
+			ps.setString(2, acc.getEmail());
+			if (acc.getPassword() == null) {
+				ps.setNull(3, java.sql.Types.VARCHAR);
+			} else {
+				ps.setString(3, acc.getPassword());
+			}
+			ps.setInt(4, acc.getPrivilege());
+			ps.setString(5, acc.getUserID());
+			if (ps.executeUpdate() > 0) {
+				JOptionPane.showMessageDialog(null, "Update account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "UserID not found", "Failed", JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
