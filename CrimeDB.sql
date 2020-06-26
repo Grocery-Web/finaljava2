@@ -151,3 +151,19 @@ create table IncidentDetail (
 	crimeType nvarchar(50)
 )
 go
+
+/* PROCEDURE PERSON */
+
+create proc getAllPerson
+as
+begin
+	select * from Person
+end
+go
+
+
+/* END PROCEDURE PERSON */
+
+/* PROCEDURE COMPLAINT */
+
+/* END PROCEDURE COMPLAINT */

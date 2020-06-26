@@ -7,7 +7,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
@@ -21,9 +20,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
+import dao.PersonDAO;
 
 public class MainFrame extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel panelCont;
 	private Toolbar toolbar;
@@ -34,6 +35,7 @@ public class MainFrame extends JFrame {
 	private ComplaintsPanel complaintPanel;
 	private ComplaintFormPanel complaintForm;
 	private CardLayout cardLayout;
+	private PersonDAO personDAO;
 
 	/**
 	 * Launch the application.
@@ -63,6 +65,7 @@ public class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		setJMenuBar(createMenuBar());
 		
+//		CREATE COMPONENTS
 		toolbar = new Toolbar();
 		panelCont =  new JPanel();
 		personForm = new PersonFormPanel();
@@ -70,6 +73,9 @@ public class MainFrame extends JFrame {
 		complaintPanel = new ComplaintsPanel();
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
+		
+//		CREAT DAO
+		personDAO = new PersonDAO();
 		
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
@@ -80,6 +86,9 @@ public class MainFrame extends JFrame {
 //		SPLIT PANE
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelCont, tabPane);
 		splitPane.setOneTouchExpandable(true);
+		
+//		CALL BACK TABLES
+		personPanel.setData(personDAO.getAllAccount());
 		
 //		TAB PANE
 		tabPane.addTab("Person Info", personPanel);
@@ -99,7 +108,8 @@ public class MainFrame extends JFrame {
 				cardLayout.show(panelCont, "2");
 			}
 		});
-		
+
+//		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.PAGE_START);
 		
