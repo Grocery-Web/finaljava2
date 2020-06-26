@@ -1,10 +1,10 @@
-package View;
+package view;
 
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Entity.Person;
+import entity.Person;
 
 
 public class PersonTableModel extends AbstractTableModel {

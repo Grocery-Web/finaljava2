@@ -1,10 +1,10 @@
-package View;
+package view;
 
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import Entity.Complaint;
+import entity.Complaint;
 
 public class ComplaintTableModel extends AbstractTableModel{
 	private List<Complaint> db;

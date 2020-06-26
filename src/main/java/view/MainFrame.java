@@ -1,4 +1,4 @@
-package View;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -28,6 +28,7 @@ public class MainFrame extends JFrame {
 	private JSplitPane splitPane;
 	private JTabbedPane tabPane;
 	private ComplaintsPanel complaintPanel;
+	private ComplaintFormPanel complaintForm;
 
 	/**
 	 * Launch the application.
@@ -61,8 +62,9 @@ public class MainFrame extends JFrame {
 		personForm = new PersonFormPanel();
 		personPanel = new PersonPanel();
 		complaintPanel = new ComplaintsPanel();
+		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, personForm, tabPane);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, complaintForm, tabPane);
 		
 		splitPane.setOneTouchExpandable(true);
 		
