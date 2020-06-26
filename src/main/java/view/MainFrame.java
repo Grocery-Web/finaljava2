@@ -1,11 +1,13 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
@@ -19,9 +21,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
+
 public class MainFrame extends JFrame {
 
 	private JPanel contentPane;
+	private JPanel panelCont;
 	private Toolbar toolbar;
 	private PersonFormPanel personForm;
 	private PersonPanel personPanel;
@@ -29,6 +33,7 @@ public class MainFrame extends JFrame {
 	private JTabbedPane tabPane;
 	private ComplaintsPanel complaintPanel;
 	private ComplaintFormPanel complaintForm;
+	private CardLayout cardLayout;
 
 	/**
 	 * Launch the application.
@@ -59,18 +64,41 @@ public class MainFrame extends JFrame {
 		setJMenuBar(createMenuBar());
 		
 		toolbar = new Toolbar();
+		panelCont =  new JPanel();
 		personForm = new PersonFormPanel();
 		personPanel = new PersonPanel();
 		complaintPanel = new ComplaintsPanel();
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, complaintForm, tabPane);
 		
+//		CARD LAYOUT
+		cardLayout = new CardLayout();
+		panelCont.setLayout(cardLayout);
+		panelCont.add(personForm,"1");
+		panelCont.add(complaintForm,"2");
+		
+//		SPLIT PANE
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelCont, tabPane);
 		splitPane.setOneTouchExpandable(true);
 		
+//		TAB PANE
 		tabPane.addTab("Person Info", personPanel);
 		tabPane.addTab("Complaints", complaintPanel);
 		
+//		BUTTON LISTENER
+		toolbar.setToolbarListener(new ToolbarListener() {
+			
+			@Override
+			public void addPersonEventOccured() {
+				cardLayout.show(panelCont, "1");
+				
+			}
+			
+			@Override
+			public void addComplaintEventOccured() {
+				cardLayout.show(panelCont, "2");
+			}
+		});
 		
 		add(splitPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.PAGE_START);
@@ -103,7 +131,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 				
-				personForm.setVisible(menuItem.isSelected());
+				panelCont.setVisible(menuItem.isSelected());
 			}
 		});
 		
