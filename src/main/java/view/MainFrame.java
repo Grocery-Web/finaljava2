@@ -20,6 +20,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
+import dao.ComplaintDAO;
 import dao.PersonDAO;
 
 public class MainFrame extends JFrame {
@@ -35,7 +36,10 @@ public class MainFrame extends JFrame {
 	private ComplaintsPanel complaintPanel;
 	private ComplaintFormPanel complaintForm;
 	private CardLayout cardLayout;
+	
+//	DAO
 	private PersonDAO personDAO;
+	private ComplaintDAO complaintDAO;
 
 	/**
 	 * Launch the application.
@@ -76,6 +80,7 @@ public class MainFrame extends JFrame {
 		
 //		CREAT DAO
 		personDAO = new PersonDAO();
+		complaintDAO = new ComplaintDAO();
 		
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
@@ -89,6 +94,7 @@ public class MainFrame extends JFrame {
 		
 //		CALL BACK TABLES
 		personPanel.setData(personDAO.getAllAccount());
+		complaintPanel.setData(complaintDAO.getAllComplaints());
 		
 //		TAB PANE
 		tabPane.addTab("Person Info", personPanel);

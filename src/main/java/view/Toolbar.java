@@ -1,20 +1,24 @@
 package view;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 public class Toolbar extends JToolBar implements ActionListener{
 	private JButton addPersonButton;
 	private JButton addComplaintButton;
+	private JTextField searchBox;
 	private ToolbarListener toolbarListener;
-	
+	private JLabel searchLabel;
 	public Toolbar() {
 		
 //		Get rid of the border if you want the toolbar draggable
@@ -22,6 +26,8 @@ public class Toolbar extends JToolBar implements ActionListener{
 		
 		addPersonButton 	= new JButton();
 		addComplaintButton 	= new JButton();
+		searchBox			= new JTextField();
+		searchLabel 		= new JLabel("Search:");
 		
 		addPersonButton.addActionListener(this);
 		Image imgPerson = new ImageIcon(this.getClass().getResource("/img/person.png")).getImage();
@@ -33,11 +39,17 @@ public class Toolbar extends JToolBar implements ActionListener{
 		addComplaintButton.setIcon(new ImageIcon(imgComplaint));
 		addComplaintButton.setToolTipText("Add Complaint");
 		
-		setLayout(new FlowLayout(FlowLayout.LEFT));
+//		setLayout(new FlowLayout(FlowLayout.LEFT));
+		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		
 		add(addPersonButton);
 		addSeparator();
 		add(addComplaintButton);
+		add(Box.createHorizontalGlue());
+		add(Box.createRigidArea(new Dimension(1400,0)));
+		add(searchLabel);
+		addSeparator();
+		add(searchBox);
 	}
 	
 	public void actionPerformed(ActionEvent e) {

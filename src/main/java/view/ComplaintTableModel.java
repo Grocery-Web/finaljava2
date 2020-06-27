@@ -18,14 +18,12 @@ public class ComplaintTableModel extends AbstractTableModel{
 	
 	@Override
 	public String getColumnName(int column) {
-		// TODO Auto-generated method stub
 		return colNames[column];
 	}
 
 	@Override
 	public int getRowCount() {
-//		return db.size();
-		return 1;
+		return db.size();
 	}
 
 	@Override
@@ -48,7 +46,7 @@ public class ComplaintTableModel extends AbstractTableModel{
 			return complaint.getPlace();
 		}
 		case 3: {
-			return complaint.getVictimName();
+			return complaint.getDeclarantName();
 		}
 		case 4: {
 			return complaint.getDetail();
