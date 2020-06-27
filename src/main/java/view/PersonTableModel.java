@@ -3,13 +3,14 @@ package view;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
-
+import dao.PersonDAO;
 import entity.Person;
 
 
 public class PersonTableModel extends AbstractTableModel {
 	
 	private List<Person> db;
+	private PersonDAO dao;
 	private String[] colNames = {"Id", "Name", "Gender", "Date Of Birth", "Occupation", "Nationality", "Address"};
 	
 	public PersonTableModel() {}
@@ -26,8 +27,7 @@ public class PersonTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-//		return db.size();
-		return 1;
+		return db.size();
 	}
 
 	@Override
