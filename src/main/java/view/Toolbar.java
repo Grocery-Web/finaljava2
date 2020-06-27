@@ -16,7 +16,7 @@ import javax.swing.JToolBar;
 public class Toolbar extends JToolBar implements ActionListener{
 	private JButton addPersonButton;
 	private JButton addComplaintButton;
-	private JTextField searchBox;
+	private CustomTextField txtSearch;
 	private ToolbarListener toolbarListener;
 	private JLabel searchLabel;
 	public Toolbar() {
@@ -26,9 +26,13 @@ public class Toolbar extends JToolBar implements ActionListener{
 		
 		addPersonButton 	= new JButton();
 		addComplaintButton 	= new JButton();
-		searchBox			= new JTextField();
+		txtSearch			= new CustomTextField(10);
 		searchLabel 		= new JLabel("Search:");
 		
+//		SET PLACE HOLDER IN SEARCH BOX
+		txtSearch.setPlaceholder("Search....");
+		
+//		SET IMAGE FOR BUTTONS
 		addPersonButton.addActionListener(this);
 		Image imgPerson = new ImageIcon(this.getClass().getResource("/img/person.png")).getImage();
 		addPersonButton.setIcon(new ImageIcon(imgPerson));
@@ -39,7 +43,7 @@ public class Toolbar extends JToolBar implements ActionListener{
 		addComplaintButton.setIcon(new ImageIcon(imgComplaint));
 		addComplaintButton.setToolTipText("Add Complaint");
 		
-//		setLayout(new FlowLayout(FlowLayout.LEFT));
+//		ALLIGN COMPONENT ON TOOLBAR
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		
 		add(addPersonButton);
@@ -49,7 +53,7 @@ public class Toolbar extends JToolBar implements ActionListener{
 		add(Box.createRigidArea(new Dimension(1400,0)));
 		add(searchLabel);
 		addSeparator();
-		add(searchBox);
+		add(txtSearch);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
