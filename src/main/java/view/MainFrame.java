@@ -1,6 +1,7 @@
-package View;
+package view;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -19,15 +20,26 @@ import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
+import dao.ComplaintDAO;
+import dao.PersonDAO;
+
 public class MainFrame extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JPanel panelCont;
 	private Toolbar toolbar;
 	private PersonFormPanel personForm;
 	private PersonPanel personPanel;
 	private JSplitPane splitPane;
 	private JTabbedPane tabPane;
 	private ComplaintsPanel complaintPanel;
+	private ComplaintFormPanel complaintForm;
+	private CardLayout cardLayout;
+	
+//	DAO
+	private PersonDAO personDAO;
+	private ComplaintDAO complaintDAO;
 
 	/**
 	 * Launch the application.
@@ -57,19 +69,53 @@ public class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		setJMenuBar(createMenuBar());
 		
+//		CREATE COMPONENTS
 		toolbar = new Toolbar();
+		panelCont =  new JPanel();
 		personForm = new PersonFormPanel();
 		personPanel = new PersonPanel();
 		complaintPanel = new ComplaintsPanel();
+		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, personForm, tabPane);
 		
+//		CREAT DAO
+		personDAO = new PersonDAO();
+		complaintDAO = new ComplaintDAO();
+		
+//		CARD LAYOUT
+		cardLayout = new CardLayout();
+		panelCont.setLayout(cardLayout);
+		panelCont.add(personForm,"1");
+		panelCont.add(complaintForm,"2");
+		
+//		SPLIT PANE
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelCont, tabPane);
 		splitPane.setOneTouchExpandable(true);
 		
+//		CALL BACK TABLES
+		personPanel.setData(personDAO.getAllAccount());
+		complaintPanel.setData(complaintDAO.getAllComplaints());
+		
+//		TAB PANE
 		tabPane.addTab("Person Info", personPanel);
 		tabPane.addTab("Complaints", complaintPanel);
 		
-		
+//		BUTTON LISTENER
+		toolbar.setToolbarListener(new ToolbarListener() {
+			
+			@Override
+			public void addPersonEventOccured() {
+				cardLayout.show(panelCont, "1");
+				
+			}
+			
+			@Override
+			public void addComplaintEventOccured() {
+				cardLayout.show(panelCont, "2");
+			}
+		});
+
+//		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.PAGE_START);
 		
@@ -101,7 +147,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 				
-				personForm.setVisible(menuItem.isSelected());
+				panelCont.setVisible(menuItem.isSelected());
 			}
 		});
 		

@@ -1,4 +1,4 @@
-package View;
+package view;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,6 +18,7 @@ import javax.swing.border.Border;
 
 public class PersonFormPanel extends JPanel{
 	
+	private JTextField personalID;
 	private JTextField nameField;
 	private JTextField dob;
 	private JTextField occupationField;
@@ -34,6 +35,7 @@ public class PersonFormPanel extends JPanel{
 		setPreferredSize(dim);
 		setMinimumSize(dim);
 		
+		personalID = new JTextField(10);
 		nameField = new JTextField(10);
 		occupationField = new JTextField(10);
 		nationality = new JTextField(10);
@@ -73,19 +75,31 @@ public class PersonFormPanel extends JPanel{
 		
 //		This form just have one column, therefore we just use weightY to allocate the space between each components
 		
-		/////////////// NAME ///////////////////
+		/////////////// PERSONAL ID ///////////////////
 		gc.weighty = 0.1; // assign at least small additional space between each component on Vertical
 		
 		gc.gridx = 0;
 		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(new JLabel("Name: "),gc);
+		add(new JLabel("Personal ID: "),gc);
 		
 		gc.gridx = 1;
 		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.LINE_START;
-		add(nameField, gc);
+		add(personalID, gc);
+		
+		/////////////// NAME ///////////////////
+		gc.gridy++;
+		gc.gridx = 0;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(new JLabel("Name: "),gc);
+		
+		gc.gridy = 1;
+		gc.gridx = 1;
+		gc.anchor = GridBagConstraints.LINE_START;
+		add(nameField,gc);
 		
 		/////////////// OCCUPATION ///////////////////
 		gc.gridy++;
@@ -94,7 +108,7 @@ public class PersonFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Occupation: "),gc);
 		
-		gc.gridy = 1;
+		gc.gridy = 2;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(occupationField,gc);
@@ -106,7 +120,7 @@ public class PersonFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Date of Birth: "),gc);
 		
-		gc.gridy = 2;
+		gc.gridy = 3;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(dob,gc);
@@ -118,7 +132,7 @@ public class PersonFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Nationality: "),gc);
 		
-		gc.gridy = 3;
+		gc.gridy = 4;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(nationality,gc);
@@ -130,7 +144,7 @@ public class PersonFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Address: "),gc);
 		
-		gc.gridy = 4;
+		gc.gridy = 5;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(address,gc);

@@ -1,4 +1,4 @@
-package Entity;
+package entity;
 
 import java.util.Date;
 
@@ -6,17 +6,17 @@ public class Complaint {
 	private int id;
 	private Date datetime;
 	private String place;
-	private String victimName;
+	private String declarantName;
 	private String detail;
 	private boolean status;
 	
 	public Complaint() {}
 
-	public Complaint(int id, Date datetime, String place, String victimName, String detail, boolean status) {
+	public Complaint(int id, Date datetime, String place, String declarantName, String detail, boolean status) {
 		this.id = id;
 		this.datetime = datetime;
 		this.place = place;
-		this.victimName = victimName;
+		this.declarantName = declarantName;
 		this.detail = detail;
 		this.status = status;
 	}
@@ -45,12 +45,12 @@ public class Complaint {
 		this.place = place;
 	}
 
-	public String getVictimName() {
-		return victimName;
+	public String getDeclarantName() {
+		return declarantName;
 	}
 
-	public void setVictimName(String victimName) {
-		this.victimName = victimName;
+	public void setDeclarantName(String declarantName) {
+		this.declarantName = declarantName;
 	}
 
 	public String getDetail() {
@@ -71,8 +71,7 @@ public class Complaint {
 
 	@Override
 	public String toString() {
-		return "Complaint [id=" + id + ", datetime=" + datetime + ", place=" + place + ", victimName=" + victimName
-				+ ", detail=" + detail + ", status=" + status + "]";
+		return "Complaint [id=" + id + ", datetime=" + datetime + ", place=" + place + ", declarantName="
+				+ declarantName + ", detail=" + detail + ", status=" + status + "]";
 	}
-	
 }
