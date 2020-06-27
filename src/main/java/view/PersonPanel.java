@@ -26,8 +26,12 @@ public class PersonPanel extends JPanel {
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem removeItem = new JMenuItem("Delete Row");
+		JMenuItem removeItem = new JMenuItem("Delete Person");
+		JMenuItem updateItem = new JMenuItem("Update Person");
+		JMenuItem detailItem = new JMenuItem("Person Details");
 		popup.add(removeItem);
+		popup.add(updateItem);
+		popup.add(detailItem);
 		
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
