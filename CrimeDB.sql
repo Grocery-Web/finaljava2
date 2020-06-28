@@ -3,20 +3,87 @@ create database CrimeDB;
 go
 use CrimeDB
 
-
-/* account table */
-create table Account (
-	id int identity(1,1) primary key,
-	userName varchar(20),
-	passWord varchar(20),
-	level varchar(10)
+-- Create table for Account login
+CREATE TABLE Account (
+	UserID varchar(20) PRIMARY KEY NOT NULL,
+	FullName nvarchar(50) NOT NULL,
+	Email varchar(50) NOT NULL,
+	PasswordHash BINARY(64) NOT NULL,
+	Privilege INT NOT NULL CHECK (Privilege IN (1, 2, 3)),
 )
-go
+GO
 
-insert into Account values ('master', 'master', 'master')
-insert into Account values ('admin', 'admin', 'admin')
-insert into Account values ('user', 'user', 'user')
+-- Create proc to add new Account
+CREATE PROCEDURE addAccount
+	@UserID varchar(20),
+	@FullName nvarchar(50),
+	@Email varchar(50),
+	@Password varchar(50),
+	@Privilege INT
+AS
+BEGIN
+	INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
+	VALUES(@UserID, @FullName, @Email, HASHBYTES('SHA2_512', @Password), @Privilege)
+END
+GO
 
+-- Add a new Admin account
+EXEC addAccount
+	@UserID = 'admin',
+	@FullName = 'ADMINISTRATOR',
+	@Email = 'admin@gmail.com',
+	@Password = 'admin',
+	@Privilege = 1
+GO
+
+-- Create proc to check for Account login
+CREATE PROC checkAcc
+	@UserID varchar(20),
+	@Password varchar(50)
+AS
+BEGIN
+	SELECT * FROM Account
+	WHERE UserID = @UserID COLLATE Latin1_General_CS_AS
+	and PasswordHash = HASHBYTES('SHA2_512', @Password) 
+END
+GO
+
+-- Create proc to get all Accounts
+CREATE PROC getAllAcc
+
+AS
+BEGIN
+	SELECT UserID, FullName, Email, Privilege FROM Account
+END
+GO
+
+-- Create proc to delete Account
+CREATE PROC deleteAcc
+	@UserID varchar(20)
+AS
+BEGIN
+	DELETE FROM Account
+	WHERE UserID = @UserID
+END
+GO
+
+-- Create proc to update Account
+CREATE PROC updateAcc
+	@FullName nvarchar(50),
+	@Email varchar(50),
+	@Password varchar(50) = NULL,
+	@Privilege INT,
+	@UserID varchar(20)
+AS
+BEGIN
+	UPDATE Account
+	SET FullName = @FullName,
+		Email = @Email,
+		PasswordHash = ISNULL(HASHBYTES('SHA2_512', @Password), PasswordHash),
+		Privilege = @Privilege
+	WHERE UserID = @UserID
+END
+GO
 
 /* complaint table */ 
 create table Complaint (
