@@ -27,10 +27,14 @@ public class PersonPanel extends JPanel {
 		popup = new JPopupMenu();
 		
 		JMenuItem removeItem = new JMenuItem("Delete Person");
-		JMenuItem updateItem = new JMenuItem("Update Person");
+		JMenuItem criminalItem = new JMenuItem("Add into Criminal List");
+		JMenuItem victimItem = new JMenuItem("Add into Victim List");
+		JMenuItem complaintItem = new JMenuItem("Attach Complaint");
 		JMenuItem detailItem = new JMenuItem("Person Details");
 		popup.add(removeItem);
-		popup.add(updateItem);
+		popup.add(criminalItem);
+		popup.add(victimItem);
+		popup.add(complaintItem);
 		popup.add(detailItem);
 		
 		table.addMouseListener(new MouseAdapter() {

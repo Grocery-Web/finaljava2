@@ -240,4 +240,13 @@ begin
 end
 go
 
+create proc addComplaint
+@datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX),@verifyStatus bit
+as
+begin
+	insert into Complaint (datetime,place,declarantName,detail,verifyStatus)
+	values(@datetime, @place, @declarantName, @detail, @verifyStatus)
+end
+go
+
 /* END PROCEDURE COMPLAINT */

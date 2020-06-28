@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 
 import dao.ComplaintDAO;
 import dao.PersonDAO;
+import entity.Complaint;
 
 public class MainFrame extends JFrame {
 
@@ -36,6 +37,9 @@ public class MainFrame extends JFrame {
 	private ComplaintsPanel complaintPanel;
 	private ComplaintFormPanel complaintForm;
 	private CardLayout cardLayout;
+	
+//	INTERFACE LISTERNER
+	private ComplaintListener cplListener;
 	
 //	DAO
 	private PersonDAO personDAO;
@@ -92,14 +96,14 @@ public class MainFrame extends JFrame {
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelCont, tabPane);
 		splitPane.setOneTouchExpandable(true);
 		
-//		CALL BACK TABLES
-		personPanel.setData(personDAO.getAllAccount());
-		complaintPanel.setData(complaintDAO.getAllComplaints());
-		
 //		TAB PANE
 		tabPane.addTab("Person Info", personPanel);
 		tabPane.addTab("Complaints", complaintPanel);
 		
+//		CALL BACK TABLES
+		personPanel.setData(personDAO.getAllAccount());
+		complaintPanel.setData(complaintDAO.getAllComplaints());
+	
 //		BUTTON LISTENER
 		toolbar.setToolbarListener(new ToolbarListener() {
 			
@@ -112,6 +116,16 @@ public class MainFrame extends JFrame {
 			@Override
 			public void addComplaintEventOccured() {
 				cardLayout.show(panelCont, "2");
+			}
+		});
+		
+//		FORM LISTENER
+		complaintForm.setFormListener(new ComplaintListener() {
+			@Override
+			public void complaintListener(Complaint cpt) {
+				complaintDAO.addComplaint(cpt);
+				complaintPanel.refresh();
+				complaintPanel.setData(complaintDAO.getAllComplaints());
 			}
 		});
 

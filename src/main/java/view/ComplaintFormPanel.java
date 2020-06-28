@@ -7,11 +7,15 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -19,13 +23,20 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import entity.Complaint;
+
 public class ComplaintFormPanel extends JPanel{
+	
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
 	private JTextField datetime;
 	private JTextField place;
 	private JTextField declarantName;
 	private JTextArea detail;
 	private JButton submitBtn;
 	private JScrollPane scroll;
+	
+//	INTERFACE LISTERNER
+	private ComplaintListener cplListener;
 	
 	public ComplaintFormPanel() {
 		Dimension dim = getPreferredSize();
@@ -49,7 +60,23 @@ public class ComplaintFormPanel extends JPanel{
 //		ACTION PERFORM ON SUBMIT BUTTON
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				Date getTime = null;
+				try {
+					getTime = formatter.parse(datetime.getText());
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				String getPlace = place.getText();
+				String getDeclarantName = declarantName.getText();
+				String getDetails = detail.getText();
+				
+				Complaint cpt = new Complaint(getTime, getPlace, getDeclarantName, getDetails, false);
+				
+				if(cplListener != null) {
+					cplListener.complaintListener(cpt);
+				}
 			}
 		});
 		
@@ -129,4 +156,7 @@ public class ComplaintFormPanel extends JPanel{
 //		End of Edit Form
 	}
 
+	public void setFormListener(ComplaintListener cplListener) {
+		this.cplListener = cplListener;
+	}
 }
