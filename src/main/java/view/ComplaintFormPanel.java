@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
@@ -21,8 +23,9 @@ public class ComplaintFormPanel extends JPanel{
 	private JTextField datetime;
 	private JTextField place;
 	private JTextField declarantName;
-	private JTextField detail;
+	private JTextArea detail;
 	private JButton submitBtn;
+	private JScrollPane scroll;
 	
 	public ComplaintFormPanel() {
 		Dimension dim = getPreferredSize();
@@ -33,16 +36,24 @@ public class ComplaintFormPanel extends JPanel{
 		datetime = new JTextField(10);
 		place = new JTextField(10);
 		declarantName = new JTextField(10);
-		detail = new JTextField(10);
+		detail = new JTextArea(8,10);
 		submitBtn = new JButton("Submit");
 		submitBtn.setMnemonic(KeyEvent.VK_S);
-				
+		
+//		ADD SCROLL PANE INTO DETAIL AREA
+		detail.setBorder(BorderFactory.createEtchedBorder());
+		scroll = new JScrollPane(detail,
+			                    JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+			                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+//		ACTION PERFORM ON SUBMIT BUTTON
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 			}
 		});
 		
+//		SET FORM LAYOUT
 		Border innerBorder = BorderFactory.createTitledBorder("Add Complaint");
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
@@ -105,7 +116,7 @@ public class ComplaintFormPanel extends JPanel{
 		gc.gridy = 3;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
-		add(detail,gc);
+		add(scroll,gc);
 		
 		/////////////// SUBMIT BUTTON ///////////////////
 		gc.weighty = 2; //all additional space below will be distributed to this component on Vertical

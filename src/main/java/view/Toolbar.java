@@ -35,12 +35,12 @@ public class Toolbar extends JToolBar implements ActionListener{
 		
 //		SET IMAGE FOR BUTTONS
 		addPersonButton.addActionListener(this);
-		Image imgPerson = new ImageIcon(this.getClass().getResource("/img/person.png")).getImage();
+		Image imgPerson = new ImageIcon(this.getClass().getResource("/images/person.png")).getImage();
 		addPersonButton.setIcon(new ImageIcon(imgPerson));
 		addPersonButton.setToolTipText("Add Person");
 		
 		addComplaintButton.addActionListener(this);
-		Image imgComplaint = new ImageIcon(this.getClass().getResource("/img/complaint.png")).getImage();
+		Image imgComplaint = new ImageIcon(this.getClass().getResource("/images/complaint.png")).getImage();
 		addComplaintButton.setIcon(new ImageIcon(imgComplaint));
 		addComplaintButton.setToolTipText("Add Complaint");
 		

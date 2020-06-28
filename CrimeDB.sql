@@ -233,4 +233,11 @@ go
 
 /* PROCEDURE COMPLAINT */
 
+create proc getAllComplaints
+as
+begin
+	select * from Complaint
+end
+go
+
 /* END PROCEDURE COMPLAINT */
