@@ -1,8 +1,9 @@
 package entity;
 
 import java.util.Date;
+import java.util.EventObject;
 
-public class Complaint {
+public class Complaint{
 	private int id;
 	private Date datetime;
 	private String place;
@@ -11,9 +12,17 @@ public class Complaint {
 	private boolean status;
 	
 	public Complaint() {}
-
+	
 	public Complaint(int id, Date datetime, String place, String declarantName, String detail, boolean status) {
 		this.id = id;
+		this.datetime = datetime;
+		this.place = place;
+		this.declarantName = declarantName;
+		this.detail = detail;
+		this.status = status;
+	}
+	
+	public Complaint(Date datetime, String place, String declarantName, String detail, boolean status) {
 		this.datetime = datetime;
 		this.place = place;
 		this.declarantName = declarantName;

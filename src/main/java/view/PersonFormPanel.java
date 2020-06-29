@@ -6,6 +6,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -13,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
@@ -23,11 +28,12 @@ public class PersonFormPanel extends JPanel{
 	private JTextField dob;
 	private JTextField occupationField;
 	private JTextField nationality;
-	private JTextField address;
+	private JTextArea address;
 	private JButton submitBtn;
 	private JRadioButton maleRadio;
 	private JRadioButton femaleRadio;
 	private ButtonGroup genderGroup;
+	private JScrollPane scroll;
 	
 	public PersonFormPanel() {
 		Dimension dim = getPreferredSize();
@@ -39,13 +45,19 @@ public class PersonFormPanel extends JPanel{
 		nameField = new JTextField(10);
 		occupationField = new JTextField(10);
 		nationality = new JTextField(10);
-		address = new JTextField(10);
+		address = new JTextArea(5,5);
 		dob = new JTextField(10);
 		maleRadio = new JRadioButton("male");
 		femaleRadio = new JRadioButton("female");
 		genderGroup = new ButtonGroup();
 		submitBtn = new JButton("Submit");
 		submitBtn.setMnemonic(KeyEvent.VK_S);
+		
+//		ADD SCROLL PANE INTO ADRRESS AREA
+		address.setBorder(BorderFactory.createEtchedBorder());
+		scroll = new JScrollPane(address,
+			                    JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+			                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 //		Radio Button
 		maleRadio.setSelected(true);
@@ -146,8 +158,11 @@ public class PersonFormPanel extends JPanel{
 		
 		gc.gridy = 5;
 		gc.gridx = 1;
+		gc.gridwidth = 3;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+        
 		gc.anchor = GridBagConstraints.LINE_START;
-		add(address,gc);
+		add(scroll,gc);
 		
 		/////////////// RADIO BUTTON ///////////////////
 		gc.gridy++;
