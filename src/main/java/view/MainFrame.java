@@ -131,7 +131,6 @@ public class MainFrame extends JFrame {
 		
 // 		DELETE DATA ON TABLE COMPLAINTS
 		complaintPanel.setTableListener(new TableListener() {
-			
 			@Override
 			public void tableEventDeleted(int id) {
 				complaintDAO.deleteComplaint(id);
