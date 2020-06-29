@@ -249,4 +249,12 @@ begin
 end
 go
 
+create proc deleteComplaint
+@id int
+as
+begin
+	DELETE FROM Complaint WHERE id = @id; 
+end
+go
+
 /* END PROCEDURE COMPLAINT */

@@ -128,6 +128,17 @@ public class MainFrame extends JFrame {
 				complaintPanel.setData(complaintDAO.getAllComplaints());
 			}
 		});
+		
+// 		DELETE DATA ON TABLE COMPLAINTS
+		complaintPanel.setTableListener(new TableListener() {
+			
+			@Override
+			public void tableEventDeleted(int id) {
+				complaintDAO.deleteComplaint(id);
+				complaintPanel.refresh();
+				complaintPanel.setData(complaintDAO.getAllComplaints());
+			}
+		});
 
 //		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);
