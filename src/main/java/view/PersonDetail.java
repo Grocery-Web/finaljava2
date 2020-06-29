@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PersonDetail extends JFrame {
 
@@ -22,25 +24,26 @@ public class PersonDetail extends JFrame {
 	private JTextPane textPane;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
-	private JTextField textField_1;
+	private JTextField txtGender;
 	private JLabel lblNewLabel_3;
-	private JTextField textField_2;
+	private JTextField txtDOB;
 	private JLabel lblNewLabel_4;
-	private JTextField textField_3;
+	private JTextField txtAddress;
 	private JLabel lblNewLabel_5;
-	private JTextField textField_4;
+	private JTextField txtNation;
 	private JLabel lblNewLabel_6;
-	private JTextField textField_5;
-	private JTextField textField;
+	private JTextField txtJob;
+	private JTextField txtName;
 	private JLabel lblNewLabel;
-	private JTextField textField_6;
+	private JTextField txtBlood;
 	private JLabel lblHeight;
-	private JTextField textField_7;
+	private JTextField txtHeight;
 	private JLabel lblNote;
-	private JTextArea textArea;
+	private JTextArea txtNote;
 	private JButton btnNewButton;
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
+	private JButton btnNewButton_3;
 
 	/**
 	 * Launch the application.
@@ -64,7 +67,7 @@ public class PersonDetail extends JFrame {
 	public PersonDetail() {
 		setTitle("Personal Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 565, 576);
+		setBounds(100, 100, 565, 562);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -77,62 +80,85 @@ public class PersonDetail extends JFrame {
 		lblNewLabel_2 = new JLabel("Gender");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_1.setColumns(10);
+		txtGender = new JTextField();
+		txtGender.setEnabled(false);
+		txtGender.setEditable(false);
+		txtGender.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtGender.setColumns(10);
 		
 		lblNewLabel_3 = new JLabel("DOB");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_2.setColumns(10);
+		txtDOB = new JTextField();
+		txtDOB.setEnabled(false);
+		txtDOB.setEditable(false);
+		txtDOB.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtDOB.setColumns(10);
 		
 		lblNewLabel_4 = new JLabel("Address");
 		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		textField_3 = new JTextField();
-		textField_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_3.setColumns(10);
+		txtAddress = new JTextField();
+		txtAddress.setEnabled(false);
+		txtAddress.setEditable(false);
+		txtAddress.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtAddress.setColumns(10);
 		
 		lblNewLabel_5 = new JLabel("Nationality");
 		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		textField_4 = new JTextField();
-		textField_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_4.setColumns(10);
+		txtNation = new JTextField();
+		txtNation.setEditable(false);
+		txtNation.setEnabled(false);
+		txtNation.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtNation.setColumns(10);
 		
 		lblNewLabel_6 = new JLabel("Job");
 		lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		textField_5 = new JTextField();
-		textField_5.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_5.setColumns(10);
+		txtJob = new JTextField();
+		txtJob.setEnabled(false);
+		txtJob.setEditable(false);
+		txtJob.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtJob.setColumns(10);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField.setColumns(10);
+		txtName = new JTextField();
+		txtName.setEditable(false);
+		txtName.setEnabled(false);
+		txtName.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtName.setColumns(10);
 		
 		lblNewLabel = new JLabel("Blood Type");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		textField_6 = new JTextField();
-		textField_6.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_6.setColumns(10);
+		txtBlood = new JTextField();
+		txtBlood.setEnabled(false);
+		txtBlood.setEditable(false);
+		txtBlood.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtBlood.setColumns(10);
 		
 		lblHeight = new JLabel("Height");
 		lblHeight.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		textField_7 = new JTextField();
-		textField_7.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_7.setColumns(10);
+		txtHeight = new JTextField();
+		txtHeight.setEnabled(false);
+		txtHeight.setEditable(false);
+		txtHeight.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtHeight.setColumns(10);
 		
 		lblNote = new JLabel("Note");
 		lblNote.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		textArea = new JTextArea();
+		txtNote = new JTextArea();
+		txtNote.setEnabled(false);
+		txtNote.setEditable(false);
 		
 		btnNewButton = new JButton("Update");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnNewButtonactionPerformed(e);
+			}
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		btnNewButton_1 = new JButton("Delete ");
@@ -140,6 +166,8 @@ public class PersonDetail extends JFrame {
 		
 		btnNewButton_2 = new JButton("Save");
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		btnNewButton_3 = new JButton("GetData");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -150,42 +178,44 @@ public class PersonDetail extends JFrame {
 							.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(55)
-							.addComponent(btnNewButton_1)))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnNewButton_3)
+								.addComponent(btnNewButton_1))))
 					.addGap(62)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblHeight, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+							.addComponent(txtHeight, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+							.addComponent(txtBlood, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtNation, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblNewLabel_4, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtGender, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(textField))
+								.addComponent(txtName))
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblNewLabel_3, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtDOB, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblNewLabel_6, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(txtJob, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblNote, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -194,7 +224,7 @@ public class PersonDetail extends JFrame {
 									.addComponent(btnNewButton)
 									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 									.addComponent(btnNewButton_2))
-								.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))))
+								.addComponent(txtNote, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))))
 					.addContainerGap(102, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
@@ -209,45 +239,81 @@ public class PersonDetail extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtGender, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtDOB, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblNewLabel_3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblNewLabel_4, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtNation, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtJob, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblNewLabel_6, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))))
-					.addGap(18)
+								.addComponent(txtBlood, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblHeight, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNote, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnNewButton)
-						.addComponent(btnNewButton_2))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblHeight, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtHeight, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNote, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtNote, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))
+							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnNewButton)
+								.addComponent(btnNewButton_2)))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(79)
+							.addComponent(btnNewButton_3)))
 					.addGap(113))
 		);
 		contentPane.setLayout(gl_contentPane);
+	}
+	protected void btnNewButtonactionPerformed(ActionEvent e) {
+		txtBlood.setEnabled(true);
+		txtBlood.setEditable(true);
+		
+		txtGender.setEnabled(true);
+		txtGender.setEditable(true);
+		
+		txtDOB.setEnabled(true);
+		txtDOB.setEditable(true);
+		
+		txtHeight.setEnabled(true);
+		txtHeight.setEditable(true);
+		
+		txtAddress.setEnabled(true);
+		txtAddress.setEditable(true);
+		
+		txtNation.setEditable(true);
+		txtNation.setEnabled(true);
+		
+		txtName.setEditable(true);
+		txtName.setEnabled(true);
+		
+		txtJob.setEditable(true);
+		txtJob.setEnabled(true);
+		
+		txtNote.setEnabled(true);
+		txtNote.setEditable(true);
+		
+		
+		
 	}
 }
