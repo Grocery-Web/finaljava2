@@ -1,4 +1,5 @@
 package view;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -6,7 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
+import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -15,19 +16,23 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-public class PersonFormPanel extends JPanel{
+public class PersonFormPanel extends JPanel {
 	
 	private JTextField personalID;
 	private JTextField nameField;
-	private JTextField dob;
 	private JTextField occupationField;
 	private JTextField nationality;
 	private JTextField address;
 	private JButton submitBtn;
+	private JTextField dob;
 	private JRadioButton maleRadio;
 	private JRadioButton femaleRadio;
 	private ButtonGroup genderGroup;
+	private boolean cd1, cd2, cd3, cd4, cd5;
 	
 	public PersonFormPanel() {
 		Dimension dim = getPreferredSize();
@@ -36,16 +41,108 @@ public class PersonFormPanel extends JPanel{
 		setMinimumSize(dim);
 		
 		personalID = new JTextField(10);
+		personalID.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd1Check();
+				checkUnlock();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd1Check();
+				checkUnlock();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd1Check();
+				checkUnlock();
+			}
+		});
+		
 		nameField = new JTextField(10);
+		nameField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd2Check();
+				checkUnlock();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd2Check();
+				checkUnlock();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd2Check();
+				checkUnlock();				
+			}
+		});
+		
 		occupationField = new JTextField(10);
+		occupationField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd3Check();
+				checkUnlock();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd3Check();
+				checkUnlock();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd3Check();
+				checkUnlock();
+			}
+		});
+		
 		nationality = new JTextField(10);
+		nationality.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+		});
+		
 		address = new JTextField(10);
+		address.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+		});
+		
 		dob = new JTextField(10);
+		
 		maleRadio = new JRadioButton("male");
 		femaleRadio = new JRadioButton("female");
 		genderGroup = new ButtonGroup();
 		submitBtn = new JButton("Submit");
 		submitBtn.setMnemonic(KeyEvent.VK_S);
+		submitBtn.setEnabled(false);
 		
 //		Radio Button
 		maleRadio.setSelected(true);
@@ -54,10 +151,10 @@ public class PersonFormPanel extends JPanel{
 //		using ButtonGroup to ensure that only one values chosen at one time
 		maleRadio.setActionCommand("male");
 		femaleRadio.setActionCommand("female");
-			
+		
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+			
 			}
 		});
 		
@@ -67,7 +164,62 @@ public class PersonFormPanel extends JPanel{
 		
 		layoutComponents();
 	}
+//	Functions to check for all input fields
+	private void cd1Check() {
+		if (!personalID.getText().equals("") && personalID.getText().matches("\\d+")) {
+        	personalID.setBorder(new LineBorder(Color.GREEN, 1));
+            cd1 = true;
+        } else {
+        	personalID.setBorder(new LineBorder(Color.RED, 1));
+        	cd1 = false;
+        }
+	}
 	
+	private void cd2Check() {
+		if (!nameField.getText().equals("") && nameField.getText().matches("[\\D ]{1,50}")) {
+        	nameField.setBorder(new LineBorder(Color.GREEN, 1));
+            cd2 = true;
+        } else {
+        	nameField.setBorder(new LineBorder(Color.RED, 1));
+        	cd2 = false;
+        }
+	}
+	
+	private void cd3Check() {
+		if (!occupationField.getText().equals("") && occupationField.getText().matches("[a-zA-Z]{4,20}")) {				 		   
+	       	occupationField.setBorder(new LineBorder(Color.GREEN, 1));
+	        cd3 = true;
+		} else {
+			occupationField.setBorder(new LineBorder(Color.RED, 1));
+	        cd3 = false;
+	    }
+	}
+	
+	private void cd4Check() {
+		if (!nationality.getText().equals("") && nationality.getText().matches("[a-zA-Z]{4,50}")) {
+			nationality.setBorder(new LineBorder(Color.GREEN, 1));
+			cd4 = true;
+		} else {
+			nationality.setBorder(new LineBorder(Color.RED, 1));
+			cd4 = false;
+		}
+	}
+	
+	private void cd5Check() {
+		if (!address.getText().equals("") && address.getText().matches(".{2,4000}")) {
+			address.setBorder(new LineBorder(Color.GREEN, 1));
+			cd5 = true;
+		} else {
+			address.setBorder(new LineBorder(Color.RED, 1));
+			cd5 = false;
+		}
+	}
+	
+	private void checkUnlock() {
+		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5;
+		submitBtn.setEnabled(unlock);
+	}
+
 	public void layoutComponents() {
 		setLayout(new GridBagLayout());
 		
@@ -88,6 +240,13 @@ public class PersonFormPanel extends JPanel{
 		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(personalID, gc);
+		
+		gc.gridx = 2;
+		gc.gridy = 0;
+		gc.anchor = GridBagConstraints.LINE_START;
+		JLabel q1 = new JLabel("?");
+		q1.setToolTipText("Please enter a number as Personal ID");
+		add(q1, gc);
 		
 		/////////////// NAME ///////////////////
 		gc.gridy++;
