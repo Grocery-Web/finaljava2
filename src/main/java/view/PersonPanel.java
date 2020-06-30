@@ -5,18 +5,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.DefaultRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import entity.Person;
 
 public class PersonPanel extends JPanel {
-	
 	private JTable table;
 	private PersonTableModel tableModel;
 	private JPopupMenu popup;
@@ -50,6 +51,7 @@ public class PersonPanel extends JPanel {
 			
 		});
 		
+		table.setAutoCreateRowSorter(true);  // Search data
 		
 		setLayout(new BorderLayout());
 		
@@ -72,4 +74,9 @@ public class PersonPanel extends JPanel {
 		tableModel.fireTableDataChanged();
 	}
 	
+	public void search(String txt) {
+		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
+		sorter.setRowFilter(RowFilter.regexFilter(txt));
+		sorter.setSortKeys(null);
+	}
 }
