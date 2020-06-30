@@ -124,12 +124,10 @@ public class MainFrame extends JFrame {
 			public void searchText(String txt) {
 				int selectedIndex = tabPane.getSelectedIndex();
 				if(selectedIndex == 0) {
-					personPanel.setData(personDAO.getAllAccount());
 					personPanel.search(txt);
 				}
 				
 				if(selectedIndex == 1) {
-					complaintPanel.setData(complaintDAO.getAllComplaints());
 					complaintPanel.search(txt);
 				}
 
@@ -141,8 +139,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void complaintListener(Complaint cpt) {
 				complaintDAO.addComplaint(cpt);
-				complaintPanel.refresh();
 				complaintPanel.setData(complaintDAO.getAllComplaints());
+				complaintPanel.refresh();
 			}
 		});
 
@@ -151,8 +149,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDeleted(int id) {
 				complaintDAO.deleteComplaint(id);
-				complaintPanel.refresh();
 				complaintPanel.setData(complaintDAO.getAllComplaints());
+				complaintPanel.refresh();
 			}
 		});
 
