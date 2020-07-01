@@ -12,9 +12,11 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -190,18 +192,37 @@ public class PersonFormPanel extends JPanel {
 			                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 //		Radio Button
-		maleRadio.setSelected(true);
 		genderGroup.add(maleRadio);
 		genderGroup.add(femaleRadio);
 //		using ButtonGroup to ensure that only one values chosen at one time
 		maleRadio.setActionCommand("male");
 		femaleRadio.setActionCommand("female");
-		
-		submitBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		ActionListener gender = new ActionListener() {
 			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AbstractButton btn = (AbstractButton) e.getSource();
+				BufferedImage img = null;
+				if (btn.getText() == "male") {
+					try {
+						img = ImageIO.read(getClass().getResource("/images/male.png"));
+					} catch (IOException e2) {
+						e2.printStackTrace();
+					}
+				} else {
+					try {
+						img = ImageIO.read(getClass().getResource("/images/female.png"));
+					} catch (IOException e2) {
+						e2.printStackTrace();
+					}
+				}
+				Image dimg = img.getScaledInstance(imgLabel.getWidth(), imgLabel.getHeight(), Image.SCALE_SMOOTH);
+				imgLabel.setIcon(new ImageIcon(dimg));
 			}
-		});
+		};
+		maleRadio.addActionListener(gender);
+		femaleRadio.addActionListener(gender);
+		
 //		Image Chooser:
 		imgChooser = new JButton("Open File...");
 		imgChooser.setFocusPainted(false);
@@ -227,6 +248,12 @@ public class PersonFormPanel extends JPanel {
 					imgLabel.setIcon(new ImageIcon(dimg));
 				}
 				
+			}
+		});
+		
+		submitBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
 			}
 		});
 		
