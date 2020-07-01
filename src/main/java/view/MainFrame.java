@@ -19,12 +19,11 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import dao.ComplaintDAO;
 import dao.PersonDAO;
 import entity.Complaint;
+import entity.Person;
 
 public class MainFrame extends JFrame {
 
@@ -49,6 +48,7 @@ public class MainFrame extends JFrame {
 	
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
+	private AttachComplaintForm attComplain;
 	
 	/**
 	 * Launch the application.
@@ -169,6 +169,23 @@ public class MainFrame extends JFrame {
 					}
 				});
 				cplDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			}
+		});
+		
+// 		PERSON TABLE LISTENER
+		personPanel.setTableListener(new TablePersonListener() {
+			
+			@Override
+			public void tableEventDeleted(int id) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tableEventAttached(int id) {
+				Person per = personDAO.findPersonById(id);
+				attComplain = new AttachComplaintForm(per);
+				attComplain.setVisible(true);
 			}
 		});
 

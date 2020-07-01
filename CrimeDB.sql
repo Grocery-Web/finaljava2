@@ -157,6 +157,13 @@ begin
 end
 go
 
+create proc findPersonById
+@id int
+as
+begin
+	select * FROM Person WHERE id = @id; 
+end
+go
 
 /* END PROCEDURE PERSON */
 
