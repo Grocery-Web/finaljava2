@@ -7,6 +7,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
@@ -47,8 +48,8 @@ public class MainFrame extends JFrame {
 	private ComplaintDAO complaintDAO;
 	
 //	EXTERNAL FRAME OR DIALOG
-	private ComplaintDetailFrame cplDetailFrame;
-	private AttachComplaintForm attComplain;
+	private ComplaintDetail cplDetailFrame;
+	private RelevantComplaintForm relComplain;
 	
 	/**
 	 * Launch the application.
@@ -158,7 +159,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDetail(int id) {
 				Complaint complaint = complaintDAO.findComplaintById(id);
-				cplDetailFrame = new ComplaintDetailFrame(complaint);
+				cplDetailFrame = new ComplaintDetail(complaint);
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setLocationRelativeTo(null);
 				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
@@ -184,8 +185,9 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventAttached(int id) {
 				Person per = personDAO.findPersonById(id);
-				attComplain = new AttachComplaintForm(per);
-				attComplain.setVisible(true);
+				List<Complaint> listComplaints = complaintDAO.getAllComplaints();
+				relComplain = new RelevantComplaintForm(per,listComplaints);
+				relComplain.setVisible(true);
 			}
 		});
 
@@ -194,7 +196,8 @@ public class MainFrame extends JFrame {
 		add(toolbar, BorderLayout.PAGE_START);
 
 		setMinimumSize(new Dimension(700, 600));
-		setSize(600, 500);
+		setSize(10000, 800);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
