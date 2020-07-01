@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -180,6 +179,7 @@ public class PersonFormPanel extends JPanel {
 		maleRadio = new JRadioButton("male");
 		femaleRadio = new JRadioButton("female");
 		genderGroup = new ButtonGroup();
+
 		submitBtn = new JButton("Add Person");
 		submitBtn.setMnemonic(KeyEvent.VK_A);
 		
