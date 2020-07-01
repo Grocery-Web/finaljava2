@@ -9,5 +9,10 @@
 	    <artifactId>mssql-jdbc</artifactId>
 	    <version>8.2.2.jre13</version>
 	</dependency>
+	<dependency>
+    	<groupId>com.toedter</groupId>
+    	<artifactId>jcalendar</artifactId>
+    	<version>1.4</version>
+	</dependency>
   </dependencies>
 </project>
