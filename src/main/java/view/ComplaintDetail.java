@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import entity.Complaint;
+
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
@@ -28,27 +31,28 @@ public class ComplaintDetail extends JFrame {
 	private JTextField textCompDate;
 	private JTextField textCompPlace;
 	private JTable table;
+	private ComplaintDetailListener cplDetailListener;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ComplaintDetail frame = new ComplaintDetail();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ComplaintDetail frame = new ComplaintDetail();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public ComplaintDetail() {
+	public ComplaintDetail(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 490);
 		contentPane = new JPanel();
@@ -176,5 +180,9 @@ public class ComplaintDetail extends JFrame {
 					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
+	}
+	
+	public void setFrameListener(ComplaintDetailListener cplDetailListener) {
+		this.cplDetailListener = cplDetailListener;
 	}
 }

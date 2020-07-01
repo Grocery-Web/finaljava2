@@ -3,44 +3,50 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
+import entity.Complaint;
 import entity.Person;
 
-public class AttachComplaintForm extends JDialog {
+public class RelevantComplaintForm extends JDialog {
 	private JButton okBtn;
 	private JButton cancelBtn;
-	private JTextArea nameField;
-	private JComboBox cplDetailBox;
+	private JLabel nameField;
+	private JComboBox<Complaint> cplDetailBox;
 	private FilterComboBox fcb;
 
-	public AttachComplaintForm(Person per) {
+	public RelevantComplaintForm(Person per, List<Complaint> listComplaint) {
 		setTitle("Person in Complaints");
 		okBtn = new JButton("OK");
 		cancelBtn = new JButton("Cancel");
+		nameField = new JLabel(per.getName());
 
-		nameField = new JTextArea();
-		nameField.setText(per.getName());
-		nameField.setEditable(false);
-
-		cplDetailBox = new JComboBox();
+		cplDetailBox = new JComboBox<Complaint>();
+		for (Complaint complaint : listComplaint) {
+			cplDetailBox.addItem(complaint);
+		}
+		System.out.println(cplDetailBox.getSelectedItem());
+		
 		fcb = new FilterComboBox(Arrays.asList("Assault and Battery", "Kidnapping", "Homicide", "Rape", "False Imprisonment",
 				"Theft", "Arson", "False Pretenses", "White Collar Crimes", "Receipt of Stolen Goods"));
-
+		System.out.println(fcb.getSelectedItem());
 		layoutControls();
 
 		okBtn.addActionListener(new ActionListener() {
@@ -96,7 +102,7 @@ public class AttachComplaintForm extends JDialog {
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.EAST;
 		gc.insets = rightPadding;
-		controlsPanel.add(new JLabel("Complaint Detail: "), gc);
+		controlsPanel.add(new JLabel("Relevant Complaint: "), gc);
 
 		gc.gridx++;
 		gc.anchor = GridBagConstraints.WEST;
@@ -114,18 +120,6 @@ public class AttachComplaintForm extends JDialog {
 		gc.anchor = GridBagConstraints.WEST;
 		gc.insets = noPadding;
 		controlsPanel.add(fcb, gc);
-
-		//////////// NEXT ROW /////////////////
-		gc.gridy++;
-		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.EAST;
-		gc.insets = rightPadding;
-		controlsPanel.add(new JLabel("Complaint Detail: "), gc);
-
-		gc.gridx++;
-		gc.anchor = GridBagConstraints.WEST;
-		gc.insets = noPadding;
-		controlsPanel.add(cplDetailBox, gc);
 
 		//////////// BUTTONS PANEL /////////////////
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
