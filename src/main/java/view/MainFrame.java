@@ -46,7 +46,10 @@ public class MainFrame extends JFrame {
 //	DAO
 	private PersonDAO personDAO;
 	private ComplaintDAO complaintDAO;
-
+	
+//	EXTERNAL FRAME OR DIALOG
+	private ComplaintDetailFrame cplDetailFrame;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -75,7 +78,7 @@ public class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		setJMenuBar(createMenuBar());
 
-//		CREATE COMPONENTS
+//		CREATE INTERNAL COMPONENTS 
 		toolbar = new Toolbar();
 		panelCont = new JPanel();
 		personForm = new PersonFormPanel();
@@ -112,7 +115,6 @@ public class MainFrame extends JFrame {
 			@Override
 			public void addPersonEventOccured() {
 				cardLayout.show(panelCont, "1");
-
 			}
 
 			@Override
@@ -144,13 +146,29 @@ public class MainFrame extends JFrame {
 			}
 		});
 
-// 		DELETE DATA ON TABLE COMPLAINTS
-		complaintPanel.setTableListener(new TableListener() {
+// 		COMPLAINTS TABLE LISTENER
+		complaintPanel.setTableListener(new TableComplaintsListener() {
 			@Override
 			public void tableEventDeleted(int id) {
 				complaintDAO.deleteComplaint(id);
 				complaintPanel.setData(complaintDAO.getAllComplaints());
 				complaintPanel.refresh();
+			}
+
+			@Override
+			public void tableEventDetail(int id) {
+				Complaint complaint = complaintDAO.findComplaintById(id);
+				cplDetailFrame = new ComplaintDetailFrame(complaint);
+				cplDetailFrame.setVisible(true);
+				cplDetailFrame.setLocationRelativeTo(null);
+				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
+					@Override
+					public void updateEventListener(Complaint cpl) {
+						// TODO Auto-generated method stub
+						System.out.println(cpl);
+					}
+				});
+				cplDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
 

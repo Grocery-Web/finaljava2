@@ -4,6 +4,7 @@ import java.util.EventListener;
 
 import entity.Complaint;
 
-public interface TableListener extends EventListener{
+public interface TableComplaintsListener extends EventListener{
 	public void tableEventDeleted(int id);
+	public void tableEventDetail(int id);
 }

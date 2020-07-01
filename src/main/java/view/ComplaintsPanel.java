@@ -27,7 +27,7 @@ public class ComplaintsPanel extends JPanel {
 	private JTable table;
 	private ComplaintTableModel tableModel;
 	private JPopupMenu popup;
-	private TableListener tableListener;
+	private TableComplaintsListener tableListener;
 
 	public ComplaintsPanel() {
 		tableModel = new ComplaintTableModel();
@@ -35,7 +35,9 @@ public class ComplaintsPanel extends JPanel {
 		popup = new JPopupMenu();
 		
 		JMenuItem removeItem = new JMenuItem("Delete Complaint");
+		JMenuItem detailItem = new JMenuItem("Complaint Details");
 		popup.add(removeItem);
+		popup.add(detailItem);
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -59,6 +61,17 @@ public class ComplaintsPanel extends JPanel {
 
 				if (action == JOptionPane.OK_OPTION && tableListener != null) {
 					tableListener.tableEventDeleted(id);
+				}
+			}
+		});
+		
+		detailItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventDetail(id);
 				}
 			}
 		});
@@ -86,7 +99,7 @@ public class ComplaintsPanel extends JPanel {
 		tableModel.fireTableDataChanged();
 	}
 
-	public void setTableListener(TableListener tableListener) {
+	public void setTableListener(TableComplaintsListener tableListener) {
 		this.tableListener = tableListener;
 	}
 

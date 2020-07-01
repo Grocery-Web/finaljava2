@@ -48,8 +48,8 @@ public class ComplaintFormPanel extends JPanel{
 		place = new JTextField(10);
 		declarantName = new JTextField(10);
 		detail = new JTextArea(8,10);
-		submitBtn = new JButton("Submit");
-		submitBtn.setMnemonic(KeyEvent.VK_S);
+		submitBtn = new JButton("Add Complaint");
+		submitBtn.setMnemonic(KeyEvent.VK_A);
 		
 //		ADD SCROLL PANE INTO DETAIL AREA
 		detail.setBorder(BorderFactory.createEtchedBorder());

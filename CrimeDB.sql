@@ -149,6 +149,7 @@ go
 
 /* PROCEDURE PERSON */
 
+-- select all people in table
 create proc getAllPerson
 as
 begin
@@ -161,6 +162,7 @@ go
 
 /* PROCEDURE COMPLAINT */
 
+-- select all Complaints in table
 create proc getAllComplaints
 as
 begin
@@ -168,6 +170,7 @@ begin
 end
 go
 
+-- insert a new Complaint
 create proc addComplaint
 @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX),@verifyStatus bit
 as
@@ -177,11 +180,21 @@ begin
 end
 go
 
+-- delete Complaint by ID
 create proc deleteComplaint
 @id int
 as
 begin
 	DELETE FROM Complaint WHERE id = @id; 
+end
+go
+
+-- find Complaint by ID
+create proc findComplaintById
+@id int
+as
+begin
+	select * FROM Complaint WHERE id = @id; 
 end
 go
 
