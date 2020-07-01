@@ -1,12 +1,15 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -19,13 +22,14 @@ public class ComplaintsPanel  extends JPanel {
 	private JTable table;
 	private ComplaintTableModel tableModel;
 	private JPopupMenu popup;
+	private TableListener tableListener;
 	
 	public ComplaintsPanel() {
 		tableModel = new ComplaintTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem removeItem = new JMenuItem("Delete Row");
+		JMenuItem removeItem = new JMenuItem("Delete Complaint");
 		popup.add(removeItem);
 		
 		table.addMouseListener(new MouseAdapter() {
@@ -38,7 +42,21 @@ public class ComplaintsPanel  extends JPanel {
 					popup.show(table, e.getX(), e.getY());
 				}
 			}
-			
+		});
+		
+		removeItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); //Start from 0
+				int id = (int) table.getModel().getValueAt(row,0);
+		
+				int action = JOptionPane.showConfirmDialog(null, 
+						"Do you really want to delete this complaint", "Confirm Exit", 
+						JOptionPane.OK_CANCEL_OPTION);
+				
+				if(action == JOptionPane.OK_OPTION && tableListener != null) {
+					tableListener.tableEventDeleted(id);
+				}
+			}
 		});
 		
 		
@@ -61,5 +79,9 @@ public class ComplaintsPanel  extends JPanel {
 	
 	public void refresh() {
 		tableModel.fireTableDataChanged();
+	}
+	
+	public void setTableListener(TableListener tableListener) {
+		this.tableListener = tableListener;
 	}
 }

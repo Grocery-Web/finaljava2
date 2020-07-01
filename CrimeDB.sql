@@ -233,4 +233,28 @@ go
 
 /* PROCEDURE COMPLAINT */
 
+create proc getAllComplaints
+as
+begin
+	select * from Complaint
+end
+go
+
+create proc addComplaint
+@datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX),@verifyStatus bit
+as
+begin
+	insert into Complaint (datetime,place,declarantName,detail,verifyStatus)
+	values(@datetime, @place, @declarantName, @detail, @verifyStatus)
+end
+go
+
+create proc deleteComplaint
+@id int
+as
+begin
+	DELETE FROM Complaint WHERE id = @id; 
+end
+go
+
 /* END PROCEDURE COMPLAINT */

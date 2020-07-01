@@ -7,22 +7,36 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import entity.Complaint;
+
 public class ComplaintFormPanel extends JPanel{
+	
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
 	private JTextField datetime;
 	private JTextField place;
 	private JTextField declarantName;
-	private JTextField detail;
+	private JTextArea detail;
 	private JButton submitBtn;
+	private JScrollPane scroll;
+	
+//	INTERFACE LISTERNER
+	private ComplaintListener cplListener;
 	
 	public ComplaintFormPanel() {
 		Dimension dim = getPreferredSize();
@@ -33,16 +47,40 @@ public class ComplaintFormPanel extends JPanel{
 		datetime = new JTextField(10);
 		place = new JTextField(10);
 		declarantName = new JTextField(10);
-		detail = new JTextField(10);
+		detail = new JTextArea(8,10);
 		submitBtn = new JButton("Submit");
 		submitBtn.setMnemonic(KeyEvent.VK_S);
-				
+		
+//		ADD SCROLL PANE INTO DETAIL AREA
+		detail.setBorder(BorderFactory.createEtchedBorder());
+		scroll = new JScrollPane(detail,
+			                    JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+			                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+//		ACTION PERFORM ON SUBMIT BUTTON
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				Date getTime = null;
+				try {
+					getTime = formatter.parse(datetime.getText());
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				String getPlace = place.getText();
+				String getDeclarantName = declarantName.getText();
+				String getDetails = detail.getText();
+				
+				Complaint cpt = new Complaint(getTime, getPlace, getDeclarantName, getDetails, false);
+				
+				if(cplListener != null) {
+					cplListener.complaintListener(cpt);
+				}
 			}
 		});
 		
+//		SET FORM LAYOUT
 		Border innerBorder = BorderFactory.createTitledBorder("Add Complaint");
 		Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
@@ -105,7 +143,7 @@ public class ComplaintFormPanel extends JPanel{
 		gc.gridy = 3;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
-		add(detail,gc);
+		add(scroll,gc);
 		
 		/////////////// SUBMIT BUTTON ///////////////////
 		gc.weighty = 2; //all additional space below will be distributed to this component on Vertical
@@ -118,4 +156,7 @@ public class ComplaintFormPanel extends JPanel{
 //		End of Edit Form
 	}
 
+	public void setFormListener(ComplaintListener cplListener) {
+		this.cplListener = cplListener;
+	}
 }
