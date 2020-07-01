@@ -73,18 +73,23 @@ public class ComplaintDetail extends JFrame {
 		
 		textDeclarantName = new JTextField();
 		textDeclarantName.setColumns(10);
+		textDeclarantName.setText(cpl.getDeclarantName());
 		
 		textCompDetail = new JTextField();
 		textCompDetail.setColumns(10);
+		textCompDetail.setText(cpl.getDetail());
 		
 		textCompId = new JTextField();
 		textCompId.setColumns(10);
+//		textCompId.setInt(cpl.getId());
 		
 		textCompDate = new JTextField();
 		textCompDate.setColumns(10);
+//		textCompDate.setText()
 		
 		textCompPlace = new JTextField();
 		textCompPlace.setColumns(10);
+		textCompPlace.setText(cpl.getPlace());
 		
 		JLabel lblCriminalList = new JLabel("List of Criminals:");
 		
@@ -92,14 +97,17 @@ public class ComplaintDetail extends JFrame {
 		
 		JRadioButton rdbtnUnverified = new JRadioButton("Unverified");
 		
-		JRadioButton rdbtnRejected = new JRadioButton("Rejected");
-		
 		JRadioButton rdbtnApproved = new JRadioButton("Approved");
+		
+		if (cpl.isStatus() == false) {
+			rdbtnUnverified.setSelected(true);
+		} else {
+			rdbtnApproved.setSelected(true);
+		}
 		
 		//Group the radio buttons.
 	    ButtonGroup group = new ButtonGroup();
 	    group.add(rdbtnUnverified);
-	    group.add(rdbtnRejected);
 	    group.add(rdbtnApproved);
 		
 		JButton btnSubmit = new JButton("Submit");
@@ -134,7 +142,6 @@ public class ComplaintDetail extends JFrame {
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(rdbtnUnverified)
 									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(rdbtnRejected)
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(rdbtnApproved))))
 						.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
@@ -173,7 +180,6 @@ public class ComplaintDetail extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCompStatus)
 						.addComponent(rdbtnUnverified)
-						.addComponent(rdbtnRejected)
 						.addComponent(rdbtnApproved))
 					.addGap(17)
 					.addComponent(btnSubmit)
