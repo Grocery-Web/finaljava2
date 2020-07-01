@@ -1,25 +1,30 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.DefaultRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import entity.Person;
 
 public class PersonPanel extends JPanel {
-	
 	private JTable table;
 	private PersonTableModel tableModel;
 	private JPopupMenu popup;
+	private TablePersonListener tableListener;
 	
 	public PersonPanel() {
 		tableModel = new PersonTableModel();
@@ -50,6 +55,18 @@ public class PersonPanel extends JPanel {
 			
 		});
 		
+		complaintItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventAttached(id);
+				}
+			}
+		});
+		
+		table.setAutoCreateRowSorter(true);  // Search data
 		
 		setLayout(new BorderLayout());
 		
@@ -72,4 +89,13 @@ public class PersonPanel extends JPanel {
 		tableModel.fireTableDataChanged();
 	}
 	
+	public void search(String txt) {
+		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
+		sorter.setRowFilter(RowFilter.regexFilter(txt));
+		sorter.setSortKeys(null);
+	}
+	
+	public void setTableListener(TablePersonListener tableListener) {
+		this.tableListener = tableListener;
+	}
 }

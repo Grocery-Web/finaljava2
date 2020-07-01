@@ -50,8 +50,8 @@ public class PersonFormPanel extends JPanel{
 		maleRadio = new JRadioButton("male");
 		femaleRadio = new JRadioButton("female");
 		genderGroup = new ButtonGroup();
-		submitBtn = new JButton("Submit");
-		submitBtn.setMnemonic(KeyEvent.VK_S);
+		submitBtn = new JButton("Add Person");
+		submitBtn.setMnemonic(KeyEvent.VK_A);
 		
 //		ADD SCROLL PANE INTO ADRRESS AREA
 		address.setBorder(BorderFactory.createEtchedBorder());

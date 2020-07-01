@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import entity.Complaint;
+import entity.Person;
 
 public class ComplaintTableModel extends AbstractTableModel{
 	private List<Complaint> db;
@@ -23,12 +24,23 @@ public class ComplaintTableModel extends AbstractTableModel{
 
 	@Override
 	public int getRowCount() {
-		return db.size();
+		if(db != null) {
+			return db.size();
+		}
+		return 0;
 	}
 
 	@Override
 	public int getColumnCount() {
 		return 6;
+	}
+	
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+	    if (db.isEmpty()) {
+	        return Object.class;
+	    }
+	    return getValueAt(0, columnIndex).getClass();
 	}
 
 	@Override
@@ -58,4 +70,12 @@ public class ComplaintTableModel extends AbstractTableModel{
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
 		}
 	}
+	
+	@Override
+    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        Complaint com = db.get(rowIndex);
+        if (columnIndex == 0) {
+        	com.setId((int) value);
+        }      
+    }
 }

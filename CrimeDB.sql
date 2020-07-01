@@ -13,78 +13,6 @@ CREATE TABLE Account (
 )
 GO
 
--- Create proc to add new Account
-CREATE PROCEDURE addAccount
-	@UserID varchar(20),
-	@FullName nvarchar(50),
-	@Email varchar(50),
-	@Password varchar(50),
-	@Privilege INT
-AS
-BEGIN
-	INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
-	VALUES(@UserID, @FullName, @Email, HASHBYTES('SHA2_512', @Password), @Privilege)
-END
-GO
-
--- Add a new Admin account
-EXEC addAccount
-	@UserID = 'admin',
-	@FullName = 'ADMINISTRATOR',
-	@Email = 'admin@gmail.com',
-	@Password = 'admin',
-	@Privilege = 1
-GO
-
--- Create proc to check for Account login
-CREATE PROC checkAcc
-	@UserID varchar(20),
-	@Password varchar(50)
-AS
-BEGIN
-	SELECT * FROM Account
-	WHERE UserID = @UserID COLLATE Latin1_General_CS_AS
-	and PasswordHash = HASHBYTES('SHA2_512', @Password) 
-END
-GO
-
--- Create proc to get all Accounts
-CREATE PROC getAllAcc
-
-AS
-BEGIN
-	SELECT UserID, FullName, Email, Privilege FROM Account
-END
-GO
-
--- Create proc to delete Account
-CREATE PROC deleteAcc
-	@UserID varchar(20)
-AS
-BEGIN
-	DELETE FROM Account
-	WHERE UserID = @UserID
-END
-GO
-
--- Create proc to update Account
-CREATE PROC updateAcc
-	@FullName nvarchar(50),
-	@Email varchar(50),
-	@Password varchar(50) = NULL,
-	@Privilege INT,
-	@UserID varchar(20)
-AS
-BEGIN
-	UPDATE Account
-	SET FullName = @FullName,
-		Email = @Email,
-		PasswordHash = ISNULL(HASHBYTES('SHA2_512', @Password), PasswordHash),
-		Privilege = @Privilege
-	WHERE UserID = @UserID
-END
-GO
-
 /* complaint table */ 
 create table Complaint (
 	id int identity(1,1) primary key,
@@ -221,6 +149,7 @@ go
 
 /* PROCEDURE PERSON */
 
+-- select all people in table
 create proc getAllPerson
 as
 begin
@@ -228,11 +157,19 @@ begin
 end
 go
 
+create proc findPersonById
+@id int
+as
+begin
+	select * FROM Person WHERE id = @id; 
+end
+go
 
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */
 
+-- select all Complaints in table
 create proc getAllComplaints
 as
 begin
@@ -240,6 +177,7 @@ begin
 end
 go
 
+-- insert a new Complaint
 create proc addComplaint
 @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX),@verifyStatus bit
 as
@@ -249,6 +187,7 @@ begin
 end
 go
 
+-- delete Complaint by ID
 create proc deleteComplaint
 @id int
 as
@@ -257,4 +196,88 @@ begin
 end
 go
 
+-- find Complaint by ID
+create proc findComplaintById
+@id int
+as
+begin
+	select * FROM Complaint WHERE id = @id; 
+end
+go
+
 /* END PROCEDURE COMPLAINT */
+
+/* PROCEDURE ACCOUNT */
+
+-- Create proc to add new Account
+CREATE PROCEDURE addAccount
+	@UserID varchar(20),
+	@FullName nvarchar(50),
+	@Email varchar(50),
+	@Password varchar(50),
+	@Privilege INT
+AS
+BEGIN
+	INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
+	VALUES(@UserID, @FullName, @Email, HASHBYTES('SHA2_512', @Password), @Privilege)
+END
+GO
+
+-- Add a new Admin account
+EXEC addAccount
+	@UserID = 'admin',
+	@FullName = 'ADMINISTRATOR',
+	@Email = 'admin@gmail.com',
+	@Password = 'admin',
+	@Privilege = 1
+GO
+
+-- Create proc to check for Account login
+CREATE PROC checkAcc
+	@UserID varchar(20),
+	@Password varchar(50)
+AS
+BEGIN
+	SELECT * FROM Account
+	WHERE UserID = @UserID COLLATE Latin1_General_CS_AS
+	and PasswordHash = HASHBYTES('SHA2_512', @Password) 
+END
+GO
+
+-- Create proc to get all Accounts
+CREATE PROC getAllAcc
+
+AS
+BEGIN
+	SELECT UserID, FullName, Email, Privilege FROM Account
+END
+GO
+
+-- Create proc to delete Account
+CREATE PROC deleteAcc
+	@UserID varchar(20)
+AS
+BEGIN
+	DELETE FROM Account
+	WHERE UserID = @UserID
+END
+GO
+
+-- Create proc to update Account
+CREATE PROC updateAcc
+	@FullName nvarchar(50),
+	@Email varchar(50),
+	@Password varchar(50) = NULL,
+	@Privilege INT,
+	@UserID varchar(20)
+AS
+BEGIN
+	UPDATE Account
+	SET FullName = @FullName,
+		Email = @Email,
+		PasswordHash = ISNULL(HASHBYTES('SHA2_512', @Password), PasswordHash),
+		Privilege = @Privilege
+	WHERE UserID = @UserID
+END
+GO
+/* END PROCEDURE ACCOUNT */
