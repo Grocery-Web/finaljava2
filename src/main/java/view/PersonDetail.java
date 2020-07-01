@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 public class PersonDetail extends JFrame {
 
 	private JPanel contentPane;
-	private JTextPane textPane;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
 	private JTextField txtGender;
@@ -41,9 +40,10 @@ public class PersonDetail extends JFrame {
 	private JLabel lblNote;
 	private JTextArea txtNote;
 	private JButton btnNewButton;
-	private JButton btnNewButton_1;
+	private JButton btnDelete;
 	private JButton btnNewButton_2;
-	private JButton btnNewButton_3;
+	private JButton btnGetData;
+	private JLabel lblNewLabel_7;
 
 	/**
 	 * Launch the application.
@@ -71,8 +71,6 @@ public class PersonDetail extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		
-		textPane = new JTextPane();
 		
 		lblNewLabel_1 = new JLabel("Name");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -161,27 +159,30 @@ public class PersonDetail extends JFrame {
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		btnNewButton_1 = new JButton("Delete ");
-		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnDelete = new JButton("Delete ");
+		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		btnNewButton_2 = new JButton("Save");
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		btnNewButton_3 = new JButton("GetData");
+		btnGetData = new JButton("GetData");
+		
+		lblNewLabel_7 = new JLabel("New label");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE))
+							.addGap(37)
+							.addComponent(btnGetData)
+							.addPreferredGap(ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+							.addComponent(btnDelete)
+							.addGap(24))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(55)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnNewButton_3)
-								.addComponent(btnNewButton_1))))
-					.addGap(62)
+							.addGap(25)
+							.addComponent(lblNewLabel_7, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblHeight, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
@@ -225,17 +226,13 @@ public class PersonDetail extends JFrame {
 									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 									.addComponent(btnNewButton_2))
 								.addComponent(txtNote, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap(102, Short.MAX_VALUE))
+					.addGap(21))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(btnNewButton_1))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
@@ -263,9 +260,7 @@ public class PersonDetail extends JFrame {
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtBlood, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))))
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
+								.addComponent(txtBlood, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblHeight, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
@@ -273,14 +268,14 @@ public class PersonDetail extends JFrame {
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNote, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtNote, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnNewButton)
-								.addComponent(btnNewButton_2)))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(79)
-							.addComponent(btnNewButton_3)))
+								.addComponent(txtNote, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(lblNewLabel_7, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnNewButton)
+						.addComponent(btnNewButton_2)
+						.addComponent(btnDelete)
+						.addComponent(btnGetData))
 					.addGap(113))
 		);
 		contentPane.setLayout(gl_contentPane);
