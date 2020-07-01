@@ -16,6 +16,7 @@ GO
 /* complaint table */ 
 create table Complaint (
 	id int identity(1,1) primary key,
+	complaintName varchar(50),
 	datetime datetime,
 	place nvarchar(MAX),
 	declarantName nvarchar(50),
