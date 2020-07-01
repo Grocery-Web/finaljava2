@@ -6,11 +6,17 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import dao.PersonDetailDAO;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
@@ -43,7 +49,7 @@ public class PersonDetail extends JFrame {
 	private JButton btnDelete;
 	private JButton btnNewButton_2;
 	private JButton btnGetData;
-	private JLabel lblNewLabel_7;
+	private JLabel labelIMG;
 
 	/**
 	 * Launch the application.
@@ -166,8 +172,13 @@ public class PersonDetail extends JFrame {
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		btnGetData = new JButton("GetData");
+		btnGetData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnGetDataactionPerformed(e);
+			}
+		});
 		
-		lblNewLabel_7 = new JLabel("New label");
+		labelIMG = new JLabel("");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -181,7 +192,7 @@ public class PersonDetail extends JFrame {
 							.addGap(24))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(25)
-							.addComponent(lblNewLabel_7, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
+							.addComponent(labelIMG, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
@@ -269,7 +280,7 @@ public class PersonDetail extends JFrame {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNote, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 								.addComponent(txtNote, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(lblNewLabel_7, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE))
+						.addComponent(labelIMG, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton)
@@ -310,5 +321,11 @@ public class PersonDetail extends JFrame {
 		
 		
 		
+	}
+	protected void btnGetDataactionPerformed(ActionEvent e) {
+		var ps = new PersonDetailDAO().getInfoDetail(181);
+		var url ="/images/person.png";
+		Image imgPerson = new ImageIcon(this.getClass().getResource(url)).getImage().getScaledInstance(150, 150, Image.SCALE_FAST);
+		labelIMG.setIcon(new ImageIcon(imgPerson));
 	}
 }
