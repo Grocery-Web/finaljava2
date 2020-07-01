@@ -6,9 +6,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dao.PersonDetailDAO;
 
+import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
@@ -20,8 +22,12 @@ import java.awt.Image;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class PersonDetail extends JFrame {
@@ -50,6 +56,7 @@ public class PersonDetail extends JFrame {
 	private JButton btnNewButton_2;
 	private JButton btnGetData;
 	private JLabel labelIMG;
+	private JButton btnUploadImage;
 
 	/**
 	 * Launch the application.
@@ -179,21 +186,33 @@ public class PersonDetail extends JFrame {
 		});
 		
 		labelIMG = new JLabel("");
+		
+		btnUploadImage = new JButton("Browse ...");
+		btnUploadImage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnUploadImageactionPerformed(e);
+			}
+		});
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(37)
-							.addComponent(btnGetData)
-							.addPreferredGap(ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
-							.addComponent(btnDelete)
-							.addGap(24))
-						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(25)
 							.addComponent(labelIMG, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)))
+							.addPreferredGap(ComponentPlacement.RELATED))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(37)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(btnUploadImage)
+									.addPreferredGap(ComponentPlacement.RELATED))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(btnGetData)
+									.addPreferredGap(ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+									.addComponent(btnDelete)
+									.addGap(24)))))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lblHeight, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
@@ -243,7 +262,7 @@ public class PersonDetail extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
@@ -279,9 +298,13 @@ public class PersonDetail extends JFrame {
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNote, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtNote, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(labelIMG, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+								.addComponent(txtNote, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE))
+							.addGap(18))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(labelIMG, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(btnUploadImage)
+							.addGap(55)))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton)
 						.addComponent(btnNewButton_2)
@@ -327,5 +350,28 @@ public class PersonDetail extends JFrame {
 		var url ="/images/person.png";
 		Image imgPerson = new ImageIcon(this.getClass().getResource(url)).getImage().getScaledInstance(150, 150, Image.SCALE_FAST);
 		labelIMG.setIcon(new ImageIcon(imgPerson));
+	}
+	protected void btnUploadImageactionPerformed(ActionEvent e) {
+		JFileChooser filechooser = new JFileChooser();
+		 FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images (jpg, gif, png)", "jpg","gif","png");
+		filechooser.setFileFilter(filter);
+	    filechooser.setDialogTitle("Choose Your File");
+//	    filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+	    // below code selects the file 
+	    int returnval = filechooser.showOpenDialog(this);
+	    if (returnval == JFileChooser.APPROVE_OPTION)
+	    {
+	        File file = filechooser.getSelectedFile();
+	        BufferedImage bi;
+	        try {
+	            // display the image in a Jlabel
+	            bi = ImageIO.read(file);
+	            System.out.println(bi);
+	            labelIMG.setIcon(new ImageIcon(bi.getScaledInstance(150, 150,  Image.SCALE_FAST)));
+	        } catch(IOException err) {
+	           err.printStackTrace(); // todo: implement proper error handeling
+	        }
+	        this.pack();
+	    }
 	}
 }
