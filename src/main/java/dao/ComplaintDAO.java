@@ -70,4 +70,29 @@ public class ComplaintDAO {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 	}
+	
+	public Complaint findComplaintById(int id) {
+		Complaint com = new Complaint();
+		
+		try(
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call findComplaintById(?)}");
+		)
+		{
+			ps.setInt(1, id);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				com.setId(rs.getInt("id"));
+				com.setDatetime(rs.getDate("datetime"));
+				com.setPlace(rs.getString("place"));
+				com.setDeclarantName(rs.getString("declarantName"));
+				com.setDetail(rs.getString("detail"));
+				com.setStatus(rs.getBoolean("verifyStatus"));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+		
+		return com;
+	}
 }
