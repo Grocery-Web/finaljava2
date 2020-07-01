@@ -3,14 +3,12 @@ package view;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
-import dao.PersonDAO;
 import entity.Person;
 
 
 public class PersonTableModel extends AbstractTableModel {
 	
 	private List<Person> db;
-	private PersonDAO dao;
 	private String[] colNames = {"Id", "Name", "Gender", "Date Of Birth", "Occupation", "Nationality", "Address"};
 	
 	public PersonTableModel() {}
@@ -27,16 +25,32 @@ public class PersonTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return db.size();
+		if(db != null) {
+			return db.size();
+		}
+		return 0;
 	}
 
 	@Override
 	public int getColumnCount() {
 		return 7;
 	}
+	
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+	    if (db.isEmpty()) {
+	        return Object.class;
+	    }
+	    return getValueAt(0, columnIndex).getClass();
+	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		
+		if(rowIndex > getRowCount() || columnIndex > getColumnCount()) {
+			return "";
+		}
+		
 		Person person = db.get(rowIndex);
 		
 		switch (columnIndex) {
@@ -65,5 +79,12 @@ public class PersonTableModel extends AbstractTableModel {
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
 		}
 	}
-
+	
+	@Override
+    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        Person per = db.get(rowIndex);
+        if (columnIndex == 0) {
+            per.setId((int) value);
+        }      
+    }
 }

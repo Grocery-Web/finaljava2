@@ -44,6 +44,13 @@ public class Toolbar extends JToolBar implements ActionListener{
 		addComplaintButton.setIcon(new ImageIcon(imgComplaint));
 		addComplaintButton.setToolTipText("Add Complaint");
 		
+//		SEARCH BOX LISTENER
+		txtSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				toolbarListener.searchText(txtSearch.getText());
+			}
+		});
+		
 //		ALLIGN COMPONENT ON TOOLBAR
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		
@@ -57,6 +64,7 @@ public class Toolbar extends JToolBar implements ActionListener{
 		add(txtSearch);
 	}
 	
+//	BUTTON ACTION PERFORM
 	public void actionPerformed(ActionEvent e) {
 		var clicked = e.getSource();
 		
