@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.awt.event.ActionEvent;
 
 public class PersonDetail extends JFrame {
@@ -57,6 +58,7 @@ public class PersonDetail extends JFrame {
 	private JButton btnGetData;
 	private JLabel labelIMG;
 	private JButton btnUploadImage;
+	File file = null;
 
 	/**
 	 * Launch the application.
@@ -351,7 +353,7 @@ public class PersonDetail extends JFrame {
 		Image imgPerson = new ImageIcon(this.getClass().getResource(url)).getImage().getScaledInstance(150, 150, Image.SCALE_FAST);
 		labelIMG.setIcon(new ImageIcon(imgPerson));
 	}
-	protected void btnUploadImageactionPerformed(ActionEvent e) {
+	protected void btnUploadImageactionPerformed(ActionEvent e){
 		JFileChooser filechooser = new JFileChooser();
 		 FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images (jpg, gif, png)", "jpg","gif","png");
 		filechooser.setFileFilter(filter);
@@ -361,13 +363,28 @@ public class PersonDetail extends JFrame {
 	    int returnval = filechooser.showOpenDialog(this);
 	    if (returnval == JFileChooser.APPROVE_OPTION)
 	    {
-	        File file = filechooser.getSelectedFile();
+	        file = filechooser.getSelectedFile();
+	        System.out.println(file.getAbsolutePath());
 	        BufferedImage bi;
 	        try {
 	            // display the image in a Jlabel
 	            bi = ImageIO.read(file);
-	            System.out.println(bi);
 	            labelIMG.setIcon(new ImageIcon(bi.getScaledInstance(150, 150,  Image.SCALE_FAST)));
+	            
+	            // save image 
+	            BufferedImage img = ImageIO.read(file);
+	            System.out.println("Read OK " + img);
+	            try {
+					String location = "E:/img/" + file.getName();
+					 System.out.println("Location OK "+ location);
+					String format = "PNG";
+					ImageIO.write(img, format, new File(location));
+					
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	            
 	        } catch(IOException err) {
 	           err.printStackTrace(); // todo: implement proper error handeling
 	        }
