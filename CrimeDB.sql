@@ -308,3 +308,24 @@ BEGIN
 	WHERE id = @UserID 
 END
 GO
+
+create proc updatePersonDetail
+	@id int,
+	@name nvarchar(50),
+	@gender bit,
+	@dob date,
+	@address nvarchar(MAX),
+	@image varchar(100),
+	@nationality varchar(50),
+	@job varchar(20),
+	@blood varchar(5),
+	@height int,
+	@note nvarchar(300)
+as
+begin
+	update PersonDetail
+	SET name = @name
+	WHERE id = @id
+
+end
+go

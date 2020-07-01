@@ -98,5 +98,11 @@ public class PersonDetail {
 		this.height = height;
 		this.note = note;
 	}
+	@Override
+	public String toString() {
+		return "PersonDetail [id=" + id + ", name=" + name + ", gender=" + gender + ", dob=" + dob + ", address="
+				+ address + ", img=" + img + ", national=" + national + ", job=" + job + ", blood=" + blood
+				+ ", height=" + height + ", note=" + note + "]";
+	}
 
 }
