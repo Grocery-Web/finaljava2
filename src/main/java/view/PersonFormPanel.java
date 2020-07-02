@@ -13,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -36,7 +37,16 @@ import javax.swing.event.DocumentListener;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
+import entity.Gender;
+import entity.Person;
+
 public class PersonFormPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private JTextField personalID;
 	private JTextField nameField;
@@ -53,6 +63,9 @@ public class PersonFormPanel extends JPanel {
 	private boolean cd1, cd2, cd3, cd4, cd5, cd6;
 	private JLabel q1, q2, q3, q4, q5, q6;
 	private JScrollPane scroll;
+	private FormPersonListener formListener;
+	private File file = null;
+
 	public String s = Character.toString("\u2713".toCharArray()[0]);
 	
 	public PersonFormPanel() {
@@ -63,6 +76,7 @@ public class PersonFormPanel extends JPanel {
 				
 		personalID = new JTextField(10);
 		
+//		Create Component and Validation input
 		personalID.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void removeUpdate(DocumentEvent e) {
@@ -231,13 +245,12 @@ public class PersonFormPanel extends JPanel {
 		imgLabel.setPreferredSize(new Dimension(120, 200));
 		
 		imgChooser.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
 				int result = fc.showOpenDialog(null);
 				if (result == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
+					file = fc.getSelectedFile();
 					BufferedImage img = null;
 					try {
 						img = ImageIO.read(file);
@@ -247,13 +260,40 @@ public class PersonFormPanel extends JPanel {
 					Image dimg = img.getScaledInstance(imgLabel.getWidth(), imgLabel.getHeight(), Image.SCALE_SMOOTH);
 					imgLabel.setIcon(new ImageIcon(dimg));
 				}
-				
 			}
-		});
-		
+		});	
+//		Button Action Perform
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
+//				String ext = file.getName();
+//				System.out.println(ext.substring(ext.lastIndexOf(".")));
+				
+//				Person per = new Person();
+//				per.setId(Integer.parseInt(personalID.getText()));
+//				per.setName(nameField.getText());
+//				
+//				Gender genderCat;
+//				String gender = genderGroup.getSelection().getActionCommand();
+//				
+//				if(gender == "male") {
+//					genderCat = Gender.male;
+//				}else {
+//					genderCat = Gender.female;
+//				}
+//				per.setGender(genderCat);
+//				per.setDob(new java.sql.Date(dob.getDate().getTime()));
+//				per.setAddress(address.getText());
+//				per.setNationality(nationality.getText());
+//				per.setJob(occupationField.getText());
+//				
+//
+//				
+//				
+//				if(formListener != null) {
+//					formListener.insertEventListener(per);
+//				}
+				
+				saveImage(file);
 			}
 		});
 		
@@ -520,4 +560,31 @@ public class PersonFormPanel extends JPanel {
 //		End of Edit Form
 	}
 	
+	public void setFormListener(FormPersonListener formListener) {
+		this.formListener = formListener;
+	}
+	
+	public void saveImage(File file) {
+        BufferedImage bi;
+        try {
+            // display the image in a Jlabel
+            bi = ImageIO.read(file);
+
+            // save image 
+            BufferedImage img = ImageIO.read(file);
+            try {
+				String location = System.getProperty("user.dir") + "/src/main/resources/images/" + file.getName();
+				System.out.println("Location OK "+ location);
+				String format = "PNG";
+				ImageIO.write(img, format, new File(location));
+				
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            
+        } catch(IOException err) {
+           err.printStackTrace(); // todo: implement proper error handeling
+        }
+	}
 }

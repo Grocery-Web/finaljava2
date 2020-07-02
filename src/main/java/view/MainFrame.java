@@ -43,7 +43,7 @@ public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
 
 //	INTERFACE LISTERNER
-	private ComplaintListener cplListener;
+	private FormComplaintListener cplListener;
 
 //	DAO
 	private PersonDAO personDAO;
@@ -142,14 +142,23 @@ public class MainFrame extends JFrame {
 		});
 
 //		FORM LISTENER
-		complaintForm.setFormListener(new ComplaintListener() {
+		complaintForm.setFormListener(new FormComplaintListener() {
 			@Override
-			public void complaintListener(Complaint cpt) {
+			public void insertEventListener(Complaint cpt) {
 				complaintDAO.addComplaint(cpt);
 				complaintPanel.setData(complaintDAO.getAllComplaints());
 				complaintPanel.refresh();
 			}
 		});
+		
+//		personForm.setFormListener(new FormComplaintListener() {
+//			@Override
+//			public void insertEventListener(Complaint cpt) {
+//				complaintDAO.addComplaint(cpt);
+//				complaintPanel.setData(complaintDAO.getAllComplaints());
+//				complaintPanel.refresh();
+//			}
+//		});
 
 // 		COMPLAINTS TABLE LISTENER
 		complaintPanel.setTableListener(new TableComplaintsListener() {

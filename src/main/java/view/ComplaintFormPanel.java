@@ -37,7 +37,7 @@ public class ComplaintFormPanel extends JPanel{
 	private JScrollPane scroll;
 	
 //	INTERFACE LISTERNER
-	private ComplaintListener cplListener;
+	private FormComplaintListener cplListener;
 	
 	public ComplaintFormPanel() {
 		Dimension dim = getPreferredSize();
@@ -79,7 +79,7 @@ public class ComplaintFormPanel extends JPanel{
 				Complaint cpt = new Complaint(getName, getTime, getPlace, getDeclarantName, getDetails, false);
 				
 				if(cplListener != null) {
-					cplListener.complaintListener(cpt);
+					cplListener.insertEventListener(cpt);
 				}
 			}
 		});
@@ -173,7 +173,7 @@ public class ComplaintFormPanel extends JPanel{
 //		End of Edit Form
 	}
 
-	public void setFormListener(ComplaintListener cplListener) {
+	public void setFormListener(FormComplaintListener cplListener) {
 		this.cplListener = cplListener;
 	}
 }
