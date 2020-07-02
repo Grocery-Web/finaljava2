@@ -26,8 +26,9 @@ import javax.swing.border.Border;
 import entity.Complaint;
 
 public class ComplaintFormPanel extends JPanel{
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
+	private JTextField name;
 	private JTextField datetime;
 	private JTextField place;
 	private JTextField declarantName;
@@ -44,6 +45,7 @@ public class ComplaintFormPanel extends JPanel{
 		setPreferredSize(dim);
 		setMinimumSize(dim);
 		
+		name =  new JTextField(10);
 		datetime = new JTextField(10);
 		place = new JTextField(10);
 		declarantName = new JTextField(10);
@@ -60,6 +62,8 @@ public class ComplaintFormPanel extends JPanel{
 //		ACTION PERFORM ON SUBMIT BUTTON
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String getName = name.getText();
+				
 				Date getTime = null;
 				try {
 					getTime = formatter.parse(datetime.getText());
@@ -72,7 +76,7 @@ public class ComplaintFormPanel extends JPanel{
 				String getDeclarantName = declarantName.getText();
 				String getDetails = detail.getText();
 				
-				Complaint cpt = new Complaint(getTime, getPlace, getDeclarantName, getDetails, false);
+				Complaint cpt = new Complaint(getName, getTime, getPlace, getDeclarantName, getDetails, false);
 				
 				if(cplListener != null) {
 					cplListener.complaintListener(cpt);
@@ -95,19 +99,31 @@ public class ComplaintFormPanel extends JPanel{
 		
 //		This form just have one column, therefore we just use weightY to allocate the space between each components
 		
-		/////////////// DATETIME ///////////////////
+		/////////////// NAME ///////////////////
 		gc.weighty = 0.1; // assign at least small additional space between each component on Vertical
 		
 		gc.gridx = 0;
 		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(new JLabel("DateTime: "),gc);
+		add(new JLabel("Name: "),gc);
 		
 		gc.gridx = 1;
 		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.LINE_START;
-		add(datetime, gc);
+		add(name, gc);
+		
+		/////////////// DATETIME ///////////////////
+		gc.gridy++;
+		gc.gridx = 0;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(new JLabel("DateTime: "),gc);
+		
+		gc.gridy = 1;
+		gc.gridx = 1;
+		gc.anchor = GridBagConstraints.LINE_START;
+		add(datetime,gc);
 		
 		/////////////// PLACE ///////////////////
 		gc.gridy++;
@@ -116,7 +132,7 @@ public class ComplaintFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Place: "),gc);
 		
-		gc.gridy = 1;
+		gc.gridy = 2;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(place,gc);
@@ -128,7 +144,7 @@ public class ComplaintFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Declarant Name: "),gc);
 		
-		gc.gridy = 2;
+		gc.gridy = 3;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(declarantName,gc);
@@ -140,7 +156,7 @@ public class ComplaintFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Details: "),gc);
 		
-		gc.gridy = 3;
+		gc.gridy = 4;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(scroll,gc);
@@ -149,8 +165,9 @@ public class ComplaintFormPanel extends JPanel{
 		gc.weighty = 2; //all additional space below will be distributed to this component on Vertical
 		
 		gc.gridy++;
-		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
+		gc.gridx = 0;
+		gc.anchor = GridBagConstraints.PAGE_START;
+		gc.gridwidth = 2;
 		add(submitBtn,gc);
 		
 //		End of Edit Form

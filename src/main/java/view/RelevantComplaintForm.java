@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import entity.Complaint;
+import entity.ComplaintDetailEntity;
 import entity.Person;
 
 public class RelevantComplaintForm extends JDialog {
@@ -31,6 +32,7 @@ public class RelevantComplaintForm extends JDialog {
 	private JLabel nameField;
 	private JComboBox<Complaint> cplDetailBox;
 	private FilterComboBox fcb;
+	private RelevantFormListener revListener;
 
 	public RelevantComplaintForm(Person per, List<Complaint> listComplaint) {
 		setTitle("Person in Complaints");
@@ -42,16 +44,22 @@ public class RelevantComplaintForm extends JDialog {
 		for (Complaint complaint : listComplaint) {
 			cplDetailBox.addItem(complaint);
 		}
-		System.out.println(cplDetailBox.getSelectedItem());
 		
 		fcb = new FilterComboBox(Arrays.asList("Assault and Battery", "Kidnapping", "Homicide", "Rape", "False Imprisonment",
 				"Theft", "Arson", "False Pretenses", "White Collar Crimes", "Receipt of Stolen Goods"));
-		System.out.println(fcb.getSelectedItem());
 		layoutControls();
 
 		okBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				ComplaintDetailEntity comDetail = new ComplaintDetailEntity();
+				
+				comDetail.setCompId(((Complaint) cplDetailBox.getSelectedItem()).getId());
+				comDetail.setPersonId(per.getId());
+				comDetail.setCrimeType((String) fcb.getSelectedItem());		
+				
+				if (revListener != null) {
+					revListener.formEventListener(comDetail);
+				}
 			}
 		});
 
@@ -61,7 +69,7 @@ public class RelevantComplaintForm extends JDialog {
 			}
 		});
 
-		setSize(340, 250);
+		setSize(500, 300);
 		setLocationRelativeTo(null);
 	}
 
@@ -135,4 +143,7 @@ public class RelevantComplaintForm extends JDialog {
 		add(buttonsPanel, BorderLayout.SOUTH);
 	}
 
+	public void setFormListener(RelevantFormListener revListener) {
+		this.revListener = revListener;
+	}
 }

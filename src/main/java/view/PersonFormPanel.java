@@ -512,9 +512,9 @@ public class PersonFormPanel extends JPanel {
 		gc.weighty = 2; //all additional space below will be distributed to this component on Vertical
 		
 		gc.gridy++;
-		gc.gridx = 1;
-		gc.ipady = 0;
-		gc.anchor = GridBagConstraints.FIRST_LINE_START;
+		gc.gridx = 0;
+		gc.anchor = GridBagConstraints.PAGE_START;
+		gc.gridwidth = 2;
 		add(submitBtn,gc);
 		
 //		End of Edit Form

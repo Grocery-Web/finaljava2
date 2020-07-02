@@ -22,8 +22,10 @@ import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import dao.ComplaintDAO;
+import dao.ComplaintDetailDAO;
 import dao.PersonDAO;
 import entity.Complaint;
+import entity.ComplaintDetailEntity;
 import entity.Person;
 
 public class MainFrame extends JFrame {
@@ -46,6 +48,7 @@ public class MainFrame extends JFrame {
 //	DAO
 	private PersonDAO personDAO;
 	private ComplaintDAO complaintDAO;
+	private ComplaintDetailDAO comDetailDAO;
 	
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetail cplDetailFrame;
@@ -91,6 +94,7 @@ public class MainFrame extends JFrame {
 //		CREAT DAO
 		personDAO = new PersonDAO();
 		complaintDAO = new ComplaintDAO();
+		comDetailDAO = new ComplaintDetailDAO();
 
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
@@ -188,6 +192,12 @@ public class MainFrame extends JFrame {
 				List<Complaint> listComplaints = complaintDAO.getAllComplaints();
 				relComplain = new RelevantComplaintForm(per,listComplaints);
 				relComplain.setVisible(true);
+				relComplain.setFormListener(new RelevantFormListener() {
+					@Override
+					public void formEventListener(ComplaintDetailEntity comDetail) {
+						comDetailDAO.setComplaintDetail(comDetail);
+					}
+				});
 			}
 		});
 
@@ -196,7 +206,7 @@ public class MainFrame extends JFrame {
 		add(toolbar, BorderLayout.PAGE_START);
 
 		setMinimumSize(new Dimension(700, 600));
-		setSize(10000, 800);
+		setSize(1000, 800);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);

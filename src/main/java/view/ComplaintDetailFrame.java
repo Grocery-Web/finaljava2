@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder;
 import entity.Complaint;
 
 public class ComplaintDetailFrame extends JFrame {
-	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 	
 	private JPanel contentPane;
 	private JButton updateBtn;
@@ -35,16 +35,16 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		
 		
-		updateBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					var complaint = new Complaint(formatter.parse("2001-12-01"), "HCM", "Thang", "aaaa", false);
-					cplDetailListener.updateEventListener(complaint);
-				} catch (ParseException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
+//		updateBtn.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				try {
+//					var complaint = new Complaint(formatter.parse("2001-12-01"), "HCM", "Thang", "aaaa", false);
+//					cplDetailListener.updateEventListener(complaint);
+//				} catch (ParseException e1) {
+//					e1.printStackTrace();
+//				}
+//			}
+//		});
 		
 		contentPane.add(updateBtn, BorderLayout.CENTER);
 	}
