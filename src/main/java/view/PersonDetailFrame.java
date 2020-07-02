@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.awt.event.ActionEvent;
 
-public class PersonDetail extends JFrame {
+public class PersonDetailFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblNewLabel_1;
@@ -67,7 +67,7 @@ public class PersonDetail extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PersonDetail frame = new PersonDetail();
+					PersonDetailFrame frame = new PersonDetailFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -79,7 +79,7 @@ public class PersonDetail extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public PersonDetail() {
+	public PersonDetailFrame() {
 		setTitle("Personal Details");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 565, 562);
@@ -349,9 +349,10 @@ public class PersonDetail extends JFrame {
 	}
 	protected void btnGetDataactionPerformed(ActionEvent e) {
 		var ps = new PersonDetailDAO().getInfoDetail(181);
-		var url ="/images/person.png";
-		Image imgPerson = new ImageIcon(this.getClass().getResource(url)).getImage().getScaledInstance(150, 150, Image.SCALE_FAST);
-		labelIMG.setIcon(new ImageIcon(imgPerson));
+//		var url ="/images/person.png";
+//		Image imgPerson = new ImageIcon(this.getClass().getResource(url)).getImage().getScaledInstance(150, 150, Image.SCALE_FAST);
+//		labelIMG.setIcon(new ImageIcon(imgPerson));
+		System.out.println(file.getName());
 	}
 	protected void btnUploadImageactionPerformed(ActionEvent e){
 		JFileChooser filechooser = new JFileChooser();
@@ -364,7 +365,7 @@ public class PersonDetail extends JFrame {
 	    if (returnval == JFileChooser.APPROVE_OPTION)
 	    {
 	        file = filechooser.getSelectedFile();
-	        System.out.println(file.getAbsolutePath());
+//	        System.out.println(file.getAbsolutePath());
 	        BufferedImage bi;
 	        try {
 	            // display the image in a Jlabel
@@ -373,10 +374,9 @@ public class PersonDetail extends JFrame {
 	            
 	            // save image 
 	            BufferedImage img = ImageIO.read(file);
-	            System.out.println("Read OK " + img);
 	            try {
-					String location = "E:/img/" + file.getName();
-					 System.out.println("Location OK "+ location);
+					String location = System.getProperty("user.dir") + "/src/main/resources/images/" + file.getName();
+//					 System.out.println("Location OK "+ location);
 					String format = "PNG";
 					ImageIO.write(img, format, new File(location));
 					
