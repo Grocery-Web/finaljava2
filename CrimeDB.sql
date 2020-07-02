@@ -317,6 +317,19 @@ go
 
 /* END PROCEDURE COMPLAINT */
 
+/* PROCEDURE COMPLAINT DETAIL*/
+-- insert detail
+create proc setComplaintDetail
+@personId int, @compId int,  @crimeType nvarchar(50)
+as
+begin
+	insert into ComplaintDetail (personId, compId,crimeType)
+	values(@personId, @compId, @crimeType)
+end
+go
+
+/* END PROCEDURE COMPLAINT DETAIL */
+
 /* INSERT DATA IN TABLE*/ 
 
 -- table PersonDetail 

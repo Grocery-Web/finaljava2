@@ -30,7 +30,7 @@ public class RelevantComplaintForm extends JDialog {
 	private JButton okBtn;
 	private JButton cancelBtn;
 	private JLabel nameField;
-	private JComboBox<Complaint> cplDetailBox;
+	private FilterComplaintComboBox cplDetailBox;
 	private FilterComboBox fcb;
 	private RelevantFormListener revListener;
 
@@ -40,13 +40,11 @@ public class RelevantComplaintForm extends JDialog {
 		cancelBtn = new JButton("Cancel");
 		nameField = new JLabel(per.getName());
 
-		cplDetailBox = new JComboBox<Complaint>();
-		for (Complaint complaint : listComplaint) {
-			cplDetailBox.addItem(complaint);
-		}
+		cplDetailBox = new FilterComplaintComboBox(listComplaint);
 		
 		fcb = new FilterComboBox(Arrays.asList("Assault and Battery", "Kidnapping", "Homicide", "Rape", "False Imprisonment",
 				"Theft", "Arson", "False Pretenses", "White Collar Crimes", "Receipt of Stolen Goods"));
+		
 		layoutControls();
 
 		okBtn.addActionListener(new ActionListener() {
