@@ -210,6 +210,19 @@ go
 
 /* PROCEDURE ACCOUNT */
 
+/* PROCEDURE COMPLAINT DETAIL */
+
+-- find Complaint Detail by Person and Complaint ID
+create proc findCompDetailByPersonComplaintId
+@personId int
+@compId int
+as 
+begin
+	select * FROM ComplaintDetail WHERE personId = @personId AND compId = @compId
+end 
+
+/* END PROCEDURE COMPLAINT DETAIL */
+
 -- Create proc to add new Account
 CREATE PROCEDURE addAccount
 	@UserID varchar(20),
