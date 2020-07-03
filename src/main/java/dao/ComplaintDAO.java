@@ -3,6 +3,7 @@ package dao;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ public class ComplaintDAO {
 			while (rs.next()) {
 				Complaint com = new Complaint();
 				com.setId(rs.getInt("id"));
+				com.setName(rs.getString("complaintName"));
 				com.setDatetime(rs.getDate("datetime"));
 				com.setPlace(rs.getString("place"));
 				com.setDeclarantName(rs.getString("declarantName"));
@@ -42,14 +44,15 @@ public class ComplaintDAO {
 	public void addComplaint(Complaint cpt) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call addComplaint(?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call addComplaint(?,?,?,?,?,?)}");
 			) 
 		{
-			ps.setDate(1, new java.sql.Date(cpt.getDatetime().getTime()));
-			ps.setString(2, cpt.getPlace());
-			ps.setString(3, cpt.getDeclarantName());
-			ps.setString(4, cpt.getDetail());
-			ps.setBoolean(5, cpt.isStatus());
+			ps.setString(1, cpt.getName());
+			ps.setDate(2, new java.sql.Date(cpt.getDatetime().getTime()));
+			ps.setString(3, cpt.getPlace());
+			ps.setString(4, cpt.getDeclarantName());
+			ps.setString(5, cpt.getDetail());
+			ps.setBoolean(6, cpt.isStatus());
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Insert new complaint successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
