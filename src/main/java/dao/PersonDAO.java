@@ -109,4 +109,21 @@ public class PersonDAO {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	public void deletePerson(int id) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call deletePerson(?)}");
+			) 
+		{
+			ps.setInt(1, id);;
+			if (ps.executeUpdate() > 0) {
+				JOptionPane.showMessageDialog(null, "Delete person successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "PersonalID not found", "Failed", JOptionPane.ERROR_MESSAGE);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }
