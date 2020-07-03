@@ -31,7 +31,7 @@ go
 create table Person (
 	id int primary key,
 	name nvarchar(50),
-	gender bit,
+	gender bit NOT NULL CHECK (gender IN('male', 'female')),
 	dob date,
 	address nvarchar(MAX),
 	image varchar(100),
@@ -233,6 +233,7 @@ begin
 end
 go
 
+/*Find Person by ID*/
 create proc findPersonById
 @id int
 as
@@ -240,6 +241,27 @@ begin
 	select * FROM Person WHERE id = @id; 
 end
 go
+
+/*insert new person*/
+create proc insertPerson
+@id int, @name nvarchar(50), @gender bit,  @dob date, @address nvarchar(MAX), @image varchar(100),@nationality varchar(50),@job varchar(20)
+as
+begin
+	insert into Person (id, name, gender,dob,address,image,nationality,job)
+	values(@id, @name, @gender, @dob, @address, @image, @nationality, @job)
+end
+go
+
+/*delete person*/
+
+CREATE PROC deletePerson
+	@id int
+AS
+BEGIN
+	DELETE FROM Person
+	WHERE id = @id
+END
+GO
 
 /*Find By ID*/
 GO	
@@ -274,6 +296,8 @@ begin
 
 end
 go
+
+
 
 /* END PROCEDURE PERSON */
 

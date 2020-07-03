@@ -174,7 +174,7 @@ public class ComplaintFormPanel extends JPanel{
 				String getDeclarantName = declarantName.getText();
 				String getDetails = detail.getText();
 				
-				Complaint cpt = new Complaint(getDate, getPlace, getDeclarantName, getDetails, false);
+				Complaint cpt = new Complaint(getName, getDate, getPlace, getDeclarantName, getDetails, false);
 				
 				if(cplListener != null) {
 					cplListener.insertEventListener(cpt);
@@ -291,34 +291,46 @@ public class ComplaintFormPanel extends JPanel{
 		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(new JLabel("Date: "),gc);
 		add(new JLabel("Name: "),gc);
 		
 		gc.gridx = 1;
 		gc.gridy = 0;
-		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(name, gc);
 		
+		/////////////// DATE ///////////////////
+		gc.gridy++;
+		gc.gridx = 0;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(new JLabel("Date: "),gc);
+		
+		gc.gridy = 1;
+		gc.gridx = 1;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.anchor = GridBagConstraints.LINE_START;
+		add(complaintDate, gc);
+		
 		gc.gridx = 2;
-		gc.gridy = 0;
+		gc.gridy = 1;
 		gc.anchor = GridBagConstraints.LINE_END;
 		add(q1, gc);
 		
+		/////////////// TIME ///////////////////
 		gc.gridy++;
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Time: "), gc);
 		
-		gc.gridy = 1;
+		gc.gridy = 2;
 		gc.gridx = 1;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(timeSpinner, gc);
 		
-		gc.gridy = 1;
 		gc.gridx = 2;
+		gc.gridy = 2;
 		gc.anchor = GridBagConstraints.LINE_END;
 		add(q2, gc);
 		
@@ -329,12 +341,12 @@ public class ComplaintFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Place: "),gc);
 		
-		gc.gridy = 2;
+		gc.gridy = 3;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(place,gc);
 		
-		gc.gridy = 2;
+		gc.gridy = 3;
 		gc.gridx = 2;
 		gc.anchor = GridBagConstraints.LINE_END;
 		add(q3, gc);
@@ -346,12 +358,12 @@ public class ComplaintFormPanel extends JPanel{
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Declarant Name: "),gc);
 		
-		gc.gridy = 3;
+		gc.gridy = 4;
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(declarantName,gc);
 		
-		gc.gridy = 3;
+		gc.gridy = 4;
 		gc.gridx = 2;
 		gc.anchor = GridBagConstraints.LINE_END;
 		add(q4, gc);
@@ -369,7 +381,7 @@ public class ComplaintFormPanel extends JPanel{
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(scroll,gc);
 		
-		gc.gridy = 5;
+		gc.gridy = 6;
 		gc.gridx = 2;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(q5, gc);
