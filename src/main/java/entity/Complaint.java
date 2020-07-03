@@ -5,6 +5,7 @@ import java.util.EventObject;
 
 public class Complaint{
 	private int id;
+	private String name;
 	private Date datetime;
 	private String place;
 	private String declarantName;
@@ -13,8 +14,9 @@ public class Complaint{
 	
 	public Complaint() {}
 	
-	public Complaint(int id, Date datetime, String place, String declarantName, String detail, boolean status) {
+	public Complaint(int id, String name, Date datetime, String place, String declarantName, String detail, boolean status) {
 		this.id = id;
+		this.name = name;
 		this.datetime = datetime;
 		this.place = place;
 		this.declarantName = declarantName;
@@ -22,7 +24,8 @@ public class Complaint{
 		this.status = status;
 	}
 	
-	public Complaint(Date datetime, String place, String declarantName, String detail, boolean status) {
+	public Complaint(String name, Date datetime, String place, String declarantName, String detail, boolean status) {
+		this.name = name;
 		this.datetime = datetime;
 		this.place = place;
 		this.declarantName = declarantName;
@@ -36,6 +39,14 @@ public class Complaint{
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Date getDatetime() {
@@ -80,7 +91,6 @@ public class Complaint{
 
 	@Override
 	public String toString() {
-		return "Complaint [id=" + id + ", datetime=" + datetime + ", place=" + place + ", declarantName="
-				+ declarantName + ", detail=" + detail + ", status=" + status + "]";
+		return name;
 	}
 }

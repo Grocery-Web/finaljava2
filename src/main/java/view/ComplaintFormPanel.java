@@ -39,10 +39,12 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import entity.Complaint;
 
 public class ComplaintFormPanel extends JPanel{
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	private JDateChooser complaintDate;
 	private JTextFieldDateEditor editor;
 	private JSpinner timeSpinner;
+	private JTextField name;
 	private JTextField place;
 	private JTextField declarantName;
 	private JTextArea detail;
@@ -56,7 +58,7 @@ public class ComplaintFormPanel extends JPanel{
 	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 //	INTERFACE LISTERNER
-	private ComplaintListener cplListener;
+	private FormComplaintListener cplListener;
 	
 	public ComplaintFormPanel() {
 		Dimension dim = getPreferredSize();
@@ -92,6 +94,7 @@ public class ComplaintFormPanel extends JPanel{
 		});
 		q2 = new JLabel(); q2.setPreferredSize(new Dimension(10, 20));
 		
+		name =  new JTextField(10);
 		place = new JTextField(10);
 		place.getDocument().addDocumentListener(new DocumentListener() {			
 			@Override
@@ -166,6 +169,7 @@ public class ComplaintFormPanel extends JPanel{
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Date getDate = complaintDate.getDate();
+				String getName = name.getText();
 				String getPlace = place.getText();
 				String getDeclarantName = declarantName.getText();
 				String getDetails = detail.getText();
@@ -173,7 +177,7 @@ public class ComplaintFormPanel extends JPanel{
 				Complaint cpt = new Complaint(getDate, getPlace, getDeclarantName, getDetails, false);
 				
 				if(cplListener != null) {
-					cplListener.complaintListener(cpt);
+					cplListener.insertEventListener(cpt);
 				}
 			}
 		});
@@ -280,7 +284,7 @@ public class ComplaintFormPanel extends JPanel{
 		
 //		This form just have one column, therefore we just use weightY to allocate the space between each components
 		
-		/////////////// DATETIME ///////////////////
+		/////////////// NAME ///////////////////
 		gc.weighty = 0.1; // assign at least small additional space between each component on Vertical
 		
 		gc.gridx = 0;
@@ -288,12 +292,13 @@ public class ComplaintFormPanel extends JPanel{
 		gc.anchor = GridBagConstraints.LINE_START;
 		gc.insets = new Insets(0, 0, 0, 5);
 		add(new JLabel("Date: "),gc);
+		add(new JLabel("Name: "),gc);
 		
 		gc.gridx = 1;
 		gc.gridy = 0;
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.LINE_START;
-		add(complaintDate, gc);
+		add(name, gc);
 		
 		gc.gridx = 2;
 		gc.gridy = 0;
@@ -380,7 +385,7 @@ public class ComplaintFormPanel extends JPanel{
 //		End of Edit Form
 	}
 
-	public void setFormListener(ComplaintListener cplListener) {
+	public void setFormListener(FormComplaintListener cplListener) {
 		this.cplListener = cplListener;
 	}
 }
