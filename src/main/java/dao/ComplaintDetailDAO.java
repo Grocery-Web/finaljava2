@@ -13,27 +13,24 @@ import entity.ComplaintDetail;
 import entity.Gender;
 
 public class ComplaintDetailDAO {
-	public ComplaintDetail findCompDetailByPersonId(int personId, int compId) {
-		ComplaintDetail compDetail = new ComplaintDetail();
+	public List<Integer> findAllPersonByComplaintId(int id) {
+		List<Integer> personIdList = new ArrayList<Integer>(); 
 		
 		try(
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call findCompDetailByPersonComplaintId(?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call findAllPersonByComplaintId(?)}");
 		)
 		{
-			ps.setInt(1, personId);
-			ps.setInt(2, compId);
+			ps.setInt(1, id);
+	
 			var rs = ps.executeQuery();
 			while (rs.next()) {
-				compDetail.setId(rs.getInt("id"));
-				compDetail.setPersonId(rs.getInt("personId"));
-				compDetail.setCompId(rs.getInt("compId"));
-				compDetail.setCrimeType(rs.getString("crimeType"));
+				personIdList.add(rs.getInt("personId"));
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 		
-		return compDetail;
+		return personIdList;
 	}
 }

@@ -8,11 +8,11 @@ import entity.Complaint;
 import entity.Person;
 import entity.ComplaintDetail;
 
-public class ComplaintDetailModelTable extends AbstractTableModel {
+public class ComplaintDetailTableModel extends AbstractTableModel {
 	private List<Person> db;
 	private String[] colNames = {"Person ID", "Name", "Dob", "Gender", "Address", "Nationality", "Job", "Crime Type"};
 	
-	public ComplaintDetailModelTable() {}
+	public ComplaintDetailTableModel() {}
 	
 	public void setData(List<Person> db) {
 		this.db = db;
@@ -71,7 +71,7 @@ public class ComplaintDetailModelTable extends AbstractTableModel {
 			return person.getJob();
 		}
 		case 7: {
-			return 1;
+			return "abc";
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
