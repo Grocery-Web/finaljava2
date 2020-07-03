@@ -95,7 +95,6 @@ public class PersonDetailFrame extends JFrame {
 		txtJob.setText(person.getJob());		
 		datePerson.setDate(person.getDob());
 		txtGender.setText(person.getGender().toString());
-		
 		var url ="images/" + person.getImage();
 		Image imgPerson = 
 				new ImageIcon(
@@ -104,6 +103,8 @@ public class PersonDetailFrame extends JFrame {
 					).getImage().getScaledInstance(200, 300, Image.SCALE_FAST);
 		
 		lblImgUser.setIcon(new ImageIcon(imgPerson));
+		
+		userInFrame = new Person();
 		
 		userInFrame.setId(person.getId());
 		userInFrame.setName(person.getName());
