@@ -154,9 +154,17 @@ public class MainFrame extends JFrame {
 		personForm.setFormListener(new FormPersonListener() {
 			@Override
 			public void insertEventListener(Person per) {
-				personDAO.addPerson(per);
-				personPanel.setData(personDAO.getAllAccount());
-				personPanel.refresh();
+				int personalID = per.getId();
+				Person findPerson = personDAO.findPersonById(personalID);
+				System.out.println(findPerson);
+				if(findPerson.getId() == 0) {
+					personDAO.addPerson(per);
+					personPanel.setData(personDAO.getAllAccount());
+					personPanel.refresh();
+				}else {
+					JOptionPane.showMessageDialog(MainFrame.this, "PersonalID has already existed. Try again!!",  
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 
@@ -178,7 +186,6 @@ public class MainFrame extends JFrame {
 				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
 					@Override
 					public void updateEventListener(Complaint cpl) {
-						// TODO Auto-generated method stub
 						System.out.println(cpl);
 					}
 				});
