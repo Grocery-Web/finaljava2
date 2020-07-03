@@ -265,35 +265,39 @@ public class PersonFormPanel extends JPanel {
 //		Button Action Perform
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				String ext = file.getName();
-//				System.out.println(ext.substring(ext.lastIndexOf(".")));
+//				Rename file with name of Personal ID
 				
-//				Person per = new Person();
-//				per.setId(Integer.parseInt(personalID.getText()));
-//				per.setName(nameField.getText());
-//				
-//				Gender genderCat;
-//				String gender = genderGroup.getSelection().getActionCommand();
-//				
-//				if(gender == "male") {
-//					genderCat = Gender.male;
-//				}else {
-//					genderCat = Gender.female;
-//				}
-//				per.setGender(genderCat);
-//				per.setDob(new java.sql.Date(dob.getDate().getTime()));
-//				per.setAddress(address.getText());
-//				per.setNationality(nationality.getText());
-//				per.setJob(occupationField.getText());
-//				
-//
-//				
-//				
-//				if(formListener != null) {
-//					formListener.insertEventListener(per);
-//				}
-				
+				File renamedFile = null;
+				try {
+					renamedFile = renameFile(file, personalID.getText());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				saveImage(file);
+				
+				Person per = new Person();
+				per.setId(Integer.parseInt(personalID.getText()));
+				per.setName(nameField.getText());
+				
+				Gender genderCat;
+				String gender = genderGroup.getSelection().getActionCommand();
+				
+				if(gender == "male") {
+					genderCat = Gender.male;
+				}else {
+					genderCat = Gender.female;
+				}
+				per.setGender(genderCat);
+				per.setDob(new java.sql.Date(dob.getDate().getTime()));
+				per.setAddress(address.getText());
+				per.setNationality(nationality.getText());
+				per.setJob(occupationField.getText());
+				per.setImage(renamedFile.getName());
+				
+				if(formListener != null) {
+					formListener.insertEventListener(per);
+				}
 			}
 		});
 		
@@ -564,7 +568,7 @@ public class PersonFormPanel extends JPanel {
 		this.formListener = formListener;
 	}
 	
-	public void saveImage(File file) {
+	private void saveImage(File file) {
         BufferedImage bi;
         try {
             // display the image in a Jlabel
@@ -574,7 +578,6 @@ public class PersonFormPanel extends JPanel {
             BufferedImage img = ImageIO.read(file);
             try {
 				String location = System.getProperty("user.dir") + "/src/main/resources/images/" + file.getName();
-				System.out.println("Location OK "+ location);
 				String format = "PNG";
 				ImageIO.write(img, format, new File(location));
 				
@@ -587,4 +590,19 @@ public class PersonFormPanel extends JPanel {
            err.printStackTrace(); // todo: implement proper error handeling
         }
 	}
+	
+	private File renameFile(File toBeRenamed, String new_name)
+		    throws IOException {
+		    //need to be in the same path
+		    File fileWithNewName = new File(toBeRenamed.getParent(), new_name + ".png");
+		    if (fileWithNewName.exists()) {
+		        throw new IOException("file exists");
+		    }
+		    // Rename file (or directory)
+		    boolean success = toBeRenamed.renameTo(fileWithNewName);
+		    if (!success) {
+		        // File was not successfully renamed
+		    }
+			return fileWithNewName;
+		}
 }
