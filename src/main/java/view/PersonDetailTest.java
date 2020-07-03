@@ -59,6 +59,7 @@ public class PersonDetailTest extends JFrame {
 	Person person = null;
 	int ID;
 	private JButton btnClose;
+	private JButton btnDelete;
 	
 
 	/**
@@ -114,14 +115,14 @@ public class PersonDetailTest extends JFrame {
 	private void initPersonDetailFrame() {
 		setTitle("Person Detail");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 558, 446);
+		setBounds(100, 100, 558, 483);
 		contentPane = new JPanel();
 		contentPane.setBorder(new TitledBorder(null, "Information", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setContentPane(contentPane);
 		
 		lblImgUser = new JLabel("");
 		
-		btnUpload = new JButton("Browse...");
+		btnUpload = new JButton("Update Image");
 		btnUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnUploadactionPerformed(e);
@@ -184,16 +185,27 @@ public class PersonDetailTest extends JFrame {
 				btnCloseactionPerformed(e);
 			}
 		});
-		btnClose.setForeground(Color.RED);
+		btnClose.setForeground(Color.BLUE);
 		btnClose.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnDeleteactionPerformed(e);
+			}
+		});
+		btnDelete.setForeground(Color.RED);
+		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(10)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+							.addGap(10)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
@@ -202,40 +214,42 @@ public class PersonDetailTest extends JFrame {
 									.addGap(53)
 									.addComponent(btnUpload)))
 							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblAddress, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(datePerson, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtGender, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtName))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtJob, GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtNation, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)))
-								.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap(42, Short.MAX_VALUE))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+									.addComponent(btnDelete, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+									.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblAddress, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(datePerson, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtGender, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtName))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtNation, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtJob)))))
+					.addContainerGap(44, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(14)
-					.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(btnSave)
 					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblImgUser, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)
@@ -267,8 +281,9 @@ public class PersonDetailTest extends JFrame {
 					.addGap(31)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnUpload)
-						.addComponent(btnSave))
-					.addContainerGap(14, Short.MAX_VALUE))
+						.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnDelete, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
@@ -320,5 +335,18 @@ public class PersonDetailTest extends JFrame {
 	}
 	protected void btnCloseactionPerformed(ActionEvent e) {
 		this.setVisible(false);
+	}
+	protected void btnDeleteactionPerformed(ActionEvent e) {
+		PersonDAO psDAO = new PersonDAO();
+		try {
+			psDAO.deleteByID(ID);
+			String path = System.getProperty("user.dir") + "/src/main/resources/images/" + ID + ".png";
+			File deleteFile = new File(path);
+			deleteFile.delete();
+			this.setVisible(false);
+			
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(null, "Something went wrong. Please try again ...");
+		}
 	}
 }

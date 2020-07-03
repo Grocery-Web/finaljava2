@@ -354,7 +354,7 @@ public class PersonDetailFrame extends JFrame {
 //		var url ="/images/person.png";
 //		Image imgPerson = new ImageIcon(this.getClass().getResource(url)).getImage().getScaledInstance(150, 150, Image.SCALE_FAST);
 //		labelIMG.setIcon(new ImageIcon(imgPerson));
-		PersonDetailTest newFrame = new PersonDetailTest(181);
+		PersonDetailTest newFrame = new PersonDetailTest(182);
 		newFrame.setVisible(true);
 		
 	}

@@ -190,6 +190,15 @@ begin
 end
 go
 
+create proc deleteById 
+@id int
+as
+begin
+	delete from Person
+	where @id = id
+end
+go
+
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */

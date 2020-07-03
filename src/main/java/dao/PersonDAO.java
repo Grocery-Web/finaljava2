@@ -113,4 +113,18 @@ public class PersonDAO {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	public void deleteByID (int id) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call deleteById(?)}");
+			) 
+		{
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Deleted account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }
