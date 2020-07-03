@@ -9,7 +9,7 @@ import entity.Person;
 
 public class ComplaintTableModel extends AbstractTableModel{
 	private List<Complaint> db;
-	private String[] colNames = {"Id", "Datetime", "Place", "Declaration People", "Detail", "Status"};
+	private String[] colNames = {"Id", "Name" , "Datetime", "Place", "Declaration People", "Detail"};
 	
 	public ComplaintTableModel() {}
 	
@@ -52,19 +52,19 @@ public class ComplaintTableModel extends AbstractTableModel{
 			return complaint.getId();
 		}
 		case 1: {
-			return complaint.getDatetime();
+			return complaint.getName();
 		}
 		case 2: {
-			return complaint.getPlace();
+			return complaint.getDatetime();
 		}
 		case 3: {
-			return complaint.getDeclarantName();
+			return complaint.getPlace();
 		}
 		case 4: {
-			return complaint.getDetail();
+			return complaint.getDeclarantName();
 		}
 		case 5: {
-			return complaint.isStatus();
+			return complaint.getDetail();
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
