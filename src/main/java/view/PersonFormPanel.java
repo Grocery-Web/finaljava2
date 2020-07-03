@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
@@ -61,7 +62,7 @@ public class PersonFormPanel extends JPanel {
 	private JRadioButton maleRadio;
 	private JRadioButton femaleRadio;
 	private ButtonGroup genderGroup;
-	private boolean cd1, cd2, cd3, cd4, cd5, cd6;
+	private boolean cd1, cd2, cd3, cd4, cd5, cd6, cd7;
 	private JLabel q1, q2, q3, q4, q5, q6;
 	private JScrollPane scroll;
 	private FormPersonListener formListener;
@@ -247,6 +248,7 @@ public class PersonFormPanel extends JPanel {
 				}
 				Image dimg = img.getScaledInstance(imgLabel.getWidth(), imgLabel.getHeight(), Image.SCALE_SMOOTH);
 				imgLabel.setIcon(new ImageIcon(dimg));
+				cd7 = true; checkUnlock();
 			}
 		};
 		maleRadio.addActionListener(gender);
@@ -263,6 +265,9 @@ public class PersonFormPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
+				fc.setAcceptAllFileFilterUsed(false);
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images (jpg, gif, png)", "jpg","gif","png");
+				fc.setFileFilter(filter);
 				int result = fc.showOpenDialog(null);
 				if (result == JFileChooser.APPROVE_OPTION) {
 					file = fc.getSelectedFile();
@@ -414,7 +419,7 @@ public class PersonFormPanel extends JPanel {
 	}
 
 	private void checkUnlock() {
-		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5 && cd6;
+		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5 && cd6 && cd7;
 		submitBtn.setEnabled(unlock);
 	}
 
