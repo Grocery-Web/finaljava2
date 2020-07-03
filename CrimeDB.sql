@@ -166,6 +166,8 @@ begin
 end
 go
 
+
+
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */
@@ -220,6 +222,15 @@ as
 begin
 	select * FROM ComplaintDetail WHERE personId = @personId AND compId = @compId
 end 
+
+-- select all people in table
+@id int
+create proc findAllPersonByComplaintId
+as 
+begin
+	select personId from ComplaintDetail where compId = @id;  
+end 
+go
 
 /* END PROCEDURE COMPLAINT DETAIL */
 
