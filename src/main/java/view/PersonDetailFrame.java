@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.awt.event.ActionEvent;
+import javax.swing.JList;
 
 public class PersonDetailFrame extends JFrame {
 
@@ -59,6 +60,7 @@ public class PersonDetailFrame extends JFrame {
 	private JLabel labelIMG;
 	private JButton btnUploadImage;
 	File file = null;
+	
 
 	/**
 	 * Launch the application.
@@ -264,7 +266,7 @@ public class PersonDetailFrame extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
@@ -304,7 +306,7 @@ public class PersonDetailFrame extends JFrame {
 							.addGap(18))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(labelIMG, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
 							.addComponent(btnUploadImage)
 							.addGap(55)))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
@@ -352,7 +354,9 @@ public class PersonDetailFrame extends JFrame {
 //		var url ="/images/person.png";
 //		Image imgPerson = new ImageIcon(this.getClass().getResource(url)).getImage().getScaledInstance(150, 150, Image.SCALE_FAST);
 //		labelIMG.setIcon(new ImageIcon(imgPerson));
-		System.out.println(file.getName());
+		PersonDetailTest newFrame = new PersonDetailTest(181);
+		newFrame.setVisible(true);
+		
 	}
 	protected void btnUploadImageactionPerformed(ActionEvent e){
 		JFileChooser filechooser = new JFileChooser();
@@ -388,7 +392,6 @@ public class PersonDetailFrame extends JFrame {
 	        } catch(IOException err) {
 	           err.printStackTrace(); // todo: implement proper error handeling
 	        }
-	        this.pack();
 	    }
 	}
 }

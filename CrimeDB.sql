@@ -166,6 +166,30 @@ begin
 end
 go
 
+create proc updatePersonById
+@id int,
+@name nvarchar(50),
+@gender bit,
+@dob date,
+@address nvarchar(100),
+@img nvarchar(100),
+@nation nvarchar(100),
+@job nvarchar(100)
+as
+begin
+	update Person
+	SET 
+		name = @name,
+		gender = @gender,
+		dob = @dob,
+		address = @address,
+		image = @img,
+		nationality = @nation,
+		job = @job
+	WHERE id = @id
+end
+go
+
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */
