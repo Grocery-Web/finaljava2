@@ -151,14 +151,14 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
-//		personForm.setFormListener(new FormComplaintListener() {
-//			@Override
-//			public void insertEventListener(Complaint cpt) {
-//				complaintDAO.addComplaint(cpt);
-//				complaintPanel.setData(complaintDAO.getAllComplaints());
-//				complaintPanel.refresh();
-//			}
-//		});
+		personForm.setFormListener(new FormPersonListener() {
+			@Override
+			public void insertEventListener(Person per) {
+				personDAO.addPerson(per);
+				personPanel.setData(personDAO.getAllAccount());
+				personPanel.refresh();
+			}
+		});
 
 // 		COMPLAINTS TABLE LISTENER
 		complaintPanel.setTableListener(new TableComplaintsListener() {

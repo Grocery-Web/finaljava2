@@ -209,6 +209,7 @@ public class PersonFormPanel extends JPanel {
 		genderGroup.add(maleRadio);
 		genderGroup.add(femaleRadio);
 //		using ButtonGroup to ensure that only one values chosen at one time
+		maleRadio.setSelected(true);
 		maleRadio.setActionCommand("male");
 		femaleRadio.setActionCommand("female");
 		ActionListener gender = new ActionListener() {
@@ -266,17 +267,9 @@ public class PersonFormPanel extends JPanel {
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 //				Rename file with name of Personal ID
-				
 				File renamedFile = null;
-				try {
-					renamedFile = renameFile(file, personalID.getText());
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				saveImage(file);
-				
 				Person per = new Person();
+					
 				per.setId(Integer.parseInt(personalID.getText()));
 				per.setName(nameField.getText());
 				
@@ -293,7 +286,24 @@ public class PersonFormPanel extends JPanel {
 				per.setAddress(address.getText());
 				per.setNationality(nationality.getText());
 				per.setJob(occupationField.getText());
-				per.setImage(renamedFile.getName());
+				
+				if(file != null) {
+					
+					try {
+						renamedFile = renameFile(file, personalID.getText());
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					saveImage(renamedFile);
+					per.setImage(renamedFile.getName());
+				}else {
+					if(gender == "male") {
+						per.setImage("male.png");
+					}else {
+						per.setImage("female.png");
+					}
+				}
+				
 				
 				if(formListener != null) {
 					formListener.insertEventListener(per);
@@ -569,11 +579,7 @@ public class PersonFormPanel extends JPanel {
 	}
 	
 	private void saveImage(File file) {
-        BufferedImage bi;
         try {
-            // display the image in a Jlabel
-            bi = ImageIO.read(file);
-
             // save image 
             BufferedImage img = ImageIO.read(file);
             try {
@@ -582,7 +588,6 @@ public class PersonFormPanel extends JPanel {
 				ImageIO.write(img, format, new File(location));
 				
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
             
