@@ -45,7 +45,8 @@ public class ComplaintDetailDAO {
 				PersonDAO personDAO = new PersonDAO();
 				int personId = rs.getInt("personId");
 				String crimeType = rs.getString("crimeType");
-				Person person = PersonDAO.findPersonById(personId);
+				Person person = personDAO.findPersonById(personId);
+				personMap.put(person, crimeType);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
