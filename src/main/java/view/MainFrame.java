@@ -264,6 +264,15 @@ public class MainFrame extends JFrame {
 				detailPersonFrame.setVisible(true);
 				detailPersonFrame.setLocationRelativeTo(null);
 				
+				detailPersonFrame.setFormListener(new PersonDetailListener() {
+					
+					@Override
+					public void formEventListener(int id) {
+						// TODO Auto-generated method stub
+						System.out.println(id);
+					}
+				});
+				
 			}
 		});
 

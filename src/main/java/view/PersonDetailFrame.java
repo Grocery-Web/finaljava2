@@ -62,6 +62,7 @@ public class PersonDetailFrame extends JFrame {
 	private JLabel lblId;
 	private JTextField txtID;
 	Person userInFrame;
+	private PersonDetailListener psListen;
 	
 
 	/**
@@ -113,6 +114,10 @@ public class PersonDetailFrame extends JFrame {
 		userInFrame.setJob(person.getJob());
 		userInFrame.setDob(person.getDob());
 		userInFrame.setGender(person.getGender());
+		
+		if (psListen !=null) {
+			psListen.formEventListener(person.getId());
+		}
 		
 		
 	}
@@ -360,17 +365,27 @@ public class PersonDetailFrame extends JFrame {
 	protected void btnCloseactionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
+	
+	public void setFormListener(PersonDetailListener psListener) {
+		this.psListen = psListener;
+		
+	}
 	protected void btnDeleteactionPerformed(ActionEvent e) {
-		PersonDAO psDAO = new PersonDAO();
-		try {
-			psDAO.deleteByID(ID);
-			String path = System.getProperty("user.dir") + "/src/main/resources/images/" + ID + ".png";
-			File deleteFile = new File(path);
-			deleteFile.delete();
-			this.setVisible(false);
-			
-		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(null, "Something went wrong. Please try again ...");
+//		PersonDAO psDAO = new PersonDAO();
+//		try {
+//			psDAO.deleteByID(ID);
+//			String path = System.getProperty("user.dir") + "/src/main/resources/images/" + ID + ".png";
+//			File deleteFile = new File(path);
+//			deleteFile.delete();
+//			this.setVisible(false);
+//			
+//		} catch (Exception e2) {
+//			JOptionPane.showMessageDialog(null, "Something went wrong. Please try again ...");
+//		}
+		if (psListen !=null) {
+			psListen.formEventListener(userInFrame.getId());
 		}
+		
+		
 	}
 }
