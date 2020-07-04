@@ -29,7 +29,7 @@ import dao.ComplaintDAO;
 import dao.ComplaintDetailDAO;
 import dao.PersonDAO;
 import entity.Complaint;
-import entity.ComplaintDetailEntity;
+import entity.ComplaintDetail;
 import entity.Person;
 
 public class MainFrame extends JFrame {
@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
 	private ComplaintDetailDAO comDetailDAO;
 
 //	EXTERNAL FRAME OR DIALOG
-	private ComplaintDetail cplDetailFrame;
+	private ComplaintDetailFrame cplDetailFrame;
 	private RelevantComplaintForm relComplain;
 
 	/**
@@ -208,7 +208,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDetail(int id) {
 				Complaint complaint = complaintDAO.findComplaintById(id);
-				cplDetailFrame = new ComplaintDetail(complaint);
+				cplDetailFrame = new ComplaintDetailFrame(complaint);
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setLocationRelativeTo(null);
 				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
@@ -249,7 +249,7 @@ public class MainFrame extends JFrame {
 				relComplain.setVisible(true);
 				relComplain.setFormListener(new RelevantFormListener() {
 					@Override
-					public void formEventListener(ComplaintDetailEntity comDetail) {
+					public void formEventListener(ComplaintDetail comDetail) {
 						comDetailDAO.setComplaintDetail(comDetail);
 					}
 				});
