@@ -271,6 +271,12 @@ public class MainFrame extends JFrame {
 						// TODO Auto-generated method stub
 						System.out.println(id);
 					}
+
+					@Override
+					public void updateEventListener(Person acc) {
+						// TODO Auto-generated method stub
+						System.out.println(acc);
+					}
 				});
 				
 			}
