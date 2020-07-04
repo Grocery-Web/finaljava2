@@ -29,7 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import dao.PersonDAO;
-import dao.PersonDetailDAO;
 import entity.Gender;
 import entity.Person;
 
@@ -345,6 +344,8 @@ public class PersonDetailFrame extends JFrame {
 		userInFrame.setNationality(txtNation.getText());
 		userInFrame.setJob(txtJob.getText());
 		userInFrame.setDob( datePerson.getDate());
+		userInFrame.setImage(Integer.toString(userInFrame.getId())+".png");
+		System.out.println(userInFrame);
 		if (txtGender.getText() == "male") {
 			userInFrame.setGender(Gender.male);
 		}
