@@ -6,8 +6,8 @@ public class ComplaintDetail {
 	private int compId;
 	private String crimeType;
 	
-	public ComplaintDetail() {};
-	
+	public ComplaintDetail() {}
+
 	public ComplaintDetail(int id, int personId, int compId, String crimeType) {
 		this.id = id;
 		this.personId = personId;
@@ -52,7 +52,4 @@ public class ComplaintDetail {
 		return "ComplaintDetail [id=" + id + ", personId=" + personId + ", compId=" + compId + ", crimeType="
 				+ crimeType + "]";
 	}
-	
-	
-	
 }
