@@ -130,21 +130,99 @@ create table IncidentDetail (
 )
 go
 
-/* person details table */
-create table PersonDetail (
-	id int primary key,
-	name nvarchar(50),
-	gender bit,
-	dob date,
-	address nvarchar(MAX),
-	image varchar(100),
-	nationality varchar(50),
-	job varchar(20),
-	blood varchar(5),
-	height int,
-	note nvarchar(300)
-)
+/* PROCEDURE PERSON */
+
+-- select all people in table
+create proc getAllPerson
+as
+begin
+	select * from Person
+end
 go
+
+create proc findPersonById
+@id int
+as
+begin
+	select * FROM Person WHERE id = @id; 
+end
+go
+
+create proc updatePersonById
+@id int,
+@name nvarchar(50),
+@gender bit,
+@dob date,
+@address nvarchar(100),
+@img nvarchar(100),
+@nation nvarchar(100),
+@job nvarchar(100)
+as
+begin
+	update Person
+	SET 
+		name = @name,
+		gender = @gender,
+		dob = @dob,
+		address = @address,
+		image = @img,
+		nationality = @nation,
+		job = @job
+	WHERE id = @id
+end
+go
+
+create proc deleteById 
+@id int
+as
+begin
+	delete from Person
+	where @id = id
+end
+go
+
+/* END PROCEDURE PERSON */
+
+/* PROCEDURE COMPLAINT */
+
+-- select all Complaints in table
+create proc getAllComplaints
+as
+begin
+	select * from Complaint
+end
+go
+
+-- insert a new Complaint
+create proc addComplaint
+@datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX),@verifyStatus bit
+as
+begin
+	insert into Complaint (datetime,place,declarantName,detail,verifyStatus)
+	values(@datetime, @place, @declarantName, @detail, @verifyStatus)
+end
+go
+
+-- delete Complaint by ID
+create proc deleteComplaint
+@id int
+as
+begin
+	DELETE FROM Complaint WHERE id = @id; 
+end
+go
+
+-- find Complaint by ID
+create proc findComplaintById
+@id int
+as
+begin
+	select * FROM Complaint WHERE id = @id; 
+end
+go
+
+/* END PROCEDURE COMPLAINT */
+
 
 /* END CREATE TABLES */ 
 
@@ -266,36 +344,7 @@ GO
 /*Find By ID*/
 GO	
 
-CREATE PROC getPersonDetail
-	@UserID varchar(20)
-AS
-BEGIN
-	SELECT * FROM PersonDetail
-	WHERE id = @UserID 
-END
-GO
 
-/*Update Person*/
-create proc updatePersonDetail
-	@id int,
-	@name nvarchar(50),
-	@gender bit,
-	@dob date,
-	@address nvarchar(MAX),
-	@image varchar(100),
-	@nationality varchar(50),
-	@job varchar(20),
-	@blood varchar(5),
-	@height int,
-	@note nvarchar(300)
-as
-begin
-	update PersonDetail
-	SET name = @name
-	WHERE id = @id
-
-end
-go
 
 /* END PROCEDURE PERSON */
 
@@ -371,26 +420,6 @@ go
 /* END PROCEDURE COMPLAINT DETAIL */
 
 /* INSERT DATA IN TABLE*/ 
-
--- table PersonDetail 
-insert into PersonDetail values (181, 'Thang', 1, '1999-08-05', 'HCM', '181.png', 'Vietnamese', 'Student', 'A', 165,' Some default text 1')
-insert into PersonDetail values (182, 'Hoang', 1, '1989-02-15', 'HN', '182.png', 'Vietnamese', 'Teacher',  'A', 186,' Some default text 2')
-insert into PersonDetail values (183, 'Son', 1, '1995-12-05', 'Da Nang', '183.png', 'Vietnamese', 'Engineer',  'B', 150,' Some default text 3')
-insert into PersonDetail values (184, 'Kien', 1, '1997-10-21', 'HCM', '184.png', 'Vietnamese', 'Student',  'O', 140,' Some default text 4')
-insert into PersonDetail values (152, 'Trung', 1, '1992-07-12', 'HN', '152.png', 'Vietnamese', 'Singer',  'A', 198,' Some default text 5')
-insert into PersonDetail values (153, 'Jenny', 0, '1982-05-26', 'Lao Cai', '153.png', 'American', 'Tailor',  'A', 189,' Some default text 6')
-insert into PersonDetail values (155, 'Nguyen', 1, '1985-12-12', 'HCM', '155.png', 'Vietnamese', 'Builder',  'B', 187,' Some default text 7')
-insert into PersonDetail values (174, 'Thao', 0, '1996-06-09', 'HCM', '174.png', 'Vietnamese', 'Dancer',  'A', 156,' Some default text 8')
-insert into PersonDetail values (175, 'Ha', 0, '1980-02-01', 'HN', '175.png', 'Vietnamese', 'Farmer',  'O', 155,' Some default text 9')
-insert into PersonDetail values (176, 'Linh', 0, '2000-09-18', 'Can Tho', '176.png', 'Vietnamese', 'Student',  'O', 151,' Some default text 10')
-insert into PersonDetail values (177, 'Hung', 1, '1983-11-29', 'Ha Tinh', '177.png', 'Vietnamese', 'Teacher',  'A', 157,' Some default text 11')
-insert into PersonDetail values (115, 'Phong', 1, '1976-02-14', 'HCM', '115.png', 'Vietnamese', 'Doctor',  'A', 166,' Some default text 12')
-insert into PersonDetail values (116, 'Xuan', 0, '1988-06-02', 'Thanh Hoa', '116.png', 'Vietnamese', 'Freelancer',  'A', 165,' Some default text 13')
-insert into PersonDetail values (118, 'Hang', 0, '1986-11-10', 'HCM', '118.png', 'Vietnamese', 'Cashier',  'B', 157,' Some default text 14')
-insert into PersonDetail values (121, 'Cuong', 1, '1996-04-26', 'HN', '121.png', 'Vietnamese', 'Pilot',  'A', 159,' Some default text 15')
-insert into PersonDetail values (122, 'Tra', 0, '1990-07-17', 'HCM', '122.png', 'Vietnamese', 'Nurse',  'A', 169,' Some default text 16')
-insert into PersonDetail values (125, 'Long', 1, '1986-10-20', 'HCM', '125.png', 'Vietnamese', 'Painter',  'B', 196,' Some default text 17')
-insert into PersonDetail values (166, 'Ngoc', 0, '1992-08-07', 'Ca Mau', '166.png', 'Vietnamese', 'Secretary',  'A', 144,' Some default text 18')
 
 -- table Person
 insert into Person values (181, 'Thang', 1, '1999-08-05', 'HCM', '181.png', 'Vietnamese', 'Student')

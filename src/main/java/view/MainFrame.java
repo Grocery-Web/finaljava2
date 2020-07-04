@@ -57,6 +57,7 @@ public class MainFrame extends JFrame {
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
 	private RelevantComplaintForm relComplain;
+	private PersonDetailFrame detailPersonFrame;
 
 	/**
 	 * Launch the application.
@@ -253,6 +254,31 @@ public class MainFrame extends JFrame {
 						comDetailDAO.setComplaintDetail(comDetail);
 					}
 				});
+			}
+
+			@Override
+			public void tableEventPersonDetail(int id) {
+				Person per = personDAO.findPersonById(id);
+				
+				detailPersonFrame = new PersonDetailFrame(per);
+				detailPersonFrame.setVisible(true);
+				detailPersonFrame.setLocationRelativeTo(null);
+				
+				detailPersonFrame.setFormListener(new PersonDetailListener() {
+					
+					@Override
+					public void formEventListener(int id) {
+						// TODO Auto-generated method stub
+						System.out.println(id);
+					}
+
+					@Override
+					public void updateEventListener(Person acc) {
+						// TODO Auto-generated method stub
+						System.out.println(acc);
+					}
+				});
+				
 			}
 		});
 
