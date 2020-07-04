@@ -1,15 +1,14 @@
 package entity;
 
-public class ComplaintDetailEntity {
+public class ComplaintDetail {
 	private int id;
 	private int personId;
 	private int compId;
 	private String crimeType;
 	
-	public ComplaintDetailEntity() {}
+	public ComplaintDetail() {}
 
-	public ComplaintDetailEntity(int id, int personId, int compId, String crimeType) {
-		super();
+	public ComplaintDetail(int id, int personId, int compId, String crimeType) {
 		this.id = id;
 		this.personId = personId;
 		this.compId = compId;

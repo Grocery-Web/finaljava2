@@ -31,7 +31,7 @@ go
 create table Person (
 	id int primary key,
 	name nvarchar(50),
-	gender bit NOT NULL CHECK (gender IN('male', 'female')),
+	gender bit NOT NULL,
 	dob date,
 	address nvarchar(MAX),
 	image varchar(100),
@@ -397,6 +397,24 @@ begin
 	insert into ComplaintDetail (personId, compId,crimeType)
 	values(@personId, @compId, @crimeType)
 end
+go
+
+-- find Complaint Detail by Person and Complaint ID
+create proc findCompDetailByPersonComplaintId
+@personId int, @compId int
+as 
+begin
+	select * FROM ComplaintDetail WHERE personId = @personId AND compId = @compId
+end 
+go
+
+-- select all people in table
+create proc findAllPersonByComplaintId
+@id int
+as 
+begin
+	select personId from ComplaintDetail where compId = @id;  
+end 
 go
 
 /* END PROCEDURE COMPLAINT DETAIL */
