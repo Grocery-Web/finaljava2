@@ -6,15 +6,16 @@ import javax.swing.table.AbstractTableModel;
 
 import entity.Complaint;
 import entity.Person;
+import entity.Suspect;
 import entity.ComplaintDetail;
 
 public class ComplaintDetailTableModel extends AbstractTableModel {
-	private List<Person> db;
+	private List<Suspect> db;
 	private String[] colNames = {"Person ID", "Name", "Dob", "Gender", "Address", "Nationality", "Job", "Crime Type"};
 	
 	public ComplaintDetailTableModel() {}
 	
-	public void setData(List<Person> db) {
+	public void setData(List<Suspect> db) {
 		this.db = db;
 	}
 	
@@ -46,32 +47,32 @@ public class ComplaintDetailTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Person person = db.get(rowIndex);
+		Suspect suspect = db.get(rowIndex);
 		
 		switch (columnIndex) {
 		case 0: {
-			return person.getId();
+			return suspect.getPerson().getId();
 		}
 		case 1: {
-			return person.getName();
+			return suspect.getPerson().getName();
 		}
 		case 2: {
-			return person.getDob();
+			return suspect.getPerson().getDob();
 		}
 		case 3: {
-			return person.getGender();
+			return suspect.getPerson().getGender();
 		}
 		case 4: {
-			return person.getAddress();
+			return suspect.getPerson().getAddress();
 		}
 		case 5: {
-			return person.getNationality();
+			return suspect.getPerson().getNationality();
 		}
 		case 6: {
-			return person.getJob();
+			return suspect.getPerson().getJob();
 		}
 		case 7: {
-			return "abc";
+			return suspect.getCrimeType();
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
@@ -80,9 +81,9 @@ public class ComplaintDetailTableModel extends AbstractTableModel {
 	
 	@Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        Person per = db.get(rowIndex);
+		Suspect suspect = db.get(rowIndex);
         if (columnIndex == 0) {
-        	per.setId((int) value);
+        	suspect.getPerson().setId((int) value);
         }      
     }
 }
