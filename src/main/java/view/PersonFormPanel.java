@@ -1,8 +1,6 @@
 package view;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,8 +23,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -66,7 +62,7 @@ public class PersonFormPanel extends JPanel {
 	private JRadioButton maleRadio;
 	private JRadioButton femaleRadio;
 	private ButtonGroup genderGroup;
-	private boolean cd1, cd2, cd3, cd4, cd5, cd6;
+	private boolean cd1, cd2, cd3, cd4, cd5, cd6, cd7;
 	private JLabel q1, q2, q3, q4, q5, q6;
 	private JScrollPane scroll;
 	private FormPersonListener formListener;
@@ -251,6 +247,7 @@ public class PersonFormPanel extends JPanel {
 				}
 				Image dimg = img.getScaledInstance(imgLabel.getWidth(), imgLabel.getHeight(), Image.SCALE_SMOOTH);
 				imgLabel.setIcon(new ImageIcon(dimg));
+				cd7 = true; checkUnlock();
 			}
 		};
 		maleRadio.addActionListener(gender);
@@ -262,14 +259,6 @@ public class PersonFormPanel extends JPanel {
 		imgLabel = new JLabel();
 		imgLabel.setBorder(BorderFactory.createEtchedBorder());
 		imgLabel.setPreferredSize(new Dimension(120, 200));
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(getClass().getResource("/images/male.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image dimg = img.getScaledInstance(200, 208, Image.SCALE_SMOOTH);
-		imgLabel.setIcon(new ImageIcon(dimg));
 
 		imgChooser.addActionListener(new ActionListener() {
 			@Override
@@ -430,7 +419,7 @@ public class PersonFormPanel extends JPanel {
 	}
 
 	private void checkUnlock() {
-		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5 && cd6;
+		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5 && cd6 && cd7;
 		submitBtn.setEnabled(unlock);
 	}
 
