@@ -110,7 +110,7 @@ public class PersonDetailFrame extends JFrame {
 				new ImageIcon(
 					getClass().getClassLoader()
 					.getResource(url)
-					).getImage().getScaledInstance(200, 300, Image.SCALE_FAST);
+					).getImage().getScaledInstance(200, 200, Image.SCALE_FAST);
 		
 		lblImgUser.setIcon(new ImageIcon(imgPerson));
 		
@@ -338,7 +338,7 @@ public class PersonDetailFrame extends JFrame {
 	    	BufferedImage bi;
 	    	try {
 	    		 	bi = ImageIO.read(imgChooser);
-	    		 	lblImgUser.setIcon(new ImageIcon(bi.getScaledInstance(200, 300,  Image.SCALE_FAST)));
+	    		 	lblImgUser.setIcon(new ImageIcon(bi.getScaledInstance(200, 200,  Image.SCALE_FAST)));
 			} catch (Exception e2) {
 				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, "Something went wrong. Please try again");
