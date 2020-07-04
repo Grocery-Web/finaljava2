@@ -29,13 +29,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import dao.PersonDAO;
-import dao.PersonDetailDAO;
 import entity.Gender;
 import entity.Person;
 
 import javax.swing.border.TitledBorder;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 public class PersonDetailFrame extends JFrame {
 
@@ -49,7 +50,6 @@ public class PersonDetailFrame extends JFrame {
 	private JLabel lblNationality;
 	private JLabel lblJob;
 	private JTextField txtName;
-	private JTextField txtGender;
 	private JTextField txtAddress;
 	private JTextField txtNation;
 	private JTextField txtJob;
@@ -62,6 +62,10 @@ public class PersonDetailFrame extends JFrame {
 	private JLabel lblId;
 	private JTextField txtID;
 	Person userInFrame;
+	private PersonDetailListener psListen;
+	private JRadioButton rdbtnMale;
+	private JRadioButton rdbtnFemale;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 
 	/**
@@ -87,6 +91,7 @@ public class PersonDetailFrame extends JFrame {
 	
 	public PersonDetailFrame( Person person ) {
 		initPersonDetailFrame();
+		ID = person.getId();
 		
 		txtID.setText(Integer.toString(person.getId()));
 		txtName.setText(person.getName());
@@ -94,16 +99,22 @@ public class PersonDetailFrame extends JFrame {
 		txtNation.setText(person.getNationality());
 		txtJob.setText(person.getJob());		
 		datePerson.setDate(person.getDob());
-		txtGender.setText(person.getGender().toString());
-		
-		var url ="images/" + person.getImage();
+		if (person.getGender().toString() == "male") {
+			rdbtnMale.setSelected(true);
+		}
+		else
+			rdbtnFemale.setSelected(true);
+//		txtGender.setText(person.getGender().toString());
+		var url ="avatar/" + person.getImage();
 		Image imgPerson = 
 				new ImageIcon(
 					getClass().getClassLoader()
 					.getResource(url)
-					).getImage().getScaledInstance(200, 300, Image.SCALE_FAST);
+					).getImage().getScaledInstance(200, 200, Image.SCALE_FAST);
 		
 		lblImgUser.setIcon(new ImageIcon(imgPerson));
+		
+		userInFrame = new Person();
 		
 		userInFrame.setId(person.getId());
 		userInFrame.setName(person.getName());
@@ -112,6 +123,10 @@ public class PersonDetailFrame extends JFrame {
 		userInFrame.setJob(person.getJob());
 		userInFrame.setDob(person.getDob());
 		userInFrame.setGender(person.getGender());
+		
+//		if (psListen !=null) {
+//			psListen.formEventListener(person.getId());
+//		}
 		
 		
 	}
@@ -123,14 +138,15 @@ public class PersonDetailFrame extends JFrame {
 	private void initPersonDetailFrame() {
 		setTitle("Person Detail");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 558, 483);
+		setBounds(100, 100, 560, 546);
 		contentPane = new JPanel();
 		contentPane.setBorder(new TitledBorder(null, "Information", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setContentPane(contentPane);
 		
 		lblImgUser = new JLabel("");
 		
-		btnUpload = new JButton("Update Image");
+		btnUpload = new JButton("Browse ...");
+		btnUpload.setForeground(Color.BLACK);
 		btnUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnUploadactionPerformed(e);
@@ -159,10 +175,6 @@ public class PersonDetailFrame extends JFrame {
 		txtName = new JTextField();
 		txtName.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtName.setColumns(10);
-		
-		txtGender = new JTextField();
-		txtGender.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		txtGender.setColumns(10);
 		
 		txtAddress = new JTextField();
 		txtAddress.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -193,7 +205,7 @@ public class PersonDetailFrame extends JFrame {
 				btnCloseactionPerformed(e);
 			}
 		});
-		btnClose.setForeground(Color.BLUE);
+		btnClose.setForeground(Color.BLACK);
 		btnClose.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		btnDelete = new JButton("Delete");
@@ -211,80 +223,81 @@ public class PersonDetailFrame extends JFrame {
 		txtID = new JTextField();
 		txtID.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtID.setColumns(10);
+		
+		rdbtnMale = new JRadioButton("Male");
+		rdbtnMale.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		buttonGroup.add(rdbtnMale);
+		
+		rdbtnFemale = new JRadioButton("Female");
+		rdbtnFemale.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		buttonGroup.add(rdbtnFemale);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(10)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblImgUser, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(53)
-									.addComponent(btnUpload)))
+							.addComponent(lblImgUser, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(btnUpload, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(btnSave, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(btnClose, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))))
+					.addGap(19)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtID, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtName, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(rdbtnMale, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(rdbtnFemale))
+						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtName))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtGender, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(datePerson, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblAddress, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtNation, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtJob))
-									.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-										.addComponent(btnDelete, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
-										.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE))))))
-					.addContainerGap(44, Short.MAX_VALUE))
+								.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblAddress, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(datePerson, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+								.addComponent(txtAddress, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+								.addComponent(txtNation, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+								.addComponent(txtJob, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))))
+					.addGap(44))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(18)
-					.addComponent(btnSave)
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+					.addGap(65)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblImgUser, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblNewLabel))
-							.addGap(18)
+								.addComponent(lblNewLabel)
+								.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(20)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtGender, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+									.addComponent(rdbtnFemale)
+									.addComponent(rdbtnMale)))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
@@ -303,10 +316,13 @@ public class PersonDetailFrame extends JFrame {
 								.addComponent(txtJob, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))))
 					.addGap(31)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnUpload)
-						.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnDelete, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(43, Short.MAX_VALUE))
+						.addComponent(btnUpload, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnDelete, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
+					.addGap(31)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnSave, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(20, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
@@ -322,7 +338,7 @@ public class PersonDetailFrame extends JFrame {
 	    	BufferedImage bi;
 	    	try {
 	    		 	bi = ImageIO.read(imgChooser);
-	    		 	lblImgUser.setIcon(new ImageIcon(bi.getScaledInstance(200, 300,  Image.SCALE_FAST)));
+	    		 	lblImgUser.setIcon(new ImageIcon(bi.getScaledInstance(200, 200,  Image.SCALE_FAST)));
 			} catch (Exception e2) {
 				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, "Something went wrong. Please try again");
@@ -332,21 +348,27 @@ public class PersonDetailFrame extends JFrame {
 	}
 	protected void btnSaveactionPerformed(ActionEvent e) {
 		
-		PersonDAO psDAO = new PersonDAO();
 		
 		userInFrame.setName(txtName.getText());
 		userInFrame.setAddress(txtAddress.getText());
 		userInFrame.setNationality(txtNation.getText());
 		userInFrame.setJob(txtJob.getText());
 		userInFrame.setDob( datePerson.getDate());
-		if (txtGender.getText() == "male") {
+		userInFrame.setImage(Integer.toString(userInFrame.getId())+".png");
+		if (rdbtnMale.isSelected()) {
 			userInFrame.setGender(Gender.male);
 		}
-		else userInFrame.setGender(Gender.female);
+		else {
+			userInFrame.setGender(Gender.female);
+		}
+//		if (txtGender.getText() == "male") {
+//			userInFrame.setGender(Gender.male);
+//		}
+//		else userInFrame.setGender(Gender.female);
 		if (imgChooser != null) {
 			try {
 				BufferedImage img = ImageIO.read(imgChooser);
-				String location = System.getProperty("user.dir") + "/src/main/resources/images/" + ID + ".png";
+				String location = System.getProperty("user.dir") + "/src/main/resources/avatar/" + ID + ".png";
 				String format = "PNG";
 				ImageIO.write(img, format, new File(location));
 			} catch (IOException e1) {
@@ -354,22 +376,21 @@ public class PersonDetailFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		psDAO.updatePersonByID(ID, userInFrame);
+		psListen.updateEventListener(userInFrame);
 	}
 	protected void btnCloseactionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
+	
+	public void setFormListener(PersonDetailListener psListener) {
+		this.psListen = psListener;
+		
+	}
 	protected void btnDeleteactionPerformed(ActionEvent e) {
-		PersonDAO psDAO = new PersonDAO();
-		try {
-			psDAO.deleteByID(ID);
-			String path = System.getProperty("user.dir") + "/src/main/resources/images/" + ID + ".png";
-			File deleteFile = new File(path);
-			deleteFile.delete();
-			this.setVisible(false);
-			
-		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(null, "Something went wrong. Please try again ...");
+		if (psListen !=null) {
+			psListen.formEventListener(userInFrame.getId());
 		}
+		
+		
 	}
 }

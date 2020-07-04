@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,6 +25,8 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -224,7 +228,6 @@ public class PersonFormPanel extends JPanel {
 		genderGroup.add(maleRadio);
 		genderGroup.add(femaleRadio);
 //		using ButtonGroup to ensure that only one values chosen at one time
-		maleRadio.setSelected(true);
 		maleRadio.setActionCommand("male");
 		femaleRadio.setActionCommand("female");
 		ActionListener gender = new ActionListener() {
@@ -316,6 +319,7 @@ public class PersonFormPanel extends JPanel {
 				if (formListener != null) {
 					formListener.insertEventListener(per, file);
 				}
+				clearForm();
 			}
 		});
 
@@ -597,5 +601,16 @@ public class PersonFormPanel extends JPanel {
 
 	public void setFormListener(FormPersonListener formListener) {
 		this.formListener = formListener;
+	}
+	
+	public void clearForm() {
+		personalID.setText(null);
+		nameField.setText(null);
+		occupationField.setText(null);
+		nationality.setText(null);
+		address.setText(null);
+		imgLabel.setIcon(null);
+		dob.setCalendar(null);
+		genderGroup.clearSelection();
 	}
 }

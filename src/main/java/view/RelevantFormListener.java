@@ -2,8 +2,8 @@ package view;
 
 import java.util.EventListener;
 
-import entity.ComplaintDetailEntity;
+import entity.ComplaintDetail;
 
 public interface RelevantFormListener extends EventListener{
-	public void formEventListener(ComplaintDetailEntity comDetail);
+	public void formEventListener(ComplaintDetail comDetail);
 }

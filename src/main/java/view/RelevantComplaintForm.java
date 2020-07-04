@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import entity.Complaint;
-import entity.ComplaintDetailEntity;
+import entity.ComplaintDetail;
 import entity.Person;
 
 public class RelevantComplaintForm extends JDialog {
@@ -49,7 +49,7 @@ public class RelevantComplaintForm extends JDialog {
 
 		okBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ComplaintDetailEntity comDetail = new ComplaintDetailEntity();
+				ComplaintDetail comDetail = new ComplaintDetail();
 				
 				comDetail.setCompId(((Complaint) cplDetailBox.getSelectedItem()).getId());
 				comDetail.setPersonId(per.getId());
@@ -60,7 +60,7 @@ public class RelevantComplaintForm extends JDialog {
 				}
 			}
 		});
-
+		
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
