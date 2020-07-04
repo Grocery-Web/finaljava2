@@ -12,9 +12,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -48,8 +45,8 @@ public class ComplaintFormPanel extends JPanel{
 	private JTextField place;
 	private JTextField declarantName;
 	private JTextArea detail;
-	private JLabel q1, q2, q3, q4, q5;
-	private boolean cd1, cd2, cd3, cd4, cd5;
+	private JLabel q1, q2, q3, q4, q5, q6;
+	private boolean cd1, cd2, cd3, cd4, cd5, cd6;
 	private JButton submitBtn;
 	private JScrollPane scroll;
 	private String s = Character.toString("\u2713".toCharArray()[0]);
@@ -95,6 +92,27 @@ public class ComplaintFormPanel extends JPanel{
 		q2 = new JLabel(); q2.setPreferredSize(new Dimension(10, 20));
 		
 		name =  new JTextField(10);
+		name.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd6Check();
+				checkUnlock();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd6Check();
+				checkUnlock();				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd6Check();
+				checkUnlock();				
+			}
+		});
+		q6 = new JLabel(); q6.setPreferredSize(new Dimension(10, 20));
+		
 		place = new JTextField(10);
 		place.getDocument().addDocumentListener(new DocumentListener() {			
 			@Override
@@ -272,8 +290,22 @@ public class ComplaintFormPanel extends JPanel{
         }
 	}
 	
+	private void cd6Check() {
+		if (!name.getText().equals("") && name.getText().matches("[a-zA-Z]{3,50}")) {
+        	name.setBorder(new LineBorder(Color.GREEN, 1));
+        	q6.setText(s); q6.setForeground(new Color(0, 153, 51));
+        	q6.setToolTipText(null);
+            cd6 = true;
+        } else {
+        	name.setBorder(new LineBorder(Color.RED, 1));
+        	q6.setText("?"); q6.setForeground(Color.RED);
+        	q6.setToolTipText("3 - 50 alphabet characters");
+        	cd6 = false;
+        }
+	}
+	
 	private void checkUnlock() {
-		boolean unlock = cd1 && cd3 && cd4 && cd5;
+		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5 && cd6;
 		submitBtn.setEnabled(unlock);
 	}
 	
@@ -297,6 +329,11 @@ public class ComplaintFormPanel extends JPanel{
 		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(name, gc);
+		
+		gc.gridx = 2;
+		gc.gridy = 0;
+		gc.anchor = GridBagConstraints.LINE_END;
+		add(q6, gc);
 		
 		/////////////// DATE ///////////////////
 		gc.gridy++;
