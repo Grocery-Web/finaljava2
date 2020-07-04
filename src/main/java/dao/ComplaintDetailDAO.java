@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import common.ConnectToProperties;
 import entity.ComplaintDetail;
 import entity.Person;
+import entity.Suspect;
 import dao.PersonDAO;
 
 public class ComplaintDetailDAO {
@@ -32,8 +33,8 @@ public class ComplaintDetailDAO {
 		return personIdList;
 	}
 	
-	public HashMap<Person, String> getPeopleListByComplaintId(int id) {
-		HashMap<Person, String> personMap = new HashMap<Person, String>();
+	public List<Suspect> getPeopleListByComplaintId(int id) {
+		List<Suspect> suspectList = new ArrayList<Suspect>();
 		
 
 		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
@@ -42,17 +43,18 @@ public class ComplaintDetailDAO {
 
 			var rs = ps.executeQuery();
 			while (rs.next()) {
+				Suspect sus = new Suspect();
 				PersonDAO personDAO = new PersonDAO();
 				int personId = rs.getInt("personId");
-				String crimeType = rs.getString("crimeType");
-				Person person = personDAO.findPersonById(personId);
-				personMap.put(person, crimeType);
+				sus.setCrimeType(rs.getString("crimeType"));
+				sus.setPerson(personDAO.findPersonById(personId));
+				suspectList.add(sus);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 
-		return personMap;
+		return suspectList;
 	}
 
 	public void setComplaintDetail(ComplaintDetail comDetail) {
