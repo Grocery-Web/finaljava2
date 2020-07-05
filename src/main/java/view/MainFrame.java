@@ -45,6 +45,7 @@ public class MainFrame extends JFrame {
 	private ComplaintsPanel complaintPanel;
 	private ComplaintFormPanel complaintForm;
 	private CardLayout cardLayout;
+	private IncidentsPanel incidentPanel;
 
 //	INTERFACE LISTERNER
 	private FormComplaintListener cplListener;
@@ -95,6 +96,7 @@ public class MainFrame extends JFrame {
 		complaintPanel = new ComplaintsPanel();
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
+		incidentPanel =  new IncidentsPanel();
 
 //		CREAT DAO
 		personDAO = new PersonDAO();
@@ -114,10 +116,12 @@ public class MainFrame extends JFrame {
 //		TAB PANE
 		tabPane.addTab("Person Info", personPanel);
 		tabPane.addTab("Complaints", complaintPanel);
+		tabPane.addTab("Incidents", incidentPanel);
 
 //		CALL BACK TABLES
 		personPanel.setData(personDAO.getAllAccount());
 		complaintPanel.setData(complaintDAO.getAllComplaints());
+		incidentPanel.setData(comDetailDAO.getComplaintDetails());
 
 //		TOOLBAR LISTENER
 		toolbar.setToolbarListener(new ToolbarListener() {
@@ -169,9 +173,9 @@ public class MainFrame extends JFrame {
 						saveImage(file);
 						
 //						Find image in path and rename it
-						String path = System.getProperty("user.dir") + "/src/main/resources/images/" + file.getName();
+						String path = System.getProperty("user.dir") + "/src/main/resources/avatar/" + file.getName();
 						File fileInPath = new File(path);
-						System.out.println(fileInPath.getName());
+
 						try {
 							renameFile(fileInPath, Integer.toString(per.getId()));
 						} catch (IOException e) {
@@ -180,7 +184,7 @@ public class MainFrame extends JFrame {
 						
 //						Set name of image in Person
 						per.setImage(personalID + ".png");
-						System.out.println(per);
+
 						personDAO.addPerson(per);
 						personPanel.setData(personDAO.getAllAccount());
 						personPanel.refresh();
@@ -227,7 +231,7 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void tableEventDeleted(int id) {
-				String path = System.getProperty("user.dir") + "/src/main/resources/images/" + id + ".png";
+				String path = System.getProperty("user.dir") + "/src/main/resources/avatar/" + id + ".png";
 				if (path.equalsIgnoreCase("")) {
 					personDAO.deletePerson(id);
 					personPanel.setData(personDAO.getAllAccount());
@@ -343,7 +347,7 @@ public class MainFrame extends JFrame {
 			// save image
 			BufferedImage img = ImageIO.read(file);
 			try {
-				String location = System.getProperty("user.dir") + "/src/main/resources/images/" + file.getName();
+				String location = System.getProperty("user.dir") + "/src/main/resources/avatar/" + file.getName();
 				String format = "PNG";
 				ImageIO.write(img, format, new File(location));
 
