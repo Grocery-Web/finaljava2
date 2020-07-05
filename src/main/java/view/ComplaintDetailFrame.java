@@ -9,13 +9,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import entity.Complaint;
+import entity.Person;
 
 import java.awt.GridBagLayout;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,6 +27,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JButton;
 
 
@@ -30,7 +35,7 @@ public class ComplaintDetailFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textDeclarantName;
-	private JTextField textCompDetail;
+	private JTextArea textCompDetail;
 	private JTextField textCompId;
 	private JTextField textCompDate;
 	private JTextField textCompPlace;
@@ -60,7 +65,7 @@ public class ComplaintDetailFrame extends JFrame {
 	 */
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 752, 540);
+		setBounds(100, 100, 819, 540);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -87,8 +92,10 @@ public class ComplaintDetailFrame extends JFrame {
 		textDeclarantName.setColumns(10);
 		textDeclarantName.setText(cpl.getDeclarantName());
 		
-		textCompDetail = new JTextField();
+		textCompDetail = new JTextArea();
 		textCompDetail.setColumns(10);
+		textCompDetail.setLineWrap(true);
+		textCompDetail.setWrapStyleWord(true);
 		textCompDetail.setText(cpl.getDetail());
 		
 		textCompId = new JTextField();
@@ -103,15 +110,19 @@ public class ComplaintDetailFrame extends JFrame {
 		textCompPlace.setColumns(10);
 		textCompPlace.setText(cpl.getPlace());
 		
-		JLabel lblCriminalList = new JLabel("List of Criminals:");
+		JLabel lblCriminalList = new JLabel("List of Suspect:");
 		
+		tableModel = new ComplaintDetailTableModel();
 		table = new JTable(tableModel);
+		
+		table.setBorder(BorderFactory.createEtchedBorder());
+
 		
 		// ALIGN TEXT IN CENTER
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 8; i++) {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 		
@@ -138,17 +149,7 @@ public class ComplaintDetailFrame extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(37)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblCriminalList)
-							.addGap(18)
-							.addComponent(table, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addComponent(lblCompStatus)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(88)
-							.addComponent(rdbtnUnverified)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(rdbtnApproved))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -165,8 +166,19 @@ public class ComplaintDetailFrame extends JFrame {
 								.addComponent(textCompPlace, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
 								.addComponent(textCompDetail, GroupLayout.PREFERRED_SIZE, 533, GroupLayout.PREFERRED_SIZE)
 								.addComponent(textDeclarantName, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textCompDate, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE))))
-					.addGap(66))
+								.addComponent(textCompDate, GroupLayout.PREFERRED_SIZE, 154, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCriminalList)
+								.addComponent(lblCompStatus))
+							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(rdbtnUnverified)
+									.addGap(14)
+									.addComponent(rdbtnApproved))
+								.addComponent(table, GroupLayout.PREFERRED_SIZE, 592, GroupLayout.PREFERRED_SIZE))))
+					.addGap(72))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -202,8 +214,8 @@ public class ComplaintDetailFrame extends JFrame {
 					.addGap(31)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCompStatus)
-						.addComponent(rdbtnUnverified)
-						.addComponent(rdbtnApproved))
+						.addComponent(rdbtnApproved)
+						.addComponent(rdbtnUnverified))
 					.addGap(17)
 					.addComponent(btnSubmit)
 					.addContainerGap())
@@ -213,5 +225,9 @@ public class ComplaintDetailFrame extends JFrame {
 	
 	public void setFrameListener(ComplaintDetailListener cplDetailListener) {
 		this.cplDetailListener = cplDetailListener;
+	}
+	
+	public void setData(HashMap<Person, String> db) {
+		tableModel.setData(db);
 	}
 }

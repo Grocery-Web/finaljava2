@@ -216,6 +216,7 @@ public class MainFrame extends JFrame {
 				cplDetailFrame = new ComplaintDetailFrame(complaint);
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setLocationRelativeTo(null);
+				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
 				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
 					@Override
 					public void updateEventListener(Complaint cpl) {
