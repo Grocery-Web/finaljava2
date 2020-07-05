@@ -33,8 +33,8 @@ public class ComplaintDetailDAO {
 		return personIdList;
 	}
 	
-	public List<Suspect> getPeopleListByComplaintId(int id) {
-		List<Suspect> suspectList = new ArrayList<Suspect>();
+	public HashMap<Person, String> getPeopleListByComplaintId(int id) {
+		HashMap<Person, String> map = new HashMap<Person, String>();
 		
 
 		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
@@ -43,18 +43,16 @@ public class ComplaintDetailDAO {
 
 			var rs = ps.executeQuery();
 			while (rs.next()) {
-				Suspect sus = new Suspect();
 				PersonDAO personDAO = new PersonDAO();
 				int personId = rs.getInt("personId");
-				sus.setCrimeType(rs.getString("crimeType"));
-				sus.setPerson(personDAO.findPersonById(personId));
-				suspectList.add(sus);
+				Person person = personDAO.findPersonById(personId);		
+				map.put(person, rs.getString("crimeType"));
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 
-		return suspectList;
+		return map;
 	}
 
 	public void setComplaintDetail(ComplaintDetail comDetail) {
