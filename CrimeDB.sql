@@ -130,99 +130,21 @@ create table IncidentDetail (
 )
 go
 
-/* PROCEDURE PERSON */
-
--- select all people in table
-create proc getAllPerson
-as
-begin
-	select * from Person
-end
+/* person details table */
+create table PersonDetail (
+	id int primary key,
+	name nvarchar(50),
+	gender bit,
+	dob date,
+	address nvarchar(MAX),
+	image varchar(100),
+	nationality varchar(50),
+	job varchar(20),
+	blood varchar(5),
+	height int,
+	note nvarchar(300)
+)
 go
-
-create proc findPersonById
-@id int
-as
-begin
-	select * FROM Person WHERE id = @id; 
-end
-go
-
-create proc updatePersonById
-@id int,
-@name nvarchar(50),
-@gender bit,
-@dob date,
-@address nvarchar(100),
-@img nvarchar(100),
-@nation nvarchar(100),
-@job nvarchar(100)
-as
-begin
-	update Person
-	SET 
-		name = @name,
-		gender = @gender,
-		dob = @dob,
-		address = @address,
-		image = @img,
-		nationality = @nation,
-		job = @job
-	WHERE id = @id
-end
-go
-
-create proc deleteById 
-@id int
-as
-begin
-	delete from Person
-	where @id = id
-end
-go
-
-/* END PROCEDURE PERSON */
-
-/* PROCEDURE COMPLAINT */
-
--- select all Complaints in table
-create proc getAllComplaints
-as
-begin
-	select * from Complaint
-end
-go
-
--- insert a new Complaint
-create proc addComplaint
-@datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX),@verifyStatus bit
-as
-begin
-	insert into Complaint (datetime,place,declarantName,detail,verifyStatus)
-	values(@datetime, @place, @declarantName, @detail, @verifyStatus)
-end
-go
-
--- delete Complaint by ID
-create proc deleteComplaint
-@id int
-as
-begin
-	DELETE FROM Complaint WHERE id = @id; 
-end
-go
-
--- find Complaint by ID
-create proc findComplaintById
-@id int
-as
-begin
-	select * FROM Complaint WHERE id = @id; 
-end
-go
-
-/* END PROCEDURE COMPLAINT */
-
 
 /* END CREATE TABLES */ 
 
@@ -340,11 +262,6 @@ BEGIN
 	WHERE id = @id
 END
 GO
-
-/*Find By ID*/
-GO	
-
-
 
 /* END PROCEDURE PERSON */
 
