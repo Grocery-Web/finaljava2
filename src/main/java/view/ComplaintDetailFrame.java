@@ -1,22 +1,36 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import dao.ComplaintDAO;
 import entity.Complaint;
+import entity.ComplaintDetail;
 import entity.Person;
 
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
@@ -39,30 +53,15 @@ public class ComplaintDetailFrame extends JFrame {
 	private JTextField textCompId;
 	private JTextField textCompDate;
 	private JTextField textCompPlace;
+	private JRadioButton rdbtnUnverified, rdbtnApproved;
 	private JTable table;
 	private ComplaintDetailListener cplDetailListener;
+	private TableComplaintDetailListener tableListener;
 	private JTextField textCompName;
 	private ComplaintDetailTableModel tableModel;
+	private JPopupMenu popup;
+	private Complaint complaint;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ComplaintDetail frame = new ComplaintDetail();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the frame.
-	 */
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 819, 540);
@@ -86,7 +85,12 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		textCompName = new JTextField();
 		textCompName.setColumns(10);
-//		textCompName.setText(cpl.getComplaintName());
+		textCompName.setText(cpl.getName());
+		
+		textCompId = new JTextField();
+		textCompId.setColumns(10);
+		textCompId.setText(String.valueOf(cpl.getId()));
+		textCompId.setEditable(false);
 		
 		textDeclarantName = new JTextField();
 		textDeclarantName.setColumns(10);
@@ -97,10 +101,8 @@ public class ComplaintDetailFrame extends JFrame {
 		textCompDetail.setLineWrap(true);
 		textCompDetail.setWrapStyleWord(true);
 		textCompDetail.setText(cpl.getDetail());
-		
-		textCompId = new JTextField();
-		textCompId.setColumns(10);
-		textCompId.setText(String.valueOf(cpl.getId()));
+		JScrollPane jp = new JScrollPane(textCompDetail);
+		textCompDetail.setEditable(true);
 		
 		textCompDate = new JTextField();
 		textCompDate.setColumns(10);
@@ -110,13 +112,14 @@ public class ComplaintDetailFrame extends JFrame {
 		textCompPlace.setColumns(10);
 		textCompPlace.setText(cpl.getPlace());
 		
+//		TABLE LIST OF SUSPECT
 		JLabel lblCriminalList = new JLabel("List of Suspect:");
 		
 		tableModel = new ComplaintDetailTableModel();
 		table = new JTable(tableModel);
 		
 		table.setBorder(BorderFactory.createEtchedBorder());
-
+//		add(new JScrollPane(table));
 		
 		// ALIGN TEXT IN CENTER
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -126,9 +129,43 @@ public class ComplaintDetailFrame extends JFrame {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 		
-		JRadioButton rdbtnUnverified = new JRadioButton("Unverified");
+		// REMOVE PERSON
+		popup = new JPopupMenu();
 		
-		JRadioButton rdbtnApproved = new JRadioButton("Approved");
+		JMenuItem removeItem = new JMenuItem("Remove person");
+		popup.add(removeItem);
+		
+		table.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				int row = table.rowAtPoint(e.getPoint());
+				table.getSelectionModel().setSelectionInterval(row, row);
+
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					// When right click on the row of table, the pop up will be showed up
+					popup.show(table, e.getX(), e.getY());
+				}
+			}
+		});
+		
+		removeItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				int action = JOptionPane.showConfirmDialog(null, "Do you really want to remove this person",
+						"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
+
+				if (action == JOptionPane.OK_OPTION && tableListener != null) {
+					tableListener.tableEventDeleted(id);
+				}
+			}
+		});
+	
+		
+// 		RADIO BUTTON GROUP
+		rdbtnUnverified = new JRadioButton("Unverified");
+		
+		rdbtnApproved = new JRadioButton("Approved");
 		
 		if (cpl.isStatus() == false) {
 			rdbtnUnverified.setSelected(true);
@@ -136,12 +173,28 @@ public class ComplaintDetailFrame extends JFrame {
 			rdbtnApproved.setSelected(true);
 		}
 		
-		//Group the radio buttons.
 	    ButtonGroup group = new ButtonGroup();
 	    group.add(rdbtnUnverified);
 	    group.add(rdbtnApproved);
-		
+	    
+// 		ASSIGN DATA FOR COMPLAINT IN THIS FRAME;
+	    complaint = new Complaint();
+	    complaint.setId(cpl.getId());
+	    complaint.setName(cpl.getName());
+	    complaint.setDatetime(cpl.getDatetime());
+	    complaint.setDeclarantName(cpl.getDeclarantName());
+	    complaint.setDetail(cpl.getDetail());
+	    complaint.setPlace(cpl.getPlace());
+	    complaint.setStatus(cpl.isStatus());
+	    
+//		SUMMIT BUTTON
 		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.setForeground(Color.GREEN);
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnSubmitActionPerformed(e);
+			}
+		});
 		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -229,5 +282,42 @@ public class ComplaintDetailFrame extends JFrame {
 	
 	public void setData(HashMap<Person, String> db) {
 		tableModel.setData(db);
+	}
+	
+	public void refresh() {
+		tableModel.fireTableDataChanged();
+	}
+	
+	public void setTableListener(TableComplaintDetailListener tableListener) {
+		this.tableListener = tableListener;
+	}
+	
+	protected void btnSubmitActionPerformed(ActionEvent e) {
+	    complaint.setId(Integer.parseInt(textCompId.getText()));
+	    complaint.setName(textCompName.getText());
+	    complaint.setDeclarantName(textDeclarantName.getText());
+	    complaint.setDetail(textCompDetail.getText());
+	    complaint.setPlace(textCompPlace.getText());
+	    
+	    String datetime = textCompDate.getText();
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	      //Parsing the given String to Date object
+	    try {
+			complaint.setDatetime(formatter.parse(datetime));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    
+	    if (rdbtnUnverified.isSelected()) {
+	    	complaint.setStatus(false);
+	    } else {
+	    	complaint.setStatus(true);
+	    }
+	    
+	    ComplaintDAO compDAO = new ComplaintDAO();
+	    compDAO.updateComplaintById(complaint.getId(), complaint);
+		
+		cplDetailListener.updateEventListener(complaint);
 	}
 }

@@ -303,6 +303,17 @@ begin
 end
 go
 
+-- update Complaint by ID
+create proc updateComplaintById
+@id int, @name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX), @verifyStatus bit
+as
+begin
+	update Complaint 
+	set complaintName = @name, datetime = @datetime, place = @place, declarantName = @declarantName, detail = @detail, verifyStatus = @verifyStatus
+	where id = @id
+end
+go
+
 /* END PROCEDURE COMPLAINT */
 
 /* PROCEDURE COMPLAINT DETAIL*/
