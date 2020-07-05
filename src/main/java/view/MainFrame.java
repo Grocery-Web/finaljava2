@@ -169,9 +169,9 @@ public class MainFrame extends JFrame {
 						saveImage(file);
 						
 //						Find image in path and rename it
-						String path = System.getProperty("user.dir") + "/src/main/resources/images/" + file.getName();
+						String path = System.getProperty("user.dir") + "/src/main/resources/avatar/" + file.getName();
 						File fileInPath = new File(path);
-						System.out.println(fileInPath.getName());
+
 						try {
 							renameFile(fileInPath, Integer.toString(per.getId()));
 						} catch (IOException e) {
