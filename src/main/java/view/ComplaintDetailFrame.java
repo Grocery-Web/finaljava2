@@ -65,7 +65,7 @@ public class ComplaintDetailFrame extends JFrame {
 
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 540);
+		setBounds(100, 100, 900, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -193,7 +193,7 @@ public class ComplaintDetailFrame extends JFrame {
 	    
 //		SUMMIT BUTTON
 		JButton btnSubmit = new JButton("Submit");
-		btnSubmit.setForeground(Color.GREEN);
+		btnSubmit.setBackground(Color.YELLOW);
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnSubmitActionPerformed(e);
@@ -275,14 +275,14 @@ public class ComplaintDetailFrame extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblSuspectList)
 						.addComponent(jpTable, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblCompStatus)
 								.addComponent(rdbtnUnverified)
 								.addComponent(rdbtnApproved))
-							.addGap(25))
+							.addGap(10))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(btnSubmit)
 							.addContainerGap())))
