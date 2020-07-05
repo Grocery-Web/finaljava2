@@ -86,6 +86,7 @@ public class ComplaintDAO {
 			var rs = ps.executeQuery();
 			while (rs.next()) {
 				com.setId(rs.getInt("id"));
+				com.setName(rs.getString("complaintName"));
 				com.setDatetime(rs.getDate("datetime"));
 				com.setPlace(rs.getString("place"));
 				com.setDeclarantName(rs.getString("declarantName"));
@@ -114,7 +115,7 @@ public class ComplaintDAO {
 			ps.setBoolean(7, cpl.isStatus());			
 		
 			ps.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Update account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Update complaint successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
