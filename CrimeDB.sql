@@ -317,7 +317,7 @@ end
 go
 
 -- find Complaint Detail by Person and Complaint ID
-create proc findCompDetailByPersonComplaintId
+create proc find
 @personId int, @compId int
 as 
 begin
@@ -331,6 +331,14 @@ create proc findAllPersonByComplaintId
 as 
 begin
 	select personId from ComplaintDetail where compId = @id;  
+end 
+go
+
+-- select personID and crimeType in table
+create proc getAllComplaintDetail
+as 
+begin
+	select * from ComplaintDetail;  
 end 
 go
 
