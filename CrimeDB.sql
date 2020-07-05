@@ -342,6 +342,16 @@ begin
 end 
 go
 
+-- remove person from complaint table
+CREATE PROC removePerson
+@personId int, @compId int
+AS
+BEGIN
+	DELETE FROM ComplaintDetail 
+	WHERE personId = @personId AND compId = @compId
+END
+GO
+
 /* END PROCEDURE COMPLAINT DETAIL */
 
 /* INSERT DATA IN TABLE*/ 

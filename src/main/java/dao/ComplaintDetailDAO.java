@@ -87,4 +87,19 @@ public class ComplaintDetailDAO {
 		
 		return complaintDetails;
 	}
+	
+	public void removePerson(int personId, int compId) {
+		try(
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call removePerson(?,?)}");
+		)
+		{
+			ps.setInt(1, personId);
+			ps.setInt(2, compId);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Delete Sucessfully", "Success", JOptionPane.OK_OPTION|JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+	}
 }
