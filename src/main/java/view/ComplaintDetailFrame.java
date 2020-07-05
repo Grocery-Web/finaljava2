@@ -60,11 +60,12 @@ public class ComplaintDetailFrame extends JFrame {
 	private JTextField textCompName;
 	private ComplaintDetailTableModel tableModel;
 	private JPopupMenu popup;
+	private JScrollPane jpTable, jpDetail;
 	private Complaint complaint;
 
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 819, 540);
+		setBounds(100, 100, 900, 540);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -101,8 +102,9 @@ public class ComplaintDetailFrame extends JFrame {
 		textCompDetail.setLineWrap(true);
 		textCompDetail.setWrapStyleWord(true);
 		textCompDetail.setText(cpl.getDetail());
-		JScrollPane jp = new JScrollPane(textCompDetail);
 		textCompDetail.setEditable(true);
+		jpDetail = new JScrollPane(textCompDetail);
+		jpDetail.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		textCompDate = new JTextField();
 		textCompDate.setColumns(10);
@@ -117,9 +119,11 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		tableModel = new ComplaintDetailTableModel();
 		table = new JTable(tableModel);
+		jpTable = new JScrollPane(table);
+		jpTable.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		table.setBorder(BorderFactory.createEtchedBorder());
-//		add(new JScrollPane(table));
+		
 		
 		// ALIGN TEXT IN CENTER
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -218,7 +222,7 @@ public class ComplaintDetailFrame extends JFrame {
 										.addComponent(lblCompDetail))
 									.addGap(18)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(textCompDetail, GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+										.addComponent(jpDetail, GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
 										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 											.addComponent(textDeclarantName)
 											.addComponent(textCompId, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -236,8 +240,8 @@ public class ComplaintDetailFrame extends JFrame {
 											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 											.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 199, GroupLayout.PREFERRED_SIZE))
 										.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-											.addGap(18)
-											.addComponent(table, GroupLayout.PREFERRED_SIZE, 590, GroupLayout.PREFERRED_SIZE)))))
+											.addGap(24)
+											.addComponent(jpTable, GroupLayout.PREFERRED_SIZE, 700, Short.MAX_VALUE)))))
 							.addGap(36))))
 		);
 		gl_contentPane.setVerticalGroup(
@@ -266,11 +270,11 @@ public class ComplaintDetailFrame extends JFrame {
 					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCompDetail)
-						.addComponent(textCompDetail, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE))
+						.addComponent(jpDetail, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblSuspectList)
-						.addComponent(table, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
+						.addComponent(jpTable, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_contentPane.createSequentialGroup()
