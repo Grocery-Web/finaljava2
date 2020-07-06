@@ -15,7 +15,10 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
@@ -39,6 +42,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
+import dao.PersonDAO;
 import entity.Gender;
 import entity.Person;
 
@@ -322,12 +326,27 @@ public class PersonFormPanel extends JPanel {
 
 //	Functions to check for all input fields
 	private void cd1Check() {
+		PersonDAO personDAO = new PersonDAO();
+		List<Person> list = personDAO.getAllPeople();
+		ArrayList<Integer> listID = new ArrayList<Integer>();
+		for (Person ps : list) {
+			listID.add(ps.getId());
+		}
+		
 		if (!personalID.getText().equals("") && personalID.getText().matches("\\d+")) {
-			personalID.setBorder(new LineBorder(Color.GREEN, 1));
-			q1.setText(s);
-			q1.setForeground(new Color(0, 153, 51));
-			q1.setToolTipText(null);
-			cd1 = true;
+			if (listID.contains(Integer.parseInt(personalID.getText()))) {
+				personalID.setBorder(new LineBorder(Color.RED, 1));
+				q1.setText("?");
+				q1.setForeground(Color.RED);
+				q1.setToolTipText("This ID already exists in database.");
+				cd1 = false;
+			} else {
+				personalID.setBorder(new LineBorder(Color.GREEN, 1));
+				q1.setText(s);
+				q1.setForeground(new Color(0, 153, 51));
+				q1.setToolTipText(null);
+				cd1 = true;
+			}
 		} else {
 			personalID.setBorder(new LineBorder(Color.RED, 1));
 			q1.setText("?");
