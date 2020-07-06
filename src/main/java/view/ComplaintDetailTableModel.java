@@ -1,25 +1,28 @@
 package view;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.table.AbstractTableModel;
 
-import entity.Complaint;
 import entity.Person;
-import entity.ComplaintDetail;
 
-public class ComplaintDetailTableModel extends AbstractTableModel {
-	private List<Person> db;
-	private String[] colNames = {"Person ID", "Name", "Dob", "Gender", "Address", "Nationality", "Job", "Crime Type"};
+public class ComplaintDetailTableModel extends AbstractTableModel{
+
+	private HashMap<Person, String> db;
+	private String[] colNames = {"Id", "Name", "Gender", "Date Of Birth", "Occupation", "Nationality", "Address", "Crime Type"};
 	
 	public ComplaintDetailTableModel() {}
 	
-	public void setData(List<Person> db) {
+	public void setData(HashMap<Person, String> db) {
 		this.db = db;
 	}
 	
 	@Override
 	public String getColumnName(int column) {
+		// TODO Auto-generated method stub
 		return colNames[column];
 	}
 
@@ -46,7 +49,13 @@ public class ComplaintDetailTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Person person = db.get(rowIndex);
+		
+		if(rowIndex > getRowCount() || columnIndex > getColumnCount()) {
+			return "";
+		}
+		
+		String crimeType = (new ArrayList<String>(db.values())).get(rowIndex);
+		Person person = (new ArrayList<Person>(db.keySet())).get(rowIndex);
 		
 		switch (columnIndex) {
 		case 0: {
@@ -56,33 +65,26 @@ public class ComplaintDetailTableModel extends AbstractTableModel {
 			return person.getName();
 		}
 		case 2: {
-			return person.getDob();
-		}
-		case 3: {
 			return person.getGender();
 		}
+		case 3: {
+			return person.getDob();
+		}
 		case 4: {
-			return person.getAddress();
+			return person.getJob();
 		}
 		case 5: {
 			return person.getNationality();
 		}
 		case 6: {
-			return person.getJob();
+			return person.getAddress();
 		}
 		case 7: {
-			return "abc";
+			return crimeType;
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
 		}
 	}
-	
-	@Override
-    public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        Person per = db.get(rowIndex);
-        if (columnIndex == 0) {
-        	per.setId((int) value);
-        }      
-    }
+
 }

@@ -86,6 +86,7 @@ public class ComplaintDAO {
 			var rs = ps.executeQuery();
 			while (rs.next()) {
 				com.setId(rs.getInt("id"));
+				com.setName(rs.getString("complaintName"));
 				com.setDatetime(rs.getDate("datetime"));
 				com.setPlace(rs.getString("place"));
 				com.setDeclarantName(rs.getString("declarantName"));
@@ -97,5 +98,30 @@ public class ComplaintDAO {
 		}
 		
 		return com;
+	}
+	
+	public void updateComplaintById(int id, Complaint cpl) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call updateComplaintById(?,?,?,?,?,?,?)}");
+			) 
+		{
+			ps.setInt(1, id);
+			ps.setString(2, cpl.getName());
+			ps.setDate(3, convertJavaDateToSqlDate(cpl.getDatetime()));
+			ps.setString(4, cpl.getPlace());
+			ps.setString(5, cpl.getDeclarantName());
+			ps.setString(6, cpl.getDetail());
+			ps.setBoolean(7, cpl.isStatus());			
+		
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Update complaint successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
+	    return new java.sql.Date(date.getTime());
 	}
 }
