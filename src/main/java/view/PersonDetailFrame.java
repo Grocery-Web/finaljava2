@@ -54,19 +54,19 @@ public class PersonDetailFrame extends JFrame {
 	private JTextField txtNation;
 	private JTextField txtJob;
 	private JButton btnSave;
-	File imgChooser = null;
 	private JDateChooser datePerson;
-	int ID;
 	private JButton btnClose;
 	private JButton btnDelete;
 	private JLabel lblId;
 	private JTextField txtID;
-	Person userInFrame;
 	private PersonDetailListener psListen;
 	private JRadioButton rdbtnMale;
 	private JRadioButton rdbtnFemale;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
+	Person userInFrame;
+	File imgChooser = null;
+	int ID;
 
 	/**
 	 * Launch the application.
@@ -94,6 +94,9 @@ public class PersonDetailFrame extends JFrame {
 		ID = person.getId();
 		
 		txtID.setText(Integer.toString(person.getId()));
+		txtID.setEditable(false);
+		txtID.setEnabled(false);
+		
 		txtName.setText(person.getName());
 		txtAddress.setText(person.getAddress());
 		txtNation.setText(person.getNationality());
@@ -104,7 +107,6 @@ public class PersonDetailFrame extends JFrame {
 		}
 		else
 			rdbtnFemale.setSelected(true);
-//		txtGender.setText(person.getGender().toString());
 		var url ="avatar/" + person.getImage();
 		Image imgPerson = 
 				new ImageIcon(
@@ -123,11 +125,7 @@ public class PersonDetailFrame extends JFrame {
 		userInFrame.setJob(person.getJob());
 		userInFrame.setDob(person.getDob());
 		userInFrame.setGender(person.getGender());
-		
-//		if (psListen !=null) {
-//			psListen.formEventListener(person.getId());
-//		}
-		
+
 		
 	}
 	
@@ -137,7 +135,7 @@ public class PersonDetailFrame extends JFrame {
 
 	private void initPersonDetailFrame() {
 		setTitle("Person Detail");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 560, 546);
 		contentPane = new JPanel();
 		contentPane.setBorder(new TitledBorder(null, "Information", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -198,6 +196,7 @@ public class PersonDetailFrame extends JFrame {
 		btnSave.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		datePerson = new JDateChooser();
+		datePerson.setDateFormatString("yyyy-MM-dd");
 		
 		btnClose = new JButton("Close");
 		btnClose.addActionListener(new ActionListener() {
@@ -221,7 +220,8 @@ public class PersonDetailFrame extends JFrame {
 		lblId.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		txtID = new JTextField();
-		txtID.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtID.setBackground(Color.WHITE);
+		txtID.setFont(new Font("Tahoma", Font.BOLD, 14));
 		txtID.setColumns(10);
 		
 		rdbtnMale = new JRadioButton("Male");
@@ -327,8 +327,9 @@ public class PersonDetailFrame extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 	}
 	protected void btnUploadactionPerformed(ActionEvent e) {
+		
 		JFileChooser filechooser = new JFileChooser();
-		 FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images (jpg, gif, png)", "jpg","gif","png");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images (jpg, gif, png)", "jpg","gif","png");
 		filechooser.setFileFilter(filter);
 	    filechooser.setDialogTitle("Choose Your Avatar");
 	    int returnval = filechooser.showOpenDialog(this);
@@ -348,23 +349,19 @@ public class PersonDetailFrame extends JFrame {
 	}
 	protected void btnSaveactionPerformed(ActionEvent e) {
 		
-		
 		userInFrame.setName(txtName.getText());
 		userInFrame.setAddress(txtAddress.getText());
 		userInFrame.setNationality(txtNation.getText());
 		userInFrame.setJob(txtJob.getText());
 		userInFrame.setDob( datePerson.getDate());
 		userInFrame.setImage(Integer.toString(userInFrame.getId())+".png");
+		
 		if (rdbtnMale.isSelected()) {
 			userInFrame.setGender(Gender.male);
 		}
 		else {
 			userInFrame.setGender(Gender.female);
 		}
-//		if (txtGender.getText() == "male") {
-//			userInFrame.setGender(Gender.male);
-//		}
-//		else userInFrame.setGender(Gender.female);
 		if (imgChooser != null) {
 			try {
 				BufferedImage img = ImageIO.read(imgChooser);
@@ -372,13 +369,13 @@ public class PersonDetailFrame extends JFrame {
 				String format = "PNG";
 				ImageIO.write(img, format, new File(location));
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		userInFrame.setAlive(true);
 		psListen.updateEventListener(userInFrame);
 	}
+	
 	protected void btnCloseactionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
@@ -387,11 +384,10 @@ public class PersonDetailFrame extends JFrame {
 		this.psListen = psListener;
 		
 	}
+	
 	protected void btnDeleteactionPerformed(ActionEvent e) {
 		if (psListen !=null) {
 			psListen.formEventListener(userInFrame.getId());
 		}
-		
-		
 	}
 }
