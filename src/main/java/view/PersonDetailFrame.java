@@ -94,6 +94,9 @@ public class PersonDetailFrame extends JFrame {
 		ID = person.getId();
 		
 		txtID.setText(Integer.toString(person.getId()));
+		txtID.setEditable(false);
+		txtID.setEnabled(false);
+		
 		txtName.setText(person.getName());
 		txtAddress.setText(person.getAddress());
 		txtNation.setText(person.getNationality());
@@ -217,7 +220,8 @@ public class PersonDetailFrame extends JFrame {
 		lblId.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		txtID = new JTextField();
-		txtID.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtID.setBackground(Color.WHITE);
+		txtID.setFont(new Font("Tahoma", Font.BOLD, 14));
 		txtID.setColumns(10);
 		
 		rdbtnMale = new JRadioButton("Male");
@@ -323,6 +327,7 @@ public class PersonDetailFrame extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 	}
 	protected void btnUploadactionPerformed(ActionEvent e) {
+		
 		JFileChooser filechooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images (jpg, gif, png)", "jpg","gif","png");
 		filechooser.setFileFilter(filter);
@@ -344,13 +349,13 @@ public class PersonDetailFrame extends JFrame {
 	}
 	protected void btnSaveactionPerformed(ActionEvent e) {
 		
-		
 		userInFrame.setName(txtName.getText());
 		userInFrame.setAddress(txtAddress.getText());
 		userInFrame.setNationality(txtNation.getText());
 		userInFrame.setJob(txtJob.getText());
 		userInFrame.setDob( datePerson.getDate());
 		userInFrame.setImage(Integer.toString(userInFrame.getId())+".png");
+		
 		if (rdbtnMale.isSelected()) {
 			userInFrame.setGender(Gender.male);
 		}
@@ -370,6 +375,7 @@ public class PersonDetailFrame extends JFrame {
 		userInFrame.setAlive(true);
 		psListen.updateEventListener(userInFrame);
 	}
+	
 	protected void btnCloseactionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
@@ -378,11 +384,10 @@ public class PersonDetailFrame extends JFrame {
 		this.psListen = psListener;
 		
 	}
+	
 	protected void btnDeleteactionPerformed(ActionEvent e) {
 		if (psListen !=null) {
 			psListen.formEventListener(userInFrame.getId());
 		}
-		
-		
 	}
 }
