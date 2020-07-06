@@ -376,6 +376,7 @@ public class PersonDetailFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		userInFrame.setAlive(true);
 		psListen.updateEventListener(userInFrame);
 	}
 	protected void btnCloseactionPerformed(ActionEvent e) {

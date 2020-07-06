@@ -119,7 +119,7 @@ public class MainFrame extends JFrame {
 		tabPane.addTab("Incidents", incidentPanel);
 
 //		CALL BACK TABLES
-		personPanel.setData(personDAO.getAllAccount());
+		personPanel.setData(personDAO.getAllPeople());
 		complaintPanel.setData(complaintDAO.getAllComplaints());
 		incidentPanel.setData(comDetailDAO.getComplaintDetails());
 
@@ -186,11 +186,11 @@ public class MainFrame extends JFrame {
 						per.setImage(personalID + ".png");
 
 						personDAO.addPerson(per);
-						personPanel.setData(personDAO.getAllAccount());
+						personPanel.setData(personDAO.getAllPeople());
 						personPanel.refresh();
 					}else {
 						personDAO.addPerson(per);
-						personPanel.setData(personDAO.getAllAccount());
+						personPanel.setData(personDAO.getAllPeople());
 						personPanel.refresh();
 					}
 
@@ -236,7 +236,7 @@ public class MainFrame extends JFrame {
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
 					personDAO.deletePerson(id);	
-					personPanel.setData(personDAO.getAllAccount());
+					personPanel.setData(personDAO.getAllPeople());
 					personPanel.refresh();
 				}
 			}
@@ -274,7 +274,7 @@ public class MainFrame extends JFrame {
 						if(action == JOptionPane.OK_OPTION) {
 							personDAO.deletePerson(id);
 							detailPersonFrame.setVisible(false);
-							personPanel.setData(personDAO.getAllAccount());
+							personPanel.setData(personDAO.getAllPeople());
 							personPanel.refresh();
 							MainFrame.this.setVisible(true);
 						}
@@ -282,8 +282,11 @@ public class MainFrame extends JFrame {
 
 					@Override
 					public void updateEventListener(Person acc) {
-						// TODO Auto-generated method stub
-						System.out.println(acc);
+						personDAO.updatePersonByID(acc);
+						personPanel.setData(personDAO.getAllPeople());
+						personPanel.refresh();
+						detailPersonFrame.setVisible(false);
+						MainFrame.this.setVisible(true);
 					}
 				});
 				

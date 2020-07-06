@@ -16,7 +16,7 @@ import entity.Gender;
 import entity.Person;
 
 public class PersonDAO {
-	public List<Person> getAllAccount() {
+	public List<Person> getAllPeople() {
 		List<Person> list = new ArrayList<Person>();
 		boolean gen;
 		try (
@@ -89,7 +89,7 @@ public class PersonDAO {
 	public void addPerson(Person per) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call insertPerson(?,?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call insertPerson(?,?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, per.getId());
@@ -133,24 +133,26 @@ public class PersonDAO {
 	    return new java.sql.Date(date.getTime());
 	}
 	
-	public void updatePersonByID (int id, Person acc) {
+	public void updatePersonByID (Person acc) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call updatePersonById(?,?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call updatePerson(?,?,?,?,?,?,?,?,?)}");
 			) 
 		{
-			ps.setInt(1, acc.getId());
-			ps.setString(2, acc.getName());
+			ps.setString(1, acc.getName());
 			if (acc.getGender().toString() == "male") {
-				ps.setBoolean(3, true);
+				ps.setBoolean(2, true);
+			}else {
+				ps.setBoolean(2, false);
 			}
-			else ps.setBoolean(3, false);
-			ps.setDate(4, convertJavaDateToSqlDate(acc.getDob()));
-			ps.setString(5, acc.getAddress());
-			ps.setString(6, acc.getImage());
-			ps.setString(7, acc.getNationality());
-			ps.setString(8, acc.getJob());			
-		
+			ps.setDate(3, convertJavaDateToSqlDate(acc.getDob()));
+			ps.setString(4, acc.getAddress());
+			ps.setString(5, acc.getImage());
+			ps.setString(6, acc.getNationality());
+			ps.setString(7, acc.getJob());	
+			ps.setBoolean(8, acc.getAlive());	
+			ps.setInt(9, acc.getId());
+			
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Update account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
