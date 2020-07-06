@@ -291,7 +291,7 @@ public class ComplaintFormPanel extends JPanel{
 	}
 	
 	private void cd6Check() {
-		if (!name.getText().equals("") && name.getText().matches("[a-zA-Z]{3,50}")) {
+		if (!name.getText().equals("") && name.getText().matches("(\\d|[a-zA-Z]|\\s){3,50}")) {
         	name.setBorder(new LineBorder(Color.GREEN, 1));
         	q6.setText(s); q6.setForeground(new Color(0, 153, 51));
         	q6.setToolTipText(null);
@@ -299,7 +299,7 @@ public class ComplaintFormPanel extends JPanel{
         } else {
         	name.setBorder(new LineBorder(Color.RED, 1));
         	q6.setText("?"); q6.setForeground(Color.RED);
-        	q6.setToolTipText("3 - 50 alphabet characters");
+        	q6.setToolTipText("3 - 50 characters required (alphabetical characters, numbers and spaces).");
         	cd6 = false;
         }
 	}
