@@ -49,6 +49,7 @@ public class Complaint{
 		this.name = name;
 	}
 
+
 	public Date getDatetime() {
 		return datetime;
 	}
@@ -91,6 +92,8 @@ public class Complaint{
 
 	@Override
 	public String toString() {
-		return name;
+		return detail;
 	}
+	
+	
 }

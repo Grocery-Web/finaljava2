@@ -36,8 +36,6 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import entity.Complaint;
 
 public class ComplaintFormPanel extends JPanel{
-	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
 	private JDateChooser complaintDate;
 	private JTextFieldDateEditor editor;
 	private JSpinner timeSpinner;
@@ -186,14 +184,23 @@ public class ComplaintFormPanel extends JPanel{
 //		ACTION PERFORM ON SUBMIT BUTTON
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Date getDateTime = null;
 				Date getDate = complaintDate.getDate();
+				Date getTime = (Date) timeSpinner.getValue();
+				String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
+
+				try {
+					getDateTime = sdf2.parse(DateTime);
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				
 				String getName = name.getText();
 				String getPlace = place.getText();
 				String getDeclarantName = declarantName.getText();
 				String getDetails = detail.getText();
 				
-				Complaint cpt = new Complaint(getName, getDate, getPlace, getDeclarantName, getDetails, false);
-				
+				Complaint cpt = new Complaint(getName, getDateTime, getPlace, getDeclarantName, getDetails, false);
 				if(cplListener != null) {
 					cplListener.insertEventListener(cpt);
 				}

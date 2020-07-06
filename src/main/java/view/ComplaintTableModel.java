@@ -1,11 +1,12 @@
 package view;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import entity.Complaint;
-import entity.Person;
 
 public class ComplaintTableModel extends AbstractTableModel{
 	private List<Complaint> db;
@@ -55,7 +56,9 @@ public class ComplaintTableModel extends AbstractTableModel{
 			return complaint.getName();
 		}
 		case 2: {
-			return complaint.getDatetime();
+			Date getDateTime = new java.sql.Timestamp(complaint.getDatetime().getTime());
+			String dateTime = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(getDateTime);
+			return dateTime;
 		}
 		case 3: {
 			return complaint.getPlace();
