@@ -272,9 +272,8 @@ public class MainFrame extends JFrame {
 				Person per = personDAO.findPersonById(id);
 				
 				detailPersonFrame = new PersonDetailFrame(per);
-				MainFrame.this.setVisible(false);
-				detailPersonFrame.setVisible(true);
 				detailPersonFrame.setLocationRelativeTo(null);
+				detailPersonFrame.setVisible(true);
 				
 				detailPersonFrame.setFormListener(new PersonDetailListener() {
 					
