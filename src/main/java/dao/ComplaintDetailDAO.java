@@ -32,6 +32,28 @@ public class ComplaintDetailDAO {
 
 		return personIdList;
 	}
+	
+	public HashMap<Person, String> getPeopleListByComplaintId(int id) {
+		HashMap<Person, String> map = new HashMap<Person, String>();
+		
+
+		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getComplaintDetailByComplaintId(?)}");) {
+			ps.setInt(1, id);
+
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				PersonDAO personDAO = new PersonDAO();
+				int personId = rs.getInt("personId");
+				Person person = personDAO.findPersonById(personId);		
+				map.put(person, rs.getString("crimeType"));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+
+		return map;
+	}
 
 	public void setComplaintDetail(ComplaintDetail comDetail) {
 		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
@@ -64,5 +86,20 @@ public class ComplaintDetailDAO {
 		}
 		
 		return complaintDetails;
+	}
+	
+	public void removePerson(int personId, int compId) {
+		try(
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call removePerson(?,?)}");
+		)
+		{
+			ps.setInt(1, personId);
+			ps.setInt(2, compId);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Delete Sucessfully", "Success", JOptionPane.OK_OPTION|JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
 	}
 }
