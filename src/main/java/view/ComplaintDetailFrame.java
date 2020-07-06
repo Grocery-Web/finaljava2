@@ -11,8 +11,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import dao.ComplaintDAO;
+import dao.ComplaintDetailDAO;
+import dao.CriminalDAO;
+import dao.IncidentDAO;
 import entity.Complaint;
 import entity.ComplaintDetail;
+import entity.Criminal;
+import entity.Incident;
 import entity.Person;
 
 import java.awt.GridBagLayout;
@@ -54,6 +59,7 @@ public class ComplaintDetailFrame extends JFrame {
 	private JTextField textCompDate;
 	private JTextField textCompPlace;
 	private JRadioButton rdbtnUnverified, rdbtnApproved;
+	private ButtonGroup group;
 	private JTable table;
 	private ComplaintDetailListener cplDetailListener;
 	private TableComplaintDetailListener tableListener;
@@ -177,7 +183,7 @@ public class ComplaintDetailFrame extends JFrame {
 			rdbtnApproved.setSelected(true);
 		}
 		
-	    ButtonGroup group = new ButtonGroup();
+	    group = new ButtonGroup();
 	    group.add(rdbtnUnverified);
 	    group.add(rdbtnApproved);
 	    
@@ -327,6 +333,59 @@ public class ComplaintDetailFrame extends JFrame {
 	    	complaint.setStatus(false);
 	    } else {
 	    	complaint.setStatus(true);
+	    	rdbtnUnverified.setEnabled(false);
+	    	rdbtnApproved.setEnabled(false);
+	    	
+	    	// create new incident
+	    	IncidentDAO incDAO = new IncidentDAO(); 
+	    	Incident inc = new Incident();
+	    	inc = incDAO.addIncident(complaint.getDatetime(), complaint.getPlace(),complaint.getDetail());
+	    	int incId = inc.getId();
+	    	
+	    	// create new criminal
+	    	ComplaintDetailDAO compDetailDAO = new ComplaintDetailDAO();
+	    	CriminalDAO criDAO = new CriminalDAO();
+//	    	Criminal cri = new Criminal();
+	    	HashMap<Person, String> perMap = compDetailDAO.getPeopleListByComplaintId(complaint.getId());
+	    	perMap.forEach((person, crimeType) -> {
+	    		int rating;
+	    		switch(crimeType) {
+		    		  case "Assault and Battery":
+		    		    rating = 2;
+		    		    break;
+		    		  case "Kidnapping":
+		    		    rating = 5;
+		    		    break;
+		    		  case "Homicide":
+			    		    rating = 5;
+			    		    break;
+		    		  case "Rape":
+			    		    rating = 3;
+			    		    break;
+		    		  case "False Imprisonment":
+				    		rating = 3;
+				    		break;
+		    		  case "Theft":
+				    		rating = 2;
+				    		break;
+		    		  case "Arson":
+				    		rating = 1;
+				    		break;
+		    		  case "False Pretenses":
+				    		rating = 4;
+				    		break;
+		    		  case "White Collar Crimes":
+				    		rating = 4;
+				    		break;
+		    		  case "Receipt of Stolen Goods":
+				    		rating = 1;
+				    		break;
+		    		  default: 
+		    			rating = 3;
+		    		    // code block
+	    		};
+	    		criDAO.addCriminal(false, person.getId(), incId, rating);    		
+	    	});
 	    }
 	    
 	    ComplaintDAO compDAO = new ComplaintDAO();
