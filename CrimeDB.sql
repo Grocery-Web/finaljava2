@@ -366,7 +366,7 @@ GO
 /* END PROCEDURE COMPLAINT DETAIL */
 
 /* PROCEDURE INCIDENT*/
--- select all Complaints in table
+-- select all Incident in table
 create proc getAllIncidents
 as
 begin
@@ -374,7 +374,7 @@ begin
 end
 go
 
--- insert a new Complaint
+-- insert a new Incident
 create proc addIncident
 @datetime datetime,  @place nvarchar(MAX), @detail nvarchar(MAX)
 as
@@ -385,6 +385,27 @@ end
 go
 
 /* END PROCEDURE INCIDENT */
+
+/* PROCEDURE CRIMINAL*/
+-- select all Criminal in table
+create proc getAllCriminals
+as
+begin
+	select * from Criminal
+end
+go
+
+-- insert a new Criminal
+create proc addCriminal
+@catchStatus bit, @personId int,  @incidentId int, @rating int
+as
+begin
+	insert into Criminal (catchStatus, personId, incidentId, rating)
+	values(@catchStatus, @personId, @incidentId, @rating)
+end
+go
+
+/* END PROCEDURE CRIMINAL */
 
 /* INSERT DATA IN TABLE*/ 
 
