@@ -365,6 +365,27 @@ GO
 
 /* END PROCEDURE COMPLAINT DETAIL */
 
+/* PROCEDURE INCIDENT*/
+-- select all Complaints in table
+create proc getAllIncidents
+as
+begin
+	select * from Incident
+end
+go
+
+-- insert a new Complaint
+create proc addIncident
+@datetime datetime,  @place nvarchar(MAX), @detail nvarchar(MAX)
+as
+begin
+	insert into Incident (datetime, place, detail)
+	values(@datetime, @place, @detail)
+end
+go
+
+/* END PROCEDURE INCIDENT */
+
 /* INSERT DATA IN TABLE*/ 
 
 -- table Person
