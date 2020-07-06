@@ -36,8 +36,6 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import entity.Complaint;
 
 public class ComplaintFormPanel extends JPanel{
-	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
 	private JDateChooser complaintDate;
 	private JTextFieldDateEditor editor;
 	private JSpinner timeSpinner;
@@ -186,14 +184,23 @@ public class ComplaintFormPanel extends JPanel{
 //		ACTION PERFORM ON SUBMIT BUTTON
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Date getDateTime = null;
 				Date getDate = complaintDate.getDate();
+				Date getTime = (Date) timeSpinner.getValue();
+				String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
+
+				try {
+					getDateTime = sdf2.parse(DateTime);
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				
 				String getName = name.getText();
 				String getPlace = place.getText();
 				String getDeclarantName = declarantName.getText();
 				String getDetails = detail.getText();
 				
-				Complaint cpt = new Complaint(getName, getDate, getPlace, getDeclarantName, getDetails, false);
-				
+				Complaint cpt = new Complaint(getName, getDateTime, getPlace, getDeclarantName, getDetails, false);
 				if(cplListener != null) {
 					cplListener.insertEventListener(cpt);
 				}
@@ -291,7 +298,7 @@ public class ComplaintFormPanel extends JPanel{
 	}
 	
 	private void cd6Check() {
-		if (!name.getText().equals("") && name.getText().matches("[a-zA-Z]{3,50}")) {
+		if (!name.getText().equals("") && name.getText().matches("(\\d|[a-zA-Z]|\\s){3,50}")) {
         	name.setBorder(new LineBorder(Color.GREEN, 1));
         	q6.setText(s); q6.setForeground(new Color(0, 153, 51));
         	q6.setToolTipText(null);
@@ -299,7 +306,7 @@ public class ComplaintFormPanel extends JPanel{
         } else {
         	name.setBorder(new LineBorder(Color.RED, 1));
         	q6.setText("?"); q6.setForeground(Color.RED);
-        	q6.setToolTipText("3 - 50 alphabet characters");
+        	q6.setToolTipText("3 - 50 characters required (alphabetical characters, numbers and spaces).");
         	cd6 = false;
         }
 	}

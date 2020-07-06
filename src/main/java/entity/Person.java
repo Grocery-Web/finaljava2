@@ -11,12 +11,13 @@ public class Person {
 	private String image;
 	private String nationality;
 	private String job;
+	private Boolean alive;
 	
 	public Person() {
 	}
 
 	public Person(int id, String name, Gender gender, Date dob, String address, String image, String nationality,
-			String job) {
+			String job, Boolean alive) {
 		this.id = id;
 		this.name = name;
 		this.gender = gender;
@@ -25,6 +26,7 @@ public class Person {
 		this.image = image;
 		this.nationality = nationality;
 		this.job = job;
+		this.alive = alive;
 	}
 
 	public int getId() {
@@ -90,11 +92,18 @@ public class Person {
 	public void setJob(String job) {
 		this.job = job;
 	}
+	
+	public Boolean getAlive() {
+		return alive;
+	}
+
+	public void setAlive(Boolean alive) {
+		this.alive = alive;
+	}
 
 	@Override
 	public String toString() {
 		return "Person [id=" + id + ", name=" + name + ", gender=" + gender + ", dob=" + dob + ", address=" + address
-				+ ", image=" + image + ", nationality=" + nationality + ", job=" + job + "]";
+				+ ", image=" + image + ", nationality=" + nationality + ", job=" + job + ", alive=" + alive + "]";
 	}
-	
 }

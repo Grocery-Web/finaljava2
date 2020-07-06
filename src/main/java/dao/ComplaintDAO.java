@@ -27,12 +27,12 @@ public class ComplaintDAO {
 				Complaint com = new Complaint();
 				com.setId(rs.getInt("id"));
 				com.setName(rs.getString("complaintName"));
-				com.setDatetime(rs.getDate("datetime"));
+				com.setDatetime(rs.getTimestamp("datetime"));
 				com.setPlace(rs.getString("place"));
 				com.setDeclarantName(rs.getString("declarantName"));
 				com.setDetail(rs.getString("detail"));
 				com.setStatus(rs.getBoolean("verifyStatus"));
-				
+
 				list.add(com);
 			}
 		} catch (Exception e) {
@@ -48,7 +48,7 @@ public class ComplaintDAO {
 			) 
 		{
 			ps.setString(1, cpt.getName());
-			ps.setDate(2, new java.sql.Date(cpt.getDatetime().getTime()));
+			ps.setTimestamp(2, new java.sql.Timestamp(cpt.getDatetime().getTime()));
 			ps.setString(3, cpt.getPlace());
 			ps.setString(4, cpt.getDeclarantName());
 			ps.setString(5, cpt.getDetail());
