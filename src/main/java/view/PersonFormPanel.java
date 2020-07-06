@@ -304,6 +304,7 @@ public class PersonFormPanel extends JPanel {
 				per.setAddress(address.getText());
 				per.setNationality(nationality.getText());
 				per.setJob(occupationField.getText());
+				per.setAlive(true);
 
 				if (formListener != null) {
 					formListener.insertEventListener(per, file);

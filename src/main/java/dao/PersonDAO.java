@@ -56,7 +56,7 @@ public class PersonDAO {
 		
 		try(
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call findPersonById(?)}");
+				PreparedStatement ps = connect.prepareCall("{call findLivePersonById(?)}");
 		)
 		{
 			ps.setInt(1, id);
@@ -104,6 +104,7 @@ public class PersonDAO {
 			ps.setString(6, per.getImage());
 			ps.setString(7, per.getNationality());
 			ps.setString(8, per.getJob());
+			ps.setBoolean(9, per.getAlive());
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Insert new person successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {

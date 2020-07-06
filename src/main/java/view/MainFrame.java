@@ -231,19 +231,14 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void tableEventDeleted(int id) {
-				String path = System.getProperty("user.dir") + "/src/main/resources/avatar/" + id + ".png";
-				if (path.equalsIgnoreCase("")) {
-					personDAO.deletePerson(id);
-					personPanel.setData(personDAO.getAllAccount());
-					personPanel.refresh();
-				} else {
-					File deleteFile = new File(path);
-					deleteFile.delete();
-					personDAO.deletePerson(id);
+				int action = JOptionPane.showConfirmDialog(null, 
+						"Do you really want to delete this account", "Confirm Exit", 
+						JOptionPane.OK_CANCEL_OPTION);
+				if(action == JOptionPane.OK_OPTION) {
+					personDAO.deletePerson(id);	
 					personPanel.setData(personDAO.getAllAccount());
 					personPanel.refresh();
 				}
-
 			}
 
 			@Override
@@ -265,6 +260,7 @@ public class MainFrame extends JFrame {
 				Person per = personDAO.findPersonById(id);
 				
 				detailPersonFrame = new PersonDetailFrame(per);
+				MainFrame.this.setVisible(false);
 				detailPersonFrame.setVisible(true);
 				detailPersonFrame.setLocationRelativeTo(null);
 				
@@ -272,8 +268,16 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void formEventListener(int id) {
-						// TODO Auto-generated method stub
-						System.out.println(id);
+						int action = JOptionPane.showConfirmDialog(null, 
+								"Do you really want to delete this account", "Confirm Exit", 
+								JOptionPane.OK_CANCEL_OPTION);
+						if(action == JOptionPane.OK_OPTION) {
+							personDAO.deletePerson(id);
+							detailPersonFrame.setVisible(false);
+							personPanel.setData(personDAO.getAllAccount());
+							personPanel.refresh();
+							MainFrame.this.setVisible(true);
+						}
 					}
 
 					@Override
