@@ -92,7 +92,7 @@ public class Complaint{
 
 	@Override
 	public String toString() {
-		return detail;
+		return name;
 	}
 	
 	
