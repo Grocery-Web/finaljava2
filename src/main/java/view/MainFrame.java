@@ -216,10 +216,22 @@ public class MainFrame extends JFrame {
 				cplDetailFrame = new ComplaintDetailFrame(complaint);
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setLocationRelativeTo(null);
+				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
 				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
 					@Override
 					public void updateEventListener(Complaint cpl) {
 						System.out.println(cpl);
+						complaintPanel.setData(complaintDAO.getAllComplaints());
+						complaintPanel.refresh();
+					}
+				});
+				
+				cplDetailFrame.setTableListener(new TableComplaintDetailListener() {
+					@Override
+					public void tableEventDeleted(int personId) {
+						comDetailDAO.removePerson(personId,id);
+						cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
+						cplDetailFrame.refresh();
 					}
 				});
 				cplDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -260,9 +272,8 @@ public class MainFrame extends JFrame {
 				Person per = personDAO.findPersonById(id);
 				
 				detailPersonFrame = new PersonDetailFrame(per);
-				MainFrame.this.setVisible(false);
-				detailPersonFrame.setVisible(true);
 				detailPersonFrame.setLocationRelativeTo(null);
+				detailPersonFrame.setVisible(true);
 				
 				detailPersonFrame.setFormListener(new PersonDetailListener() {
 					

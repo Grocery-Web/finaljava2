@@ -340,6 +340,17 @@ begin
 end
 go
 
+-- update Complaint by ID
+create proc updateComplaintById
+@id int, @name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX), @verifyStatus bit
+as
+begin
+	update Complaint 
+	set complaintName = @name, datetime = @datetime, place = @place, declarantName = @declarantName, detail = @detail, verifyStatus = @verifyStatus
+	where id = @id
+end
+go
+
 /* END PROCEDURE COMPLAINT */
 
 /* PROCEDURE COMPLAINT DETAIL*/
@@ -379,7 +390,59 @@ begin
 end 
 go
 
+-- remove person from complaint table
+CREATE PROC removePerson
+@personId int, @compId int
+AS
+BEGIN
+	DELETE FROM ComplaintDetail 
+	WHERE personId = @personId AND compId = @compId
+END
+GO
+
 /* END PROCEDURE COMPLAINT DETAIL */
+
+/* PROCEDURE INCIDENT*/
+-- select all Incident in table
+create proc getAllIncidents
+as
+begin
+	select * from Incident
+end
+go
+
+-- insert a new Incident
+create proc addIncident
+@datetime datetime,  @place nvarchar(MAX), @detail nvarchar(MAX)
+as
+begin
+	insert into Incident (datetime, place, detail)
+	values(@datetime, @place, @detail)
+end
+go
+
+/* END PROCEDURE INCIDENT */
+
+/* PROCEDURE CRIMINAL*/
+-- select all Criminal in table
+create proc getAllCriminals
+as
+begin
+	select * from Criminal
+end
+go
+
+-- insert a new Criminal
+create proc addCriminal
+@catchStatus bit, @personId int,  @incidentId int, @rating int
+as
+begin
+	insert into Criminal (catchStatus, personId, incidentId, rating)
+	values(@catchStatus, @personId, @incidentId, @rating)
+end
+go
+
+/* END PROCEDURE CRIMINAL */
 
 /* INSERT DATA IN TABLE*/ 
 
