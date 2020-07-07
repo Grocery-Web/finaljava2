@@ -16,6 +16,23 @@ import entity.Gender;
 import entity.Person;
 
 public class PersonDAO {
+	public List<Integer> getAllID() {
+		List<Integer> listID = new ArrayList<Integer>();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getAllID}");
+				ResultSet rs = ps.executeQuery();
+			) 
+		{
+			while (rs.next()) {
+				listID.add(rs.getInt(1));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return listID;
+	}
+	
 	public List<Person> getAllPeople() {
 		List<Person> list = new ArrayList<Person>();
 		boolean gen;
