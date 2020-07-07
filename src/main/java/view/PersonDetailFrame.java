@@ -91,9 +91,9 @@ public class PersonDetailFrame extends JFrame {
 	
 	public PersonDetailFrame( Person person ) {
 		initPersonDetailFrame();
-		ID = person.getId();
+		ID = person.getPersonalId();
 		
-		txtID.setText(Integer.toString(person.getId()));
+		txtID.setText(Integer.toString(person.getPersonalId()));
 		txtID.setEditable(false);
 		txtID.setEnabled(false);
 		
@@ -118,7 +118,7 @@ public class PersonDetailFrame extends JFrame {
 		
 		userInFrame = new Person();
 		
-		userInFrame.setId(person.getId());
+		userInFrame.setPersonalId(person.getPersonalId());
 		userInFrame.setName(person.getName());
 		userInFrame.setAddress(person.getAddress());
 		userInFrame.setNationality(person.getNationality());
@@ -341,7 +341,6 @@ public class PersonDetailFrame extends JFrame {
 	    		 	bi = ImageIO.read(imgChooser);
 	    		 	lblImgUser.setIcon(new ImageIcon(bi.getScaledInstance(200, 200,  Image.SCALE_SMOOTH)));
 			} catch (Exception e2) {
-				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, "Something went wrong. Please try again");
 			}
 	    	
@@ -354,7 +353,7 @@ public class PersonDetailFrame extends JFrame {
 		userInFrame.setNationality(txtNation.getText());
 		userInFrame.setJob(txtJob.getText());
 		userInFrame.setDob( datePerson.getDate());
-		userInFrame.setImage(Integer.toString(userInFrame.getId())+".png");
+		userInFrame.setImage(Integer.toString(userInFrame.getPersonalId())+".png");
 		
 		if (rdbtnMale.isSelected()) {
 			userInFrame.setGender(Gender.male);
@@ -387,7 +386,7 @@ public class PersonDetailFrame extends JFrame {
 	
 	protected void btnDeleteactionPerformed(ActionEvent e) {
 		if (psListen !=null) {
-			psListen.formEventListener(userInFrame.getId());
+			psListen.formEventListener(userInFrame.getPersonalId());
 		}
 	}
 }

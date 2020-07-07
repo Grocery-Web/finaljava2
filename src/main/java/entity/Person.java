@@ -3,7 +3,7 @@ package entity;
 import java.util.Date;
 
 public class Person {
-	private int id;
+	private int personalId;
 	private String name;
 	private Gender gender;
 	private Date dob;
@@ -16,9 +16,9 @@ public class Person {
 	public Person() {
 	}
 
-	public Person(int id, String name, Gender gender, Date dob, String address, String image, String nationality,
+	public Person(int personalId, String name, Gender gender, Date dob, String address, String image, String nationality,
 			String job, Boolean alive) {
-		this.id = id;
+		this.personalId = personalId;
 		this.name = name;
 		this.gender = gender;
 		this.dob = dob;
@@ -29,12 +29,12 @@ public class Person {
 		this.alive = alive;
 	}
 
-	public int getId() {
-		return id;
+	public int getPersonalId() {
+		return personalId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPersonalId(int personalId) {
+		this.personalId = personalId;
 	}
 
 	public String getName() {
@@ -103,7 +103,9 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", gender=" + gender + ", dob=" + dob + ", address=" + address
-				+ ", image=" + image + ", nationality=" + nationality + ", job=" + job + ", alive=" + alive + "]";
+		return "Person [personalId=" + personalId + ", name=" + name + ", gender=" + gender + ", dob=" + dob
+				+ ", address=" + address + ", image=" + image + ", nationality=" + nationality + ", job=" + job
+				+ ", alive=" + alive + "]";
 	}
+
 }

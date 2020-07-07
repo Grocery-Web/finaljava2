@@ -30,6 +30,7 @@ import dao.ComplaintDetailDAO;
 import dao.PersonDAO;
 import entity.Complaint;
 import entity.ComplaintDetail;
+import entity.Criminal;
 import entity.Person;
 
 public class MainFrame extends JFrame {
@@ -164,10 +165,10 @@ public class MainFrame extends JFrame {
 			@Override
 			public void insertEventListener(Person per, File file) {
 //				Verify Personal ID
-				int personalID = per.getId();
+				int personalID = per.getPersonalId();
 				Person findPerson = personDAO.findPersonById(personalID);
 
-				if (findPerson.getId() == 0) {
+				if (findPerson.getPersonalId() == 0) {
 					if(file != null) {
 //						Save Image to path
 						saveImage(file);
@@ -177,7 +178,7 @@ public class MainFrame extends JFrame {
 						File fileInPath = new File(path);
 
 						try {
-							renameFile(fileInPath, Integer.toString(per.getId()));
+							renameFile(fileInPath, Integer.toString(per.getPersonalId()));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

@@ -2,14 +2,14 @@ package entity;
 
 import java.util.Date;
 
-public class Incident {
+public class Incident{
 	private int id;
 	private Date datetime;
 	private String place;
 	private String detail;
 	
 	public Incident() {};
-	
+
 	public Incident(int id, Date datetime, String place, String detail) {
 		this.id = id;
 		this.datetime = datetime;
@@ -53,6 +53,4 @@ public class Incident {
 	public String toString() {
 		return "Incident [id=" + id + ", datetime=" + datetime + ", place=" + place + ", detail=" + detail + "]";
 	}
-	
-	
 }

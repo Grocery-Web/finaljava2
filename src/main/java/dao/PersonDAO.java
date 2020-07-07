@@ -27,7 +27,7 @@ public class PersonDAO {
 		{
 			while (rs.next()) {
 				Person per = new Person();
-				per.setId(rs.getInt("id"));
+				per.setPersonalId(rs.getInt("id"));
 				per.setName(rs.getString("name"));
 				
 				Gender gender;
@@ -62,7 +62,7 @@ public class PersonDAO {
 			ps.setInt(1, id);
 			var rs = ps.executeQuery();
 			while (rs.next()) {
-				per.setId(rs.getInt("id"));
+				per.setPersonalId(rs.getInt("id"));
 				per.setName(rs.getString("name"));
 				
 				Gender gender;
@@ -92,7 +92,7 @@ public class PersonDAO {
 				PreparedStatement ps = connect.prepareCall("{call insertPerson(?,?,?,?,?,?,?,?,?)}");
 			) 
 		{
-			ps.setInt(1, per.getId());
+			ps.setInt(1, per.getPersonalId());
 			ps.setString(2, per.getName());
 			if(per.getGender().name().equals("male")) {
 				ps.setBoolean(3, true);
@@ -151,7 +151,7 @@ public class PersonDAO {
 			ps.setString(6, acc.getNationality());
 			ps.setString(7, acc.getJob());	
 			ps.setBoolean(8, acc.getAlive());	
-			ps.setInt(9, acc.getId());
+			ps.setInt(9, acc.getPersonalId());
 			
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Update account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);

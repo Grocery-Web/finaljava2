@@ -22,7 +22,6 @@ public class ComplaintDetailTableModel extends AbstractTableModel{
 	
 	@Override
 	public String getColumnName(int column) {
-		// TODO Auto-generated method stub
 		return colNames[column];
 	}
 
@@ -59,7 +58,7 @@ public class ComplaintDetailTableModel extends AbstractTableModel{
 		
 		switch (columnIndex) {
 		case 0: {
-			return person.getId();
+			return person.getPersonalId();
 		}
 		case 1: {
 			return person.getName();
