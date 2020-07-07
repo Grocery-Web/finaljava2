@@ -1,6 +1,8 @@
 package entity;
 
-public class Criminal {
+import java.util.Date;
+
+public class Criminal extends Person{
 	private int id;
 	private boolean catchStatus;
 	private int personId;
@@ -8,8 +10,9 @@ public class Criminal {
 	private int rating;
 	
 	public Criminal() {};
-	
+
 	public Criminal(int id, boolean catchStatus, int personId, int incidentId, int rating) {
+		super();
 		this.id = id;
 		this.catchStatus = catchStatus;
 		this.personId = personId;

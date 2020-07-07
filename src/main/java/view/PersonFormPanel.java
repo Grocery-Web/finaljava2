@@ -298,7 +298,7 @@ public class PersonFormPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				Person per = new Person();
 
-				per.setId(Integer.parseInt(personalID.getText()));
+				per.setPersonalId(Integer.parseInt(personalID.getText()));
 				per.setName(nameField.getText());
 
 				Gender genderCat;
@@ -338,7 +338,7 @@ public class PersonFormPanel extends JPanel {
 		List<Person> list = personDAO.getAllPeople();
 		ArrayList<Integer> listID = new ArrayList<Integer>();
 		for (Person ps : list) {
-			listID.add(ps.getId());
+			listID.add(ps.getPersonalId());
 		}
 		
 		if (!personalID.getText().equals("") && personalID.getText().matches("\\d+")) {

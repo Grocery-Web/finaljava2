@@ -19,7 +19,6 @@ public class PersonTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		// TODO Auto-generated method stub
 		return colNames[column];
 	}
 
@@ -55,7 +54,7 @@ public class PersonTableModel extends AbstractTableModel {
 		
 		switch (columnIndex) {
 		case 0: {
-			return person.getId();
+			return person.getPersonalId();
 		}
 		case 1: {
 			return person.getName();
@@ -84,7 +83,7 @@ public class PersonTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         Person per = db.get(rowIndex);
         if (columnIndex == 0) {
-            per.setId((int) value);
+            per.setPersonalId((int) value);
         }      
     }
 }

@@ -52,7 +52,7 @@ public class RelevantComplaintForm extends JDialog {
 				ComplaintDetail comDetail = new ComplaintDetail();
 				
 				comDetail.setCompId(((Complaint) cplDetailBox.getSelectedItem()).getId());
-				comDetail.setPersonId(per.getId());
+				comDetail.setPersonId(per.getPersonalId());
 				comDetail.setCrimeType((String) fcb.getSelectedItem());		
 				
 				if (revListener != null) {

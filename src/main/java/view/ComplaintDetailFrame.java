@@ -387,7 +387,7 @@ public class ComplaintDetailFrame extends JFrame {
 		    			rating = 3;
 		    		    // code block
 	    		};
-	    		criDAO.addCriminal(false, person.getId(), incId, rating);    		
+	    		criDAO.addCriminal(false, person.getPersonalId(), incId, rating);    		
 	    	});
 	    }
 	    

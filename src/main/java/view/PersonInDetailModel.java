@@ -59,7 +59,7 @@ public class PersonInDetailModel extends AbstractTableModel{
 		
 		switch (columnIndex) {
 		case 0: {
-			return person.getId();
+			return person.getPersonalId();
 		}
 		case 1: {
 			return person.getName();
