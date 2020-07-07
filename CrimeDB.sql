@@ -226,6 +226,14 @@ GO
 
 /* PROCEDURE PERSON */
 
+/* Select all Personal ID in table */
+CREATE PROC getAllID
+AS
+BEGIN
+	SELECT id FROM Person
+END
+GO
+
 /*Select all people in table*/
 create proc getAllPerson
 as
