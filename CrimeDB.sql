@@ -364,12 +364,12 @@ begin
 end
 go
 
--- find Complaint Detail by Person and Complaint ID
-create proc findPersonInComplaint
-@personId int, @compId int
+-- find Complaint Detail by Complaint ID
+create proc getComplaintDetailByComplaintId
+@id int
 as 
 begin
-	select * FROM ComplaintDetail WHERE personId = @personId AND compId = @compId
+	select * from ComplaintDetail where compId = @id;  
 end 
 go
 

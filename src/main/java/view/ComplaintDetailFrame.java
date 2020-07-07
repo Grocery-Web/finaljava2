@@ -75,6 +75,7 @@ public class ComplaintDetailFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setTitle("Complaint Details");
 		
 		JLabel lblCompName = new JLabel("Complaint Name");	
 		
@@ -200,6 +201,8 @@ public class ComplaintDetailFrame extends JFrame {
 //		SUMMIT BUTTON
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.setBackground(Color.YELLOW);
+		
+		
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnSubmitActionPerformed(e);
