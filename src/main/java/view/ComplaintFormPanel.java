@@ -188,13 +188,11 @@ public class ComplaintFormPanel extends JPanel{
 				Date getDate = complaintDate.getDate();
 				Date getTime = (Date) timeSpinner.getValue();
 				String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
-
 				try {
 					getDateTime = sdf2.parse(DateTime);
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
-				
 				String getName = name.getText();
 				String getPlace = place.getText();
 				String getDeclarantName = declarantName.getText();
