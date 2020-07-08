@@ -61,14 +61,15 @@ public class ComplaintDetailFrame extends JFrame {
 	private JRadioButton rdbtnUnverified, rdbtnApproved;
 	private ButtonGroup group;
 	private JTable table;
-	private ComplaintDetailListener cplDetailListener;
+	//TODO: Tại sao phải có thêm listener này? Sao không tạo thêm method để update trong tableListener?
+	private ComplaintDetailListener cplDetailListener; 
 	private TableComplaintDetailListener tableListener;
 	private JTextField textCompName;
 	private ComplaintDetailTableModel tableModel;
 	private JPopupMenu popup;
 	private JScrollPane jpTable, jpDetail;
 	private Complaint complaint;
-
+	
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 500);
@@ -77,6 +78,7 @@ public class ComplaintDetailFrame extends JFrame {
 		setContentPane(contentPane);
 		setTitle("Complaint Details");
 		
+		// CREATE COMPONENT
 		JLabel lblCompName = new JLabel("Complaint Name");	
 		
 		JLabel lblCompId = new JLabel("Complaint ID:");
@@ -90,6 +92,9 @@ public class ComplaintDetailFrame extends JFrame {
 		JLabel lblCompDetail = new JLabel("Detail:");
 		
 		JLabel lblCompStatus = new JLabel("Verify Status:");
+		
+		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.setBackground(Color.YELLOW);
 		
 		textCompName = new JTextField();
 		textCompName.setColumns(10);
@@ -115,13 +120,28 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		textCompDate = new JTextField();
 		textCompDate.setColumns(10);
-		textCompDate.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(cpl.getDatetime()));
+		textCompDate.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(cpl.getDatetime()));
 		
 		textCompPlace = new JTextField();
 		textCompPlace.setColumns(10);
 		textCompPlace.setText(cpl.getPlace());
 		
-//		TABLE LIST OF SUSPECT
+		// RADIO BUTTON GROUP
+		rdbtnUnverified = new JRadioButton("Unverified");
+		
+		rdbtnApproved = new JRadioButton("Approved");
+		
+		if (cpl.isStatus() == false) {
+			rdbtnUnverified.setSelected(true);
+		} else {
+			rdbtnApproved.setSelected(true);
+		}
+		
+	    group = new ButtonGroup();
+	    group.add(rdbtnUnverified);
+	    group.add(rdbtnApproved);
+		
+		// TABLE LIST OF SUSPECT
 		JLabel lblSuspectList = new JLabel("List of Suspect:");
 		
 		tableModel = new ComplaintDetailTableModel();
@@ -131,7 +151,6 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		table.setBorder(BorderFactory.createEtchedBorder());
 		
-		
 		// ALIGN TEXT IN CENTER
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -140,7 +159,7 @@ public class ComplaintDetailFrame extends JFrame {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 		
-		// REMOVE PERSON
+		// POPUP OPTION PANEL
 		popup = new JPopupMenu();
 		
 		JMenuItem removeItem = new JMenuItem("Remove person");
@@ -158,37 +177,8 @@ public class ComplaintDetailFrame extends JFrame {
 			}
 		});
 		
-		removeItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
-
-				int action = JOptionPane.showConfirmDialog(null, "Do you really want to remove this person",
-						"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
-
-				if (action == JOptionPane.OK_OPTION && tableListener != null) {
-					tableListener.tableEventDeleted(id);
-				}
-			}
-		});
-	
-		
-// 		RADIO BUTTON GROUP
-		rdbtnUnverified = new JRadioButton("Unverified");
-		
-		rdbtnApproved = new JRadioButton("Approved");
-		
-		if (cpl.isStatus() == false) {
-			rdbtnUnverified.setSelected(true);
-		} else {
-			rdbtnApproved.setSelected(true);
-		}
-		
-	    group = new ButtonGroup();
-	    group.add(rdbtnUnverified);
-	    group.add(rdbtnApproved);
-	    
-// 		ASSIGN DATA FOR COMPLAINT IN THIS FRAME;
+		// 	ASSIGN DATA FOR COMPLAINT IN THIS FRAME;
+		//TODO: Chưa hiểu tại sao phải tạo thêm một complaint ở đây mà lại lấy thông tin giống y chang complaint cpl được truyền vào, sao không dùng cpl?
 	    complaint = new Complaint();
 	    complaint.setId(cpl.getId());
 	    complaint.setName(cpl.getName());
@@ -197,12 +187,23 @@ public class ComplaintDetailFrame extends JFrame {
 	    complaint.setDetail(cpl.getDetail());
 	    complaint.setPlace(cpl.getPlace());
 	    complaint.setStatus(cpl.isStatus());
-	    
-//		SUMMIT BUTTON
-		JButton btnSubmit = new JButton("Submit");
-		btnSubmit.setBackground(Color.YELLOW);
 		
-		
+		// BUTTON ACTION LISTENER
+		removeItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				int action = JOptionPane.showConfirmDialog(null, "Do you really want to remove this person",
+						"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
+				//TODO: Kỹ thuật sử dụng ngay chỗ này rất tốt, tại sao không áp dụng cho phần code bên dưới????
+				if (action == JOptionPane.OK_OPTION && tableListener != null) {
+					tableListener.tableEventDeleted(id);
+					System.out.println("2 " + tableModel.getListPerson());
+				}
+			}
+		});
+	
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnSubmitActionPerformed(e);
@@ -316,84 +317,88 @@ public class ComplaintDetailFrame extends JFrame {
 	}
 	
 	protected void btnSubmitActionPerformed(ActionEvent e) {
-	    complaint.setId(Integer.parseInt(textCompId.getText()));
-	    complaint.setName(textCompName.getText());
-	    complaint.setDeclarantName(textDeclarantName.getText());
-	    complaint.setDetail(textCompDetail.getText());
-	    complaint.setPlace(textCompPlace.getText());
-	    
-	    String datetime = textCompDate.getText();
-	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	      //Parsing the given String to Date object
-	    try {
-			complaint.setDatetime(formatter.parse(datetime));
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	    
-	    if (rdbtnUnverified.isSelected()) {
-	    	complaint.setStatus(false);
-	    } else {
-	    	complaint.setStatus(true);
-	    	rdbtnUnverified.setEnabled(false);
-	    	rdbtnApproved.setEnabled(false);
-	    	
-	    	// create new incident
-	    	IncidentDAO incDAO = new IncidentDAO(); 
-	    	Incident inc = new Incident();
-	    	inc = incDAO.addIncident(complaint.getDatetime(), complaint.getPlace(),complaint.getDetail());
-	    	int incId = inc.getId();
-	    	
-	    	// create new criminal
-	    	ComplaintDetailDAO compDetailDAO = new ComplaintDetailDAO();
-	    	CriminalDAO criDAO = new CriminalDAO();
-//	    	Criminal cri = new Criminal();
-	    	HashMap<Person, String> perMap = compDetailDAO.getPeopleListByComplaintId(complaint.getId());
-	    	perMap.forEach((person, crimeType) -> {
-	    		int rating;
-	    		switch(crimeType) {
-		    		  case "Assault and Battery":
-		    		    rating = 2;
-		    		    break;
-		    		  case "Kidnapping":
-		    		    rating = 5;
-		    		    break;
-		    		  case "Homicide":
-			    		    rating = 5;
-			    		    break;
-		    		  case "Rape":
-			    		    rating = 3;
-			    		    break;
-		    		  case "False Imprisonment":
-				    		rating = 3;
-				    		break;
-		    		  case "Theft":
-				    		rating = 2;
-				    		break;
-		    		  case "Arson":
-				    		rating = 1;
-				    		break;
-		    		  case "False Pretenses":
-				    		rating = 4;
-				    		break;
-		    		  case "White Collar Crimes":
-				    		rating = 4;
-				    		break;
-		    		  case "Receipt of Stolen Goods":
-				    		rating = 1;
-				    		break;
-		    		  default: 
-		    			rating = 3;
-		    		    // code block
-	    		};
-	    		criDAO.addCriminal(false, person.getPersonalId(), incId, rating);    		
-	    	});
-	    }
-	    
-	    ComplaintDAO compDAO = new ComplaintDAO();
-	    compDAO.updateComplaintById(complaint.getId(), complaint);
+		//TODO: dùng kỹ thuật này để lấy lại listPerson sau khi có hành động update list
+		System.out.println("submit " + tableModel.getListPerson());
 		
-		cplDetailListener.updateEventListener(complaint);
+//	    complaint.setId(Integer.parseInt(textCompId.getText()));
+//	    complaint.setName(textCompName.getText());
+//	    complaint.setDeclarantName(textDeclarantName.getText());
+//	    complaint.setDetail(textCompDetail.getText());
+//	    complaint.setPlace(textCompPlace.getText());
+//	    
+//	    String datetime = textCompDate.getText();
+//	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
+//	      //Parsing the given String to Date object
+//	    try {
+//			complaint.setDatetime(formatter.parse(datetime));
+//		} catch (ParseException e1) {
+//			e1.printStackTrace();
+//		}
+//	    
+//	    if (rdbtnUnverified.isSelected()) {
+//	    	complaint.setStatus(false);
+//	    } else {
+//	    	complaint.setStatus(true);
+//	    	rdbtnUnverified.setEnabled(false);
+//	    	rdbtnApproved.setEnabled(false);
+//	    	
+//	    	// create new incident
+//	    	//TODO: không được dùng DAO trong child Frame
+//	    	IncidentDAO incDAO = new IncidentDAO(); 
+//	    	Incident inc = new Incident();
+//	    	inc = incDAO.addIncident(complaint.getDatetime(), complaint.getPlace(),complaint.getDetail());
+//	    	int incId = inc.getId();
+//	    	
+//	    	// create new criminal
+//	    	//TODO: không được dùng DAO trong child Frame
+//	    	ComplaintDetailDAO compDetailDAO = new ComplaintDetailDAO();
+//	    	CriminalDAO criDAO = new CriminalDAO();
+////	    	Criminal cri = new Criminal();
+//	    	HashMap<Person, String> perMap = compDetailDAO.getPeopleListByComplaintId(complaint.getId());
+//	    	perMap.forEach((person, crimeType) -> {
+//	    		int rating;
+//	    		switch(crimeType) {
+//		    		  case "Assault and Battery":
+//		    		    rating = 2;
+//		    		    break;
+//		    		  case "Kidnapping":
+//		    		    rating = 5;
+//		    		    break;
+//		    		  case "Homicide":
+//			    		    rating = 5;
+//			    		    break;
+//		    		  case "Rape":
+//			    		    rating = 3;
+//			    		    break;
+//		    		  case "False Imprisonment":
+//				    		rating = 3;
+//				    		break;
+//		    		  case "Theft":
+//				    		rating = 2;
+//				    		break;
+//		    		  case "Arson":
+//				    		rating = 1;
+//				    		break;
+//		    		  case "False Pretenses":
+//				    		rating = 4;
+//				    		break;
+//		    		  case "White Collar Crimes":
+//				    		rating = 4;
+//				    		break;
+//		    		  case "Receipt of Stolen Goods":
+//				    		rating = 1;
+//				    		break;
+//		    		  default: 
+//		    			rating = 3;
+//		    		    // code block
+//	    		};
+//	    		criDAO.addCriminal(false, person.getPersonalId(), incId, rating);    		
+//	    	});
+//	    }
+//	    
+//	    ComplaintDAO compDAO = new ComplaintDAO();
+//	    compDAO.updateComplaintById(complaint.getId(), complaint);
+//		
+//		cplDetailListener.updateEventListener(complaint);
 	}
 }
