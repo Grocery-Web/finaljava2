@@ -57,9 +57,7 @@ public class ComplaintTableModel extends AbstractTableModel{
 		}
 		case 2: {
 			Date getDateTime = new java.sql.Timestamp(complaint.getDatetime().getTime());
-			System.out.println("1 " + getDateTime);
 			String dateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(getDateTime);
-			System.out.println("2 " + dateTime);
 			return dateTime;
 		}
 		case 3: {
