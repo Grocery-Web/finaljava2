@@ -131,21 +131,6 @@ create table IncidentDetail (
 )
 go
 
-/* person details table */
-create table PersonDetail (
-	id int primary key,
-	name nvarchar(50),
-	gender bit,
-	dob date,
-	address nvarchar(MAX),
-	image varchar(100),
-	nationality varchar(50),
-	job varchar(20),
-	blood varchar(5),
-	height int,
-	note nvarchar(300)
-)
-go
 
 /* END CREATE TABLES */ 
 
