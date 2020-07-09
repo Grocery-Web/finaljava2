@@ -245,8 +245,11 @@ public class MainFrame extends JFrame {
 						for (Criminal criminal : lstCri) {
 							criminalDAO.addCriminal(criminal);
 						}
+						cplDetailFrame.dispose();
 						incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
 						incidentPanel.refresh();
+						complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
+						complaintPanel.refresh();
 					}
 				});
 				cplDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -269,15 +272,29 @@ public class MainFrame extends JFrame {
 			}
 
 			@Override
-			public void tableEventAttached(int id) {
-				Person per = personDAO.findPersonById(id);
+			public void tableEventAttached(int personalId) {
+				Person per = personDAO.findPersonById(personalId);
 				List<Complaint> listComplaints = complaintDAO.getAllUnverifiedComplaints();
+				
 				relComplain = new RelevantComplaintForm(per, listComplaints);
 				relComplain.setVisible(true);
 				relComplain.setFormListener(new RelevantFormListener() {
 					@Override
 					public void formEventListener(ComplaintDetail comDetail) {
-						comDetailDAO.setComplaintDetail(comDetail);
+						List<String> crimeTypeList = comDetailDAO.getCrimeTypeOfPerson(comDetail.getPersonId(), comDetail.getCompId());
+						int count = 0;
+						for (String crimeType : crimeTypeList) {
+							if(crimeType.equals(comDetail.getCrimeType())) {
+								count++;
+							}
+						}
+						if(count < 1) {
+							comDetailDAO.setComplaintDetail(comDetail);
+							relComplain.dispose();
+						}else {
+							JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
+									JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				});
 			}

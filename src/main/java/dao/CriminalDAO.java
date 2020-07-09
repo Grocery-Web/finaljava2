@@ -44,7 +44,6 @@ public class CriminalDAO {
 				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?)}");
 			) 
 		{
-			System.out.println(cri.getPunishment());
 			ps.setInt(1, cri.getPersonalId());
 			ps.setInt(2, cri.getComplaintId());
 			ps.setString(3, cri.getPunishment());
