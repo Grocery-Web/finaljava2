@@ -49,9 +49,7 @@ public class MainFrame extends JFrame {
 	private ComplaintFormPanel complaintForm;
 	private CardLayout cardLayout;
 	private IncidentsPanel incidentPanel;
-
-//	INTERFACE LISTERNER
-	private FormComplaintListener cplListener;
+	private CriminalPanel criminalPanel;
 
 //	DAO
 	private PersonDAO personDAO;
@@ -101,6 +99,7 @@ public class MainFrame extends JFrame {
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
 		incidentPanel =  new IncidentsPanel();
+		criminalPanel = new CriminalPanel();
 
 //		CREAT DAO
 		personDAO = new PersonDAO();
@@ -122,11 +121,13 @@ public class MainFrame extends JFrame {
 		tabPane.addTab("Person Info", personPanel);
 		tabPane.addTab("Complaints", complaintPanel);
 		tabPane.addTab("Incidents", incidentPanel);
+		tabPane.addTab("Criminals", criminalPanel);
 
 //		CALL BACK TABLES
 		personPanel.setData(personDAO.getAlivePeople());
 		complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
 		incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
+		criminalPanel.setData(criminalDAO.getAllCriminals());
 
 //		TOOLBAR LISTENER
 		toolbar.setToolbarListener(new ToolbarListener() {

@@ -46,7 +46,7 @@ public class ComplaintDetailDAO {
 				PersonDAO personDAO = new PersonDAO();
 				int personId = rs.getInt("personId");
 				Person person = personDAO.findPersonById(personId);
-				
+				// Verify person with more than one crimeType and add they into Map
 				if (map.size() > 0) {
 					for (Person perInMap : map.keySet()) {
 						if(perInMap.getPersonalId() == personId) {
