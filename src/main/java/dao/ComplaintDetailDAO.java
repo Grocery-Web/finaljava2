@@ -91,7 +91,7 @@ public class ComplaintDetailDAO {
 	public void removePerson(int personId, int compId) {
 		try(
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call removePerson(?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call removePersoninComplaintDetail(?,?)}");
 		)
 		{
 			ps.setInt(1, personId);

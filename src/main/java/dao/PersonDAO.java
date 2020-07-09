@@ -38,7 +38,7 @@ public class PersonDAO {
 		boolean gen;
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call getAlivePerson}");
+				PreparedStatement ps = connect.prepareCall("{call getAlivePeople}");
 				ResultSet rs = ps.executeQuery();
 			) 
 		{

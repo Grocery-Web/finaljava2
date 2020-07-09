@@ -362,7 +362,7 @@ public class ComplaintDetailFrame extends JFrame {
 				int rating;
 
 				cri.setPersonalId(person.getPersonalId());
-				cri.setComplainttId(cplId);
+				cri.setComplaintId(cplId);
 				cri.setPunishment("in process");
 				switch (crimeType) {
 				case "Assault and Battery":

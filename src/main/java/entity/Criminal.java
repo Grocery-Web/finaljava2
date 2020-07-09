@@ -5,17 +5,17 @@ import java.util.Date;
 public class Criminal extends Person{
 	private int criminalId;
 	private int personalId;
-	private int complainttId;
+	private int complaintId;
 	private String punishment;
 	private int rating;
 	
 	public Criminal() {}
 
-	public Criminal(int criminalId, int personalId, int complainttId, String punishment, int rating) {
+	public Criminal(int criminalId, int personalId, int complaintId, String punishment, int rating) {
 		super();
 		this.criminalId = criminalId;
 		this.personalId = personalId;
-		this.complainttId = complainttId;
+		this.complaintId = complaintId;
 		this.punishment = punishment;
 		this.rating = rating;
 	}
@@ -36,12 +36,12 @@ public class Criminal extends Person{
 		this.personalId = personalId;
 	}
 
-	public int getComplainttId() {
-		return complainttId;
+	public int getComplaintId() {
+		return complaintId;
 	}
 
-	public void setComplainttId(int complainttId) {
-		this.complainttId = complainttId;
+	public void setComplaintId(int complaintId) {
+		this.complaintId = complaintId;
 	}
 
 	public String getPunishment() {
@@ -62,7 +62,7 @@ public class Criminal extends Person{
 
 	@Override
 	public String toString() {
-		return "Criminal [criminalId=" + criminalId + ", personalId=" + personalId + ", complainttId=" + complainttId
+		return "Criminal [criminalId=" + criminalId + ", personalId=" + personalId + ", complaintId=" + complaintId
 				+ ", punishment=" + punishment + ", rating=" + rating + "]";
 	}
 

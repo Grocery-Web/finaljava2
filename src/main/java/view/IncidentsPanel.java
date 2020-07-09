@@ -22,11 +22,11 @@ import entity.Person;
 
 public class IncidentsPanel extends JPanel{
 	private JTable table;
-	private PersonInDetailModel tableModel;
+	private ComplaintTableModel tableModel;
 	private JPopupMenu popup;
 	
 	public IncidentsPanel() {
-		tableModel = new PersonInDetailModel();
+		tableModel = new ComplaintTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
@@ -46,12 +46,16 @@ public class IncidentsPanel extends JPanel{
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 6; i++) {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 	}
 	
-	public void setData(HashMap<Person, String> db) {
+	public void setData(List<Complaint> db) {
 		tableModel.setData(db);
+	}
+	
+	public void refresh() {
+		tableModel.fireTableDataChanged();
 	}
 }
