@@ -87,7 +87,7 @@ public class ComplaintDAO {
 			while (rs.next()) {
 				com.setId(rs.getInt("id"));
 				com.setName(rs.getString("complaintName"));
-				com.setDatetime(rs.getDate("datetime"));
+				com.setDatetime(rs.getTimestamp("datetime"));
 				com.setPlace(rs.getString("place"));
 				com.setDeclarantName(rs.getString("declarantName"));
 				com.setDetail(rs.getString("detail"));
