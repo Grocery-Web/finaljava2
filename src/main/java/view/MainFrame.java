@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -27,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 
 import dao.ComplaintDAO;
 import dao.ComplaintDetailDAO;
+import dao.CriminalDAO;
 import dao.PersonDAO;
 import entity.Complaint;
 import entity.ComplaintDetail;
@@ -47,14 +49,13 @@ public class MainFrame extends JFrame {
 	private ComplaintFormPanel complaintForm;
 	private CardLayout cardLayout;
 	private IncidentsPanel incidentPanel;
-
-//	INTERFACE LISTERNER
-	private FormComplaintListener cplListener;
+	private CriminalPanel criminalPanel;
 
 //	DAO
 	private PersonDAO personDAO;
 	private ComplaintDAO complaintDAO;
 	private ComplaintDetailDAO comDetailDAO;
+	private CriminalDAO criminalDAO;
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
@@ -98,11 +99,13 @@ public class MainFrame extends JFrame {
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
 		incidentPanel =  new IncidentsPanel();
+		criminalPanel = new CriminalPanel();
 
 //		CREAT DAO
 		personDAO = new PersonDAO();
 		complaintDAO = new ComplaintDAO();
 		comDetailDAO = new ComplaintDetailDAO();
+		criminalDAO = new CriminalDAO();
 
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
@@ -118,11 +121,13 @@ public class MainFrame extends JFrame {
 		tabPane.addTab("Person Info", personPanel);
 		tabPane.addTab("Complaints", complaintPanel);
 		tabPane.addTab("Incidents", incidentPanel);
+		tabPane.addTab("Criminals", criminalPanel);
 
 //		CALL BACK TABLES
-		personPanel.setData(personDAO.getAllPeople());
-		complaintPanel.setData(complaintDAO.getAllComplaints());
-		incidentPanel.setData(comDetailDAO.getComplaintDetails());
+		personPanel.setData(personDAO.getAlivePeople());
+		complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
+		incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
+		criminalPanel.setData(criminalDAO.getAllCriminals());
 
 //		TOOLBAR LISTENER
 		toolbar.setToolbarListener(new ToolbarListener() {
@@ -156,7 +161,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void insertEventListener(Complaint cpt) {
 				complaintDAO.addComplaint(cpt);
-				complaintPanel.setData(complaintDAO.getAllComplaints());
+				complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
 				complaintPanel.refresh();
 			}
 		});
@@ -187,11 +192,11 @@ public class MainFrame extends JFrame {
 						per.setImage(personalID + ".png");
 
 						personDAO.addPerson(per);
-						personPanel.setData(personDAO.getAllPeople());
+						personPanel.setData(personDAO.getAlivePeople());
 						personPanel.refresh();
 					}else {
 						personDAO.addPerson(per);
-						personPanel.setData(personDAO.getAllPeople());
+						personPanel.setData(personDAO.getAlivePeople());
 						personPanel.refresh();
 					}
 
@@ -207,10 +212,11 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDeleted(int id) {
 				complaintDAO.deleteComplaint(id);
-				complaintPanel.setData(complaintDAO.getAllComplaints());
+				complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
 				complaintPanel.refresh();
 			}
-
+			
+			//COMPLAINT DETALS TABLE LISTENER
 			@Override
 			public void tableEventDetail(int id) {
 				Complaint complaint = complaintDAO.findComplaintById(id);
@@ -218,13 +224,6 @@ public class MainFrame extends JFrame {
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setLocationRelativeTo(null);
 				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
-				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
-					@Override
-					public void updateEventListener(Complaint cpl) {
-						complaintPanel.setData(complaintDAO.getAllComplaints());
-						complaintPanel.refresh();
-					}
-				});
 				
 				cplDetailFrame.setTableListener(new TableComplaintDetailListener() {
 					@Override
@@ -232,6 +231,27 @@ public class MainFrame extends JFrame {
 						comDetailDAO.removePerson(personId,id);
 						cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
 						cplDetailFrame.refresh();
+					}
+
+					@Override
+					public void tableEventUpdated(Complaint cpl) {
+						complaintDAO.updateComplaintById(id, cpl);
+						JOptionPane.showMessageDialog(null, "Update complaint successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+						complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
+						complaintPanel.refresh();
+					}
+					
+					@Override
+					public void tableEventSubmited(Complaint cpl, ArrayList<Criminal> lstCri) {
+						complaintDAO.updateComplaintById(id, cpl);
+						for (Criminal criminal : lstCri) {
+							criminalDAO.addCriminal(criminal);
+						}
+						cplDetailFrame.dispose();
+						incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
+						incidentPanel.refresh();
+						complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
+						complaintPanel.refresh();
 					}
 				});
 				cplDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -248,21 +268,35 @@ public class MainFrame extends JFrame {
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
 					personDAO.deletePerson(id);	
-					personPanel.setData(personDAO.getAllPeople());
+					personPanel.setData(personDAO.getAlivePeople());
 					personPanel.refresh();
 				}
 			}
 
 			@Override
-			public void tableEventAttached(int id) {
-				Person per = personDAO.findPersonById(id);
-				List<Complaint> listComplaints = complaintDAO.getAllComplaints();
+			public void tableEventAttached(int personalId) {
+				Person per = personDAO.findPersonById(personalId);
+				List<Complaint> listComplaints = complaintDAO.getAllUnverifiedComplaints();
+				
 				relComplain = new RelevantComplaintForm(per, listComplaints);
 				relComplain.setVisible(true);
 				relComplain.setFormListener(new RelevantFormListener() {
 					@Override
 					public void formEventListener(ComplaintDetail comDetail) {
-						comDetailDAO.setComplaintDetail(comDetail);
+						List<String> crimeTypeList = comDetailDAO.getCrimeTypeOfPerson(comDetail.getPersonId(), comDetail.getCompId());
+						int count = 0;
+						for (String crimeType : crimeTypeList) {
+							if(crimeType.equals(comDetail.getCrimeType())) {
+								count++;
+							}
+						}
+						if(count < 1) {
+							comDetailDAO.setComplaintDetail(comDetail);
+							relComplain.dispose();
+						}else {
+							JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
+									JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				});
 			}
@@ -285,7 +319,7 @@ public class MainFrame extends JFrame {
 						if(action == JOptionPane.OK_OPTION) {
 							personDAO.deletePerson(id);
 							detailPersonFrame.setVisible(false);
-							personPanel.setData(personDAO.getAllPeople());
+							personPanel.setData(personDAO.getAlivePeople());
 							personPanel.refresh();
 							MainFrame.this.setVisible(true);
 						}
@@ -294,7 +328,7 @@ public class MainFrame extends JFrame {
 					@Override
 					public void updateEventListener(Person acc) {
 						personDAO.updatePersonByID(acc);
-						personPanel.setData(personDAO.getAllPeople());
+						personPanel.setData(personDAO.getAlivePeople());
 						personPanel.refresh();
 						detailPersonFrame.setVisible(false);
 						MainFrame.this.setVisible(true);

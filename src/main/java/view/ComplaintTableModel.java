@@ -36,13 +36,13 @@ public class ComplaintTableModel extends AbstractTableModel{
 		return 6;
 	}
 	
-	@Override
-	public Class<?> getColumnClass(int columnIndex) {
-	    if (db.isEmpty()) {
-	        return Object.class;
-	    }
-	    return getValueAt(0, columnIndex).getClass();
-	}
+//	@Override
+//	public Class<?> getColumnClass(int columnIndex) {
+//	    if (db.isEmpty()) {
+//	        return Object.class;
+//	    }
+//	    return getValueAt(0, columnIndex).getClass();
+//	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
@@ -74,11 +74,11 @@ public class ComplaintTableModel extends AbstractTableModel{
 		}
 	}
 	
-	@Override
-    public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        Complaint com = db.get(rowIndex);
-        if (columnIndex == 0) {
-        	com.setId((int) value);
-        }      
-    }
+//	@Override
+//    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+//        Complaint com = db.get(rowIndex);
+//        if (columnIndex == 0) {
+//        	com.setId((int) value);
+//        }      
+//    }
 }

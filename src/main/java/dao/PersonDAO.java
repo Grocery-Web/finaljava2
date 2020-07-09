@@ -33,12 +33,12 @@ public class PersonDAO {
 		return listID;
 	}
 	
-	public List<Person> getAllPeople() {
+	public List<Person> getAlivePeople() {
 		List<Person> list = new ArrayList<Person>();
 		boolean gen;
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call getAllPerson}");
+				PreparedStatement ps = connect.prepareCall("{call getAlivePeople}");
 				ResultSet rs = ps.executeQuery();
 			) 
 		{
@@ -95,6 +95,7 @@ public class PersonDAO {
 				per.setNationality(rs.getString("nationality"));
 				per.setImage(rs.getString("image"));
 				per.setJob(rs.getString("job"));
+				per.setAlive(rs.getBoolean("alive"));
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
