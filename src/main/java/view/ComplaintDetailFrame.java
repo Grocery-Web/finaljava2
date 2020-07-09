@@ -14,9 +14,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -119,6 +123,16 @@ public class ComplaintDetailFrame extends JFrame {
 		timeSpinner = new JSpinner(new SpinnerDateModel());
 		JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
 		timeSpinner.setEditor(timeEditor);
+		Date getDateTime = new java.sql.Timestamp(cpl.getDatetime().getTime());
+		Pattern pattern = Pattern.compile("..:..:..");
+		Matcher matcher = pattern.matcher(getDateTime.toString());
+		if (matcher.find()) {
+			try {
+				timeSpinner.setValue(new SimpleDateFormat("HH:mm:ss").parse(matcher.group(0)));
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+		}
 		
 		textCompPlace = new JTextField();
 		textCompPlace.setColumns(10);

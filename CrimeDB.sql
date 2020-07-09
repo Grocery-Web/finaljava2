@@ -52,24 +52,15 @@ create table ComplaintDetail (
 go
 
 
-/* incident table */
-create table Incident (
-	id int identity(1,1) primary key,
-	datetime datetime,
-	place nvarchar(MAX), 
-	detail nvarchar(MAX)
-)
-go
-
-
 /* criminal table */
+/* if punishment = imprisonment -> criminal move to the next level = prisoner */
 create table Criminal (
 	id int identity(1,1) primary key,
-	catchStatus bit,
 	personId int,
+	complaintID int,
+	punishment varchar(100) CHECK (punishment IN('administrative sanctions', 'imprisonment')),
 	constraint cp foreign key (personId) references Person(id),
-	incidentId int,
-	constraint cc foreign key (incidentId) references Incident(id),
+	constraint cc foreign key (complaintID) references Complaint(id),
 	rating int
 )
 go
@@ -97,8 +88,8 @@ create table Prisoner (
 	type nvarchar(50),  /* type of crime */
 	personId int,
 	constraint ppi foreign key (personId) references Person(id),
-	incidentId int,
-	constraint pin foreign key (incidentId) references Incident(id)
+	criminalID int,
+	constraint pin foreign key (criminalID) references Criminal(id)
 )
 go
 
@@ -115,37 +106,14 @@ create table Victim (
 	status bit,  /* dead or not */
 	deathTime datetime null,
 	deathPlace nvarchar(MAX),
-	deathReason nvarchar(MAX)
+	deathReason nvarchar(MAX),
+	complaintID int,
+	constraint vid foreign key (complaintID) references Complaint(id)
 )
 go
 
 
-/* incident detail table */
-create table IncidentDetail (
-	id int identity(1,1) primary key,
-	victimId int,
-	constraint idv foreign key (victimId) references Victim(id),
-	incidentId int,
-	constraint idi foreign key (incidentId) references Incident(id),
-	crimeType nvarchar(50)
-)
-go
 
-/* person details table */
-create table PersonDetail (
-	id int primary key,
-	name nvarchar(50),
-	gender bit,
-	dob date,
-	address nvarchar(MAX),
-	image varchar(100),
-	nationality varchar(50),
-	job varchar(20),
-	blood varchar(5),
-	height int,
-	note nvarchar(300)
-)
-go
 
 /* END CREATE TABLES */ 
 
@@ -410,26 +378,6 @@ GO
 
 /* END PROCEDURE COMPLAINT DETAIL */
 
-/* PROCEDURE INCIDENT*/
--- select all Incident in table
-create proc getAllIncidents
-as
-begin
-	select * from Incident
-end
-go
-
--- insert a new Incident
-create proc addIncident
-@datetime datetime,  @place nvarchar(MAX), @detail nvarchar(MAX)
-as
-begin
-	insert into Incident (datetime, place, detail)
-	values(@datetime, @place, @detail)
-end
-go
-
-/* END PROCEDURE INCIDENT */
 
 /* PROCEDURE CRIMINAL*/
 -- select all Criminal in table
@@ -440,13 +388,14 @@ begin
 end
 go
 
+
 -- insert a new Criminal
 create proc addCriminal
-@catchStatus bit, @personId int,  @incidentId int, @rating int
+@punishment varchar, @personId int, @complaintID int, @rating int
 as
 begin
-	insert into Criminal (catchStatus, personId, incidentId, rating)
-	values(@catchStatus, @personId, @incidentId, @rating)
+	insert into Criminal (punishment, personId, complaintID, rating)
+	values(@punishment, @personId, @complaintID, @rating)
 end
 go
 

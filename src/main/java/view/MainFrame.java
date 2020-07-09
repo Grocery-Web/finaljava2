@@ -221,7 +221,6 @@ public class MainFrame extends JFrame {
 				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
 					@Override
 					public void updateEventListener(Complaint cpl) {
-						System.out.println(cpl);
 						complaintPanel.setData(complaintDAO.getAllComplaints());
 						complaintPanel.refresh();
 					}
