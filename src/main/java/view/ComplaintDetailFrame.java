@@ -1,43 +1,28 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import dao.ComplaintDAO;
-import dao.ComplaintDetailDAO;
-import dao.CriminalDAO;
-import dao.IncidentDAO;
 import entity.Complaint;
-import entity.ComplaintDetail;
-import entity.Criminal;
-import entity.Incident;
 import entity.Person;
 
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -45,10 +30,12 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
-
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 public class ComplaintDetailFrame extends JFrame {
 
@@ -56,7 +43,6 @@ public class ComplaintDetailFrame extends JFrame {
 	private JTextField textDeclarantName;
 	private JTextArea textCompDetail;
 	private JTextField textCompId;
-	private JTextField textCompDate;
 	private JTextField textCompPlace;
 	private JRadioButton rdbtnUnverified, rdbtnApproved;
 	private ButtonGroup group;
@@ -69,6 +55,9 @@ public class ComplaintDetailFrame extends JFrame {
 	private JPopupMenu popup;
 	private JScrollPane jpTable, jpDetail;
 	private Complaint complaint;
+	public JSpinner timeSpinner;
+	public JDateChooser complaintDate;
+	private JTextFieldDateEditor editor;
 	
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,6 +73,8 @@ public class ComplaintDetailFrame extends JFrame {
 		JLabel lblCompId = new JLabel("Complaint ID:");
 		
 		JLabel lblCompDate = new JLabel("Date:");
+		
+		JLabel lblTime = new JLabel("Time:");
 		
 		JLabel lblCompPlace = new JLabel("Place:");
 		
@@ -118,9 +109,16 @@ public class ComplaintDetailFrame extends JFrame {
 		jpDetail = new JScrollPane(textCompDetail);
 		jpDetail.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		textCompDate = new JTextField();
-		textCompDate.setColumns(10);
-		textCompDate.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(cpl.getDatetime()));
+		complaintDate = new JDateChooser();
+		editor = (JTextFieldDateEditor) complaintDate.getDateEditor();
+		editor.setEditable(false);
+		complaintDate.setDateFormatString("yyyy-MM-dd");
+		complaintDate.setDate(cpl.getDatetime());
+		
+		
+		timeSpinner = new JSpinner(new SpinnerDateModel());
+		JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
+		timeSpinner.setEditor(timeEditor);
 		
 		textCompPlace = new JTextField();
 		textCompPlace.setColumns(10);
@@ -209,8 +207,7 @@ public class ComplaintDetailFrame extends JFrame {
 				btnSubmitActionPerformed(e);
 			}
 		});
-		
-		
+			
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -232,24 +229,29 @@ public class ComplaintDetailFrame extends JFrame {
 										.addComponent(lblCompDetail))
 									.addGap(18)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(jpDetail, GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-											.addComponent(textDeclarantName)
-											.addComponent(textCompId, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addComponent(textCompName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addComponent(textCompDate, GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-											.addComponent(textCompPlace))))
+										.addComponent(jpDetail, GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+												.addComponent(complaintDate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(textDeclarantName)
+												.addComponent(textCompId)
+												.addComponent(textCompName)
+												.addComponent(textCompPlace))
+											.addGap(18)
+											.addComponent(lblTime, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addComponent(timeSpinner, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE))))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblSuspectList)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-										.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+										.addGroup(gl_contentPane.createSequentialGroup()
 											.addGap(18)
 											.addComponent(rdbtnUnverified)
 											.addGap(18)
 											.addComponent(rdbtnApproved)
 											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 											.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 199, GroupLayout.PREFERRED_SIZE))
-										.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+										.addGroup(gl_contentPane.createSequentialGroup()
 											.addGap(24)
 											.addComponent(jpTable, GroupLayout.PREFERRED_SIZE, 700, Short.MAX_VALUE)))))
 							.addGap(36))))
@@ -266,9 +268,12 @@ public class ComplaintDetailFrame extends JFrame {
 						.addComponent(lblCompId)
 						.addComponent(textCompId, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblCompDate)
-						.addComponent(textCompDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(lblCompDate)
+							.addComponent(lblTime)
+							.addComponent(timeSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(complaintDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(textCompPlace, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
