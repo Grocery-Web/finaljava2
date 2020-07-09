@@ -86,8 +86,6 @@ create table Prisoner (
 	releaseStatus bit null,
 	duration int null,
 	type nvarchar(50),  /* type of crime */
-	personId int,
-	constraint ppi foreign key (personId) references Person(id),
 	criminalID int,
 	constraint pin foreign key (criminalID) references Criminal(id)
 )
