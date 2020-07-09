@@ -58,7 +58,7 @@ create table Criminal (
 	id int identity(1,1) primary key,
 	personId int,
 	complaintID int,
-	punishment varchar(100) CHECK (punishment IN('administrative sanctions', 'imprisonment', 'in process')),
+	punishment varchar(100) /*'administrative sanctions', 'imprisonment', 'in process' */
 	constraint cp foreign key (personId) references Person(id),
 	constraint cc foreign key (complaintID) references Complaint(id),
 	rating int
