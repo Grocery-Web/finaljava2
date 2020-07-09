@@ -215,8 +215,8 @@ public class MainFrame extends JFrame {
 			public void tableEventDetail(int id) {
 				Complaint complaint = complaintDAO.findComplaintById(id);
 				cplDetailFrame = new ComplaintDetailFrame(complaint);
-				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setLocationRelativeTo(null);
+				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
 				cplDetailFrame.setFrameListener(new ComplaintDetailListener() {
 					@Override
