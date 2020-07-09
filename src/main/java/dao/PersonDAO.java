@@ -33,12 +33,12 @@ public class PersonDAO {
 		return listID;
 	}
 	
-	public List<Person> getAllPeople() {
+	public List<Person> getAlivePeople() {
 		List<Person> list = new ArrayList<Person>();
 		boolean gen;
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call getAllPerson}");
+				PreparedStatement ps = connect.prepareCall("{call getAlivePerson}");
 				ResultSet rs = ps.executeQuery();
 			) 
 		{

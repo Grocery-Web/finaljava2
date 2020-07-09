@@ -19,7 +19,7 @@ public class ComplaintDAO {
 
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call getAllComplaints}");
+				PreparedStatement ps = connect.prepareCall("{call getAllUnverifiedComplaints}");
 				ResultSet rs = ps.executeQuery();
 			) 
 		{

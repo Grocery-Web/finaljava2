@@ -201,7 +201,7 @@ END
 GO
 
 /*Select all people in table*/
-create proc getAllPerson
+create proc getAlivePeople
 as
 begin
 	select * from Person where alive = 1
@@ -277,9 +277,8 @@ GO
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */
-
 -- select all Complaints in table
-create proc getAllComplaints
+create proc getAllUnverifiedComplaints
 as
 begin
 	select * from Complaint where verifyStatus = 0

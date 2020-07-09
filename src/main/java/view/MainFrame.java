@@ -121,7 +121,7 @@ public class MainFrame extends JFrame {
 		tabPane.addTab("Incidents", incidentPanel);
 
 //		CALL BACK TABLES
-		personPanel.setData(personDAO.getAllPeople());
+		personPanel.setData(personDAO.getAlivePeople());
 		complaintPanel.setData(complaintDAO.getAllComplaints());
 		incidentPanel.setData(comDetailDAO.getComplaintDetails());
 
@@ -188,11 +188,11 @@ public class MainFrame extends JFrame {
 						per.setImage(personalID + ".png");
 
 						personDAO.addPerson(per);
-						personPanel.setData(personDAO.getAllPeople());
+						personPanel.setData(personDAO.getAlivePeople());
 						personPanel.refresh();
 					}else {
 						personDAO.addPerson(per);
-						personPanel.setData(personDAO.getAllPeople());
+						personPanel.setData(personDAO.getAlivePeople());
 						personPanel.refresh();
 					}
 
@@ -230,7 +230,7 @@ public class MainFrame extends JFrame {
 
 					@Override
 					public void tableEventUpdated(Complaint cpl) {
-						// TODO Auto-generated method stub
+						System.out.println(cpl);
 						
 					}
 
@@ -254,7 +254,7 @@ public class MainFrame extends JFrame {
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
 					personDAO.deletePerson(id);	
-					personPanel.setData(personDAO.getAllPeople());
+					personPanel.setData(personDAO.getAlivePeople());
 					personPanel.refresh();
 				}
 			}
@@ -291,7 +291,7 @@ public class MainFrame extends JFrame {
 						if(action == JOptionPane.OK_OPTION) {
 							personDAO.deletePerson(id);
 							detailPersonFrame.setVisible(false);
-							personPanel.setData(personDAO.getAllPeople());
+							personPanel.setData(personDAO.getAlivePeople());
 							personPanel.refresh();
 							MainFrame.this.setVisible(true);
 						}
@@ -300,7 +300,7 @@ public class MainFrame extends JFrame {
 					@Override
 					public void updateEventListener(Person acc) {
 						personDAO.updatePersonByID(acc);
-						personPanel.setData(personDAO.getAllPeople());
+						personPanel.setData(personDAO.getAlivePeople());
 						personPanel.refresh();
 						detailPersonFrame.setVisible(false);
 						MainFrame.this.setVisible(true);
