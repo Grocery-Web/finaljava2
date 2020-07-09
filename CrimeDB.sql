@@ -58,7 +58,7 @@ create table Criminal (
 	id int identity(1,1) primary key,
 	personId int,
 	complaintID int,
-	punishment varchar(100) CHECK (punishment IN('administrative sanctions', 'imprisonment')),
+	punishment varchar(100) CHECK (punishment in('administrative sanctions', 'imprisoner', 'in process')),
 	constraint cp foreign key (personId) references Person(id),
 	constraint cc foreign key (complaintID) references Complaint(id),
 	rating int
@@ -201,7 +201,7 @@ END
 GO
 
 /*Select all people in table*/
-create proc getAllPerson
+create proc getAlivePeople
 as
 begin
 	select * from Person where alive = 1
@@ -277,12 +277,19 @@ GO
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */
-
--- select all Complaints in table
-create proc getAllComplaints
+-- select all Unverified Complaints in table
+create proc getAllUnverifiedComplaints
 as
 begin
 	select * from Complaint where verifyStatus = 0
+end
+go
+
+-- select all Approved Complaints in table
+create proc getAllApprovedComplaints
+as
+begin
+	select * from Complaint where verifyStatus = 1
 end
 go
 
@@ -365,7 +372,7 @@ end
 go
 
 -- remove person from complaint table
-CREATE PROC removePerson
+CREATE PROC removePersoninComplaintDetail
 @personId int, @compId int
 AS
 BEGIN
@@ -373,6 +380,15 @@ BEGIN
 	WHERE personId = @personId AND compId = @compId
 END
 GO
+
+-- remove person from complaint table
+create proc getCrimeTypeOfPerson
+@personId int, @compId int
+as 
+begin
+	select crimeType from ComplaintDetail where personId = @personId AND compId = @compId ;  
+end 
+go
 
 /* END PROCEDURE COMPLAINT DETAIL */
 
@@ -389,15 +405,32 @@ go
 
 -- insert a new Criminal
 create proc addCriminal
-@punishment varchar, @personId int, @complaintID int, @rating int
+@personId int, @complaintID int, @punishment varchar(100), @rating int
 as
 begin
-	insert into Criminal (punishment, personId, complaintID, rating)
-	values(@punishment, @personId, @complaintID, @rating)
+	insert into Criminal (personId, complaintID, punishment, rating)
+	values(@personId, @complaintID, @punishment, @rating)
 end
 go
 
 /* END PROCEDURE CRIMINAL */
+
+/* PROCEDURE PRISONER */
+
+
+--add prisoner
+create proc addPrisoner
+@startDate date, @prisonID int, @releaseStatus bit, @duration bit, @type nvarchar(50), @criminalID int
+as
+begin
+	insert into Prisoner (startDate, prisonId, releaseStatus, duration, type, criminalID)
+	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID)
+end
+go
+
+
+
+/* END PROCEDURE PRISONER*/
 
 /* INSERT DATA IN TABLE*/ 
 

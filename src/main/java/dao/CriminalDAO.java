@@ -23,10 +23,11 @@ public class CriminalDAO {
 		{
 			while (rs.next()) {
 				Criminal cri = new Criminal();
-				cri.setId(rs.getInt("id"));
-				cri.setCatchStatus(rs.getBoolean("catchStatus"));
-				cri.setPersonId(rs.getInt("personId"));
-				cri.setIncidentId(rs.getInt("IncidentId"));
+				
+				cri.setCriminalId(rs.getInt("id"));
+				cri.setPersonalId(rs.getInt("personId"));
+				cri.setComplaintId(rs.getInt("complaintID"));
+				cri.setPunishment(rs.getString("punishment"));
 				cri.setRating(rs.getInt("rating"));
 				
 				list.add(cri);
@@ -37,18 +38,17 @@ public class CriminalDAO {
 		return list;
 	}
 	
-	public void addCriminal(boolean catchStatus, int personId, int incidentId, int rating) {
+	public void addCriminal(Criminal cri) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?)}");
 			) 
 		{
-			ps.setBoolean(1, catchStatus);
-			ps.setInt(2, personId);
-			ps.setInt(3, incidentId);
-			ps.setInt(4, rating);
+			ps.setInt(1, cri.getPersonalId());
+			ps.setInt(2, cri.getComplaintId());
+			ps.setString(3, cri.getPunishment());
+			ps.setInt(4, cri.getRating());
 			ps.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Insert new criminal successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}

@@ -45,8 +45,20 @@ public class ComplaintDetailDAO {
 			while (rs.next()) {
 				PersonDAO personDAO = new PersonDAO();
 				int personId = rs.getInt("personId");
-				Person person = personDAO.findPersonById(personId);		
-				map.put(person, rs.getString("crimeType"));
+				Person person = personDAO.findPersonById(personId);
+				// Verify person with more than one crimeType and add they into Map
+				if (map.size() > 0) {
+					for (Person perInMap : map.keySet()) {
+						if(perInMap.getPersonalId() == personId) {
+							String crimeType = map.get(perInMap) + "|" + rs.getString("crimeType");
+							map.put(perInMap, crimeType);
+						}else {
+							map.put(person, rs.getString("crimeType"));
+						}
+					}
+				}else {
+					map.put(person, rs.getString("crimeType"));
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
@@ -68,30 +80,10 @@ public class ComplaintDetailDAO {
 		}
 	}
 	
-	public HashMap<Person, String> getComplaintDetails() {
-		HashMap<Person, String> complaintDetails = new HashMap<Person, String>();
-		PersonDAO perDAO = new PersonDAO();
-		try(
-				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call getAllComplaintDetail}");
-				ResultSet rs = ps.executeQuery();
-		)
-		{
-			while (rs.next()) {
-				Person per = perDAO.findPersonById(rs.getInt("personId"));
-				complaintDetails.put(per,rs.getString("crimeType"));
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		}
-		
-		return complaintDetails;
-	}
-	
 	public void removePerson(int personId, int compId) {
 		try(
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call removePerson(?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call removePersoninComplaintDetail(?,?)}");
 		)
 		{
 			ps.setInt(1, personId);
@@ -101,5 +93,24 @@ public class ComplaintDetailDAO {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
+	}
+	
+	public List<String> getCrimeTypeOfPerson(int personId, int compId) {
+		List<String> crimeTypeList = new ArrayList<String>();
+		
+		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getCrimeTypeOfPerson(?,?)}");) {
+			ps.setInt(1, personId);
+			ps.setInt(2, compId);
+			
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				crimeTypeList.add(rs.getString("crimeType"));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return crimeTypeList;
 	}
 }
