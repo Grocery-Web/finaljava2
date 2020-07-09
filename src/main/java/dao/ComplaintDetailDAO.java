@@ -45,8 +45,20 @@ public class ComplaintDetailDAO {
 			while (rs.next()) {
 				PersonDAO personDAO = new PersonDAO();
 				int personId = rs.getInt("personId");
-				Person person = personDAO.findPersonById(personId);		
-				map.put(person, rs.getString("crimeType"));
+				Person person = personDAO.findPersonById(personId);
+				
+				if (map.size() > 0) {
+					for (Person perInMap : map.keySet()) {
+						if(perInMap.getPersonalId() == personId) {
+							String crimeType = map.get(perInMap) + "|" + rs.getString("crimeType");
+							map.put(perInMap, crimeType);
+						}else {
+							map.put(person, rs.getString("crimeType"));
+						}
+					}
+				}else {
+					map.put(person, rs.getString("crimeType"));
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());

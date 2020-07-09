@@ -214,7 +214,8 @@ public class MainFrame extends JFrame {
 				complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
 				complaintPanel.refresh();
 			}
-
+			
+			//COMPLAINT DETALS TABLE LISTENER
 			@Override
 			public void tableEventDetail(int id) {
 				Complaint complaint = complaintDAO.findComplaintById(id);

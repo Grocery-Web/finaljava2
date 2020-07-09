@@ -396,7 +396,7 @@ public class ComplaintDetailFrame extends JFrame {
 					rating = 1;
 					break;
 				default:
-					rating = 3;
+					rating = 5;
 				}
 				;
 				cri.setRating(rating);
