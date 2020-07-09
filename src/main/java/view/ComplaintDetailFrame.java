@@ -40,6 +40,7 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
+import java.awt.Dimension;
 
 public class ComplaintDetailFrame extends JFrame {
 
@@ -62,6 +63,7 @@ public class ComplaintDetailFrame extends JFrame {
 	public JSpinner timeSpinner;
 	public JDateChooser complaintDate;
 	private JTextFieldDateEditor editor;
+	public JButton btnUpdate, btnSubmit;
 	
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,8 +90,13 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		JLabel lblCompStatus = new JLabel("Verify Status:");
 		
-		JButton btnSubmit = new JButton("Submit");
+		btnSubmit = new JButton("Submit");
+		btnSubmit.setFocusPainted(false);
 		btnSubmit.setBackground(Color.YELLOW);
+		
+		btnUpdate = new JButton("Update");
+		btnUpdate.setFocusPainted(false);
+		btnUpdate.setBackground(Color.GREEN);
 		
 		textCompName = new JTextField();
 		textCompName.setColumns(10);
@@ -257,13 +264,15 @@ public class ComplaintDetailFrame extends JFrame {
 											.addComponent(timeSpinner, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE))))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblSuspectList)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_contentPane.createSequentialGroup()
 											.addGap(18)
 											.addComponent(rdbtnUnverified)
 											.addGap(18)
 											.addComponent(rdbtnApproved)
-											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addPreferredGap(ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
+											.addComponent(btnUpdate, GroupLayout.PREFERRED_SIZE, 199, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
 											.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 199, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_contentPane.createSequentialGroup()
 											.addGap(24)
@@ -313,7 +322,9 @@ public class ComplaintDetailFrame extends JFrame {
 								.addComponent(rdbtnApproved))
 							.addGap(10))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(btnSubmit)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnSubmit)
+								.addComponent(btnUpdate))
 							.addContainerGap())))
 		);
 		contentPane.setLayout(gl_contentPane);
