@@ -1,45 +1,48 @@
 package view;
 
 import java.awt.Color;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-
-import entity.Complaint;
-import entity.Person;
-
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-
-import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SpinnerDateModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
+import java.awt.Dimension;
+
+import entity.Complaint;
+import entity.Criminal;
+import entity.Person;
 
 public class ComplaintDetailFrame extends JFrame {
 
@@ -51,17 +54,19 @@ public class ComplaintDetailFrame extends JFrame {
 	private JRadioButton rdbtnUnverified, rdbtnApproved;
 	private ButtonGroup group;
 	private JTable table;
-	//TODO: Tại sao phải có thêm listener này? Sao không tạo thêm method để update trong tableListener?
-	private ComplaintDetailListener cplDetailListener; 
 	private TableComplaintDetailListener tableListener;
 	private JTextField textCompName;
 	private ComplaintDetailTableModel tableModel;
 	private JPopupMenu popup;
 	private JScrollPane jpTable, jpDetail;
 	private Complaint complaint;
-	public JSpinner timeSpinner;
-	public JDateChooser complaintDate;
+	private JSpinner timeSpinner;
+	private JDateChooser complaintDate;
 	private JTextFieldDateEditor editor;
+	public JButton btnUpdate, btnSubmit;
+	private SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
+	private SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+	private SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,8 +93,13 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		JLabel lblCompStatus = new JLabel("Verify Status:");
 		
-		JButton btnSubmit = new JButton("Submit");
+		btnSubmit = new JButton("Submit");
+		btnSubmit.setFocusPainted(false);
 		btnSubmit.setBackground(Color.YELLOW);
+		
+		btnUpdate = new JButton("Update");
+		btnUpdate.setFocusPainted(false);
+		btnUpdate.setBackground(Color.GREEN);
 		
 		textCompName = new JTextField();
 		textCompName.setColumns(10);
@@ -140,15 +150,9 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		// RADIO BUTTON GROUP
 		rdbtnUnverified = new JRadioButton("Unverified");
-		
 		rdbtnApproved = new JRadioButton("Approved");
-		
-		if (cpl.isStatus() == false) {
-			rdbtnUnverified.setSelected(true);
-		} else {
-			rdbtnApproved.setSelected(true);
-		}
-		
+		rdbtnUnverified.setActionCommand("Unverified");
+		rdbtnApproved.setActionCommand("Approved");
 	    group = new ButtonGroup();
 	    group.add(rdbtnUnverified);
 	    group.add(rdbtnApproved);
@@ -189,17 +193,6 @@ public class ComplaintDetailFrame extends JFrame {
 			}
 		});
 		
-		// 	ASSIGN DATA FOR COMPLAINT IN THIS FRAME;
-		//TODO: Chưa hiểu tại sao phải tạo thêm một complaint ở đây mà lại lấy thông tin giống y chang complaint cpl được truyền vào, sao không dùng cpl?
-	    complaint = new Complaint();
-	    complaint.setId(cpl.getId());
-	    complaint.setName(cpl.getName());
-	    complaint.setDatetime(cpl.getDatetime());
-	    complaint.setDeclarantName(cpl.getDeclarantName());
-	    complaint.setDetail(cpl.getDetail());
-	    complaint.setPlace(cpl.getPlace());
-	    complaint.setStatus(cpl.isStatus());
-		
 		// BUTTON ACTION LISTENER
 		removeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -208,17 +201,15 @@ public class ComplaintDetailFrame extends JFrame {
 
 				int action = JOptionPane.showConfirmDialog(null, "Do you really want to remove this person",
 						"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
-				//TODO: Kỹ thuật sử dụng ngay chỗ này rất tốt, tại sao không áp dụng cho phần code bên dưới????
 				if (action == JOptionPane.OK_OPTION && tableListener != null) {
 					tableListener.tableEventDeleted(id);
-					System.out.println("2 " + tableModel.getListPerson());
 				}
 			}
 		});
 	
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnSubmitActionPerformed(e);
+				btnSubmitActionPerformed(e,cpl.getId());
 			}
 		});
 			
@@ -257,13 +248,15 @@ public class ComplaintDetailFrame extends JFrame {
 											.addComponent(timeSpinner, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE))))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblSuspectList)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_contentPane.createSequentialGroup()
 											.addGap(18)
 											.addComponent(rdbtnUnverified)
 											.addGap(18)
 											.addComponent(rdbtnApproved)
-											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addPreferredGap(ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
+											.addComponent(btnUpdate, GroupLayout.PREFERRED_SIZE, 199, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
 											.addComponent(btnSubmit, GroupLayout.PREFERRED_SIZE, 199, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_contentPane.createSequentialGroup()
 											.addGap(24)
@@ -313,16 +306,14 @@ public class ComplaintDetailFrame extends JFrame {
 								.addComponent(rdbtnApproved))
 							.addGap(10))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(btnSubmit)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnSubmit)
+								.addComponent(btnUpdate))
 							.addContainerGap())))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
-	
-	public void setFrameListener(ComplaintDetailListener cplDetailListener) {
-		this.cplDetailListener = cplDetailListener;
-	}
-	
+
 	public void setData(HashMap<Person, String> db) {
 		tableModel.setData(db);
 	}
@@ -335,89 +326,79 @@ public class ComplaintDetailFrame extends JFrame {
 		this.tableListener = tableListener;
 	}
 	
-	protected void btnSubmitActionPerformed(ActionEvent e) {
-		//TODO: dùng kỹ thuật này để lấy lại listPerson sau khi có hành động update list
-		System.out.println("submit " + tableModel.getListPerson());
-		
-//	    complaint.setId(Integer.parseInt(textCompId.getText()));
-//	    complaint.setName(textCompName.getText());
-//	    complaint.setDeclarantName(textDeclarantName.getText());
-//	    complaint.setDetail(textCompDetail.getText());
-//	    complaint.setPlace(textCompPlace.getText());
-//	    
-//	    String datetime = textCompDate.getText();
-//	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
-//	      //Parsing the given String to Date object
-//	    try {
-//			complaint.setDatetime(formatter.parse(datetime));
-//		} catch (ParseException e1) {
-//			e1.printStackTrace();
-//		}
-//	    
-//	    if (rdbtnUnverified.isSelected()) {
-//	    	complaint.setStatus(false);
-//	    } else {
-//	    	complaint.setStatus(true);
-//	    	rdbtnUnverified.setEnabled(false);
-//	    	rdbtnApproved.setEnabled(false);
-//	    	
-//	    	// create new incident
-//	    	//TODO: không được dùng DAO trong child Frame
-//	    	IncidentDAO incDAO = new IncidentDAO(); 
-//	    	Incident inc = new Incident();
-//	    	inc = incDAO.addIncident(complaint.getDatetime(), complaint.getPlace(),complaint.getDetail());
-//	    	int incId = inc.getId();
-//	    	
-//	    	// create new criminal
-//	    	//TODO: không được dùng DAO trong child Frame
-//	    	ComplaintDetailDAO compDetailDAO = new ComplaintDetailDAO();
-//	    	CriminalDAO criDAO = new CriminalDAO();
-////	    	Criminal cri = new Criminal();
-//	    	HashMap<Person, String> perMap = compDetailDAO.getPeopleListByComplaintId(complaint.getId());
-//	    	perMap.forEach((person, crimeType) -> {
-//	    		int rating;
-//	    		switch(crimeType) {
-//		    		  case "Assault and Battery":
-//		    		    rating = 2;
-//		    		    break;
-//		    		  case "Kidnapping":
-//		    		    rating = 5;
-//		    		    break;
-//		    		  case "Homicide":
-//			    		    rating = 5;
-//			    		    break;
-//		    		  case "Rape":
-//			    		    rating = 3;
-//			    		    break;
-//		    		  case "False Imprisonment":
-//				    		rating = 3;
-//				    		break;
-//		    		  case "Theft":
-//				    		rating = 2;
-//				    		break;
-//		    		  case "Arson":
-//				    		rating = 1;
-//				    		break;
-//		    		  case "False Pretenses":
-//				    		rating = 4;
-//				    		break;
-//		    		  case "White Collar Crimes":
-//				    		rating = 4;
-//				    		break;
-//		    		  case "Receipt of Stolen Goods":
-//				    		rating = 1;
-//				    		break;
-//		    		  default: 
-//		    			rating = 3;
-//		    		    // code block
-//	    		};
-//	    		criDAO.addCriminal(false, person.getPersonalId(), incId, rating);    		
-//	    	});
-//	    }
-//	    
-//	    ComplaintDAO compDAO = new ComplaintDAO();
-//	    compDAO.updateComplaintById(complaint.getId(), complaint);
-//		
-//		cplDetailListener.updateEventListener(complaint);
+	protected void btnSubmitActionPerformed(ActionEvent e, int cplId) {
+		int action = JOptionPane.showConfirmDialog(null, "This action means the complaint will be upgraded to be a serious situation. Do you really want to verify?",
+				"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
+
+		if (action == JOptionPane.OK_OPTION && tableListener != null) {
+			
+			// GET INFO OF COMPLAINT
+			String getCompName = textCompName.getText();
+			String getDeclarantName = textDeclarantName.getText();
+			String getCompDetail = textCompDetail.getText();
+			String getCompPlace = textCompPlace.getText();
+
+			Date getDateTime = null;
+			Date getDate = complaintDate.getDate();
+			Date getTime = (Date) timeSpinner.getValue();
+			String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
+			try {
+				getDateTime = sdf2.parse(DateTime);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+
+			Complaint complaint = new Complaint(cplId, getCompName, getDateTime, getCompPlace, getDeclarantName, getCompDetail, true);
+			
+			// GET LIST INFO OF CRIMINALS
+			Criminal cri = new Criminal();
+			HashMap<Person, String> map = tableModel.getListPerson();
+			ArrayList<Criminal> list = new ArrayList<Criminal>();
+			
+			map.forEach((person, crimeType) -> {
+				int rating;
+				
+				cri.setPersonalId(person.getPersonalId());
+				cri.setComplainttId(cplId);
+				cri.setPunishment("in process");
+				switch(crimeType) {
+	    		  case "Assault and Battery":
+	    		    rating = 2;
+	    		    break;
+	    		  case "Kidnapping":
+	    		    rating = 5;
+	    		    break;
+	    		  case "Homicide":
+		    		    rating = 5;
+		    		    break;
+	    		  case "Rape":
+		    		    rating = 3;
+		    		    break;
+	    		  case "False Imprisonment":
+			    		rating = 3;
+			    		break;
+	    		  case "Theft":
+			    		rating = 2;
+			    		break;
+	    		  case "Arson":
+			    		rating = 1;
+			    		break;
+	    		  case "False Pretenses":
+			    		rating = 4;
+			    		break;
+	    		  case "White Collar Crimes":
+			    		rating = 4;
+			    		break;
+	    		  case "Receipt of Stolen Goods":
+			    		rating = 1;
+			    		break;
+	    		  default: 
+	    			rating = 3;
+				};
+				cri.setRating(rating);
+				list.add(cri);
+			});
+			tableListener.tableEventSubmited(complaint, list);
+		}
 	}
 }

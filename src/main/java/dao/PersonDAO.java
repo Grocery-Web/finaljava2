@@ -95,6 +95,7 @@ public class PersonDAO {
 				per.setNationality(rs.getString("nationality"));
 				per.setImage(rs.getString("image"));
 				per.setJob(rs.getString("job"));
+				per.setAlive(rs.getBoolean("alive"));
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());

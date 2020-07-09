@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -234,9 +235,9 @@ public class MainFrame extends JFrame {
 					}
 
 					@Override
-					public void tableEventSubmited(Complaint cpl, Criminal cri) {
-						// TODO Auto-generated method stub
-						
+					public void tableEventSubmited(Complaint cpl, ArrayList<Criminal> lstCri) {
+						System.out.println(cpl);
+						System.out.println(lstCri);
 					}
 				});
 				cplDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
