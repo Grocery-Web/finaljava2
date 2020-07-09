@@ -120,7 +120,10 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		textCompDate = new JTextField();
 		textCompDate.setColumns(10);
-		textCompDate.setText(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(cpl.getDatetime()));
+		
+		Date getDateTime = new java.sql.Timestamp(cpl.getDatetime().getTime());
+		String dateTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(getDateTime);
+		textCompDate.setText(dateTime);
 		
 		textCompPlace = new JTextField();
 		textCompPlace.setColumns(10);
