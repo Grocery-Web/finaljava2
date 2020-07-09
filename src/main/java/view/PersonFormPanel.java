@@ -335,11 +335,7 @@ public class PersonFormPanel extends JPanel {
 //	Functions to check for all input fields
 	private void cd1Check() {
 		PersonDAO personDAO = new PersonDAO();
-		List<Person> list = personDAO.getAllPeople();
-		ArrayList<Integer> listID = new ArrayList<Integer>();
-		for (Person ps : list) {
-			listID.add(ps.getPersonalId());
-		}
+		var listID = personDAO.getAllID();
 		
 		if (!personalID.getText().equals("") && personalID.getText().matches("\\d+")) {
 			if (listID.contains(Integer.parseInt(personalID.getText()))) {

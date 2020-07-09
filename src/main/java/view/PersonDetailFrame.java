@@ -66,7 +66,7 @@ public class PersonDetailFrame extends JFrame {
 	
 	Person userInFrame;
 	File imgChooser = null;
-	int ID;
+	int ID; //Person's ID
 
 	/**
 	 * Launch the application.
@@ -90,6 +90,7 @@ public class PersonDetailFrame extends JFrame {
 	
 	
 	public PersonDetailFrame( Person person ) {
+		//get person and save all data to userInFrame.
 		initPersonDetailFrame();
 		ID = person.getPersonalId();
 		
@@ -107,14 +108,35 @@ public class PersonDetailFrame extends JFrame {
 		}
 		else
 			rdbtnFemale.setSelected(true);
-		var url ="avatar/" + person.getImage();
-		Image imgPerson = 
-				new ImageIcon(
-					getClass().getClassLoader()
-					.getResource(url)
-					).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 		
-		lblImgUser.setIcon(new ImageIcon(imgPerson));
+		var url ="avatar/" + person.getImage();
+		
+		//try to get avatar. If not, get the default avatar base on their gender
+		try {
+			Image imgPerson = 
+					new ImageIcon(
+						getClass().getClassLoader()
+						.getResource(url)
+						).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			
+			lblImgUser.setIcon(new ImageIcon(imgPerson));
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			if (person.getGender().toString() == "male") {
+				url = "images/male.png";
+			}
+			else url = "images/female.png";
+			
+			Image imgPerson = 
+					new ImageIcon(
+						getClass().getClassLoader()
+						.getResource(url)
+						).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			
+			lblImgUser.setIcon(new ImageIcon(imgPerson));
+		}
+		
 		
 		userInFrame = new Person();
 		
