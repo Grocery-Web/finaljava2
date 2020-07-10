@@ -350,7 +350,7 @@ create proc getComplaintDetailByComplaintId
 @id int
 as 
 begin
-	select * from ComplaintDetail where compId = @id;  
+	select * from ComplaintDetail where compId = @id; 
 end 
 go
 

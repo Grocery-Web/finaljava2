@@ -168,8 +168,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void insertEventListener(Complaint cpt) {
 				complaintDAO.addComplaint(cpt);
-				complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
-				complaintPanel.refresh();
+				refresh();
 			}
 		});
 
@@ -199,12 +198,10 @@ public class MainFrame extends JFrame {
 						per.setImage(personalID + ".png");
 
 						personDAO.addPerson(per);
-						personPanel.setData(personDAO.getAlivePeople());
-						personPanel.refresh();
+						refresh();
 					}else {
 						personDAO.addPerson(per);
-						personPanel.setData(personDAO.getAlivePeople());
-						personPanel.refresh();
+						refresh();
 					}
 
 				} else {
@@ -219,8 +216,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDeleted(int id) {
 				complaintDAO.deleteComplaint(id);
-				complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
-				complaintPanel.refresh();
+				refresh();
 			}
 			
 			//COMPLAINT DETALS TABLE LISTENER
@@ -236,29 +232,25 @@ public class MainFrame extends JFrame {
 					@Override
 					public void tableEventDeleted(int personId) {
 						comDetailDAO.removePerson(personId,id);
-						cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
-						cplDetailFrame.refresh();
+						refresh();
 					}
 
 					@Override
 					public void tableEventUpdated(Complaint cpl) {
 						complaintDAO.updateComplaintById(id, cpl);
 						JOptionPane.showMessageDialog(null, "Update complaint successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-						complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
-						complaintPanel.refresh();
+						refresh();
+						cplDetailFrame.dispose();
 					}
 					
 					@Override
-					public void tableEventSubmited(Complaint cpl, ArrayList<Criminal> lstCri) {
+					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
 						complaintDAO.updateComplaintById(id, cpl);
 						for (Criminal criminal : lstCri) {
 							criminalDAO.addCriminal(criminal);
 						}
 						cplDetailFrame.dispose();
-						incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
-						incidentPanel.refresh();
-						complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
-						complaintPanel.refresh();
+						refresh();
 					}
 				});
 				cplDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -275,8 +267,7 @@ public class MainFrame extends JFrame {
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
 					personDAO.deletePerson(id);	
-					personPanel.setData(personDAO.getAlivePeople());
-					personPanel.refresh();
+					refresh();
 				}
 			}
 
@@ -326,8 +317,7 @@ public class MainFrame extends JFrame {
 						if(action == JOptionPane.OK_OPTION) {
 							personDAO.deletePerson(id);
 							detailPersonFrame.setVisible(false);
-							personPanel.setData(personDAO.getAlivePeople());
-							personPanel.refresh();
+							refresh();
 							MainFrame.this.setVisible(true);
 						}
 					}
@@ -335,8 +325,7 @@ public class MainFrame extends JFrame {
 					@Override
 					public void updateEventListener(Person acc) {
 						personDAO.updatePersonByID(acc);
-						personPanel.setData(personDAO.getAlivePeople());
-						personPanel.refresh();
+						refresh();
 						detailPersonFrame.setVisible(false);
 						MainFrame.this.setVisible(true);
 					}
@@ -431,5 +420,16 @@ public class MainFrame extends JFrame {
 			// File was not successfully renamed
 		}
 		return fileWithNewName;
+	}
+	
+	private void refresh() {
+		personPanel.setData(personDAO.getAlivePeople());
+		personPanel.refresh();
+		incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
+		incidentPanel.refresh();
+		complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
+		complaintPanel.refresh();
+		criminalPanel.setData(criminalDAO.getAllCriminals());
+		criminalPanel.refresh();
 	}
 }
