@@ -96,7 +96,6 @@ public class ComplaintDetailDAO {
 			ps.setInt(1, personId);
 			ps.setInt(2, compId);
 			ps.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Remove Person in Complaint Sucessfully", "Success", JOptionPane.OK_OPTION|JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
