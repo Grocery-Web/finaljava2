@@ -58,7 +58,7 @@ create table Criminal (
 	id int identity(1,1) primary key,
 	personId int,
 	complaintID int,
-	punishment varchar(100) /*'administrative sanctions', 'imprisonment', 'in process' */
+	punishment varchar(100) CHECK (punishment in('administrative sanctions', 'imprisoner', 'in process')),
 	constraint cp foreign key (personId) references Person(id),
 	constraint cc foreign key (complaintID) references Complaint(id),
 	rating int
@@ -202,7 +202,7 @@ END
 GO
 
 /*Select all people in table*/
-create proc getAllPerson
+create proc getAlivePeople
 as
 begin
 	select * from Person where alive = 1
@@ -278,12 +278,19 @@ GO
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */
-
--- select all Complaints in table
-create proc getAllComplaints
+-- select all Unverified Complaints in table
+create proc getAllUnverifiedComplaints
 as
 begin
 	select * from Complaint where verifyStatus = 0
+end
+go
+
+-- select all Approved Complaints in table
+create proc getAllApprovedComplaints
+as
+begin
+	select * from Complaint where verifyStatus = 1
 end
 go
 
@@ -366,7 +373,7 @@ end
 go
 
 -- remove person from complaint table
-CREATE PROC removePerson
+CREATE PROC removePersoninComplaintDetail
 @personId int, @compId int
 AS
 BEGIN
@@ -374,6 +381,15 @@ BEGIN
 	WHERE personId = @personId AND compId = @compId
 END
 GO
+
+-- remove person from complaint table
+create proc getCrimeTypeOfPerson
+@personId int, @compId int
+as 
+begin
+	select crimeType from ComplaintDetail where personId = @personId AND compId = @compId ;  
+end 
+go
 
 /* END PROCEDURE COMPLAINT DETAIL */
 
@@ -390,11 +406,11 @@ go
 
 -- insert a new Criminal
 create proc addCriminal
-@punishment varchar, @personId int, @complaintID int, @rating int
+@personId int, @complaintID int, @punishment varchar(100), @rating int
 as
 begin
-	insert into Criminal (punishment, personId, complaintID, rating)
-	values(@punishment, @personId, @complaintID, @rating)
+	insert into Criminal (personId, complaintID, punishment, rating)
+	values(@personId, @complaintID, @punishment, @rating)
 end
 go
 
@@ -451,7 +467,7 @@ insert into Complaint values ('Sexual Assault', '2007-07-13 07:07:33', 'Ho Chi M
 'Sexual assault is any kind of unwanted sexual activity, from touching to rape',0)
 insert into Complaint values ('File a Restraining Order', '2011-01-30 17:37:22', 'Ha Noi', 'Tan', 
 'Generally, you have to fill out paperwork and submit it to the county courthouse. If you need protection right away',0)
-insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh Bình', 'Truc', 
+insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh Bï¿½nh', 'Truc', 
 'Report suspected crime, like traffic violations and illegal drug use, to local authorities. Or you can report it to your 
 nearest state police office',0)
 insert into Complaint values ('Vehicle Misuse or Reckless Driving', '2017-02-27 22:56:01', 'An Giang', 'Tra My', 
