@@ -62,6 +62,7 @@ public class MainFrame extends JFrame {
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
+	private IncidentDetailFrame incDetailFrame;
 	private RelevantComplaintForm relComplain;
 	private PersonDetailFrame detailPersonFrame;
 
@@ -334,6 +335,21 @@ public class MainFrame extends JFrame {
 			}
 		});
 
+//		INCIDENT TABLE LISTENER		
+		incidentPanel.setTableListener(new TableIncidentListener() {		
+			//INCIDENT DETALS TABLE LISTENER
+			@Override
+			public void tableEventDetail(int id) {
+				Complaint incident = complaintDAO.findComplaintById(id);
+				incDetailFrame = new IncidentDetailFrame(incident);
+				incDetailFrame.setLocationRelativeTo(null);
+				incDetailFrame.setVisible(true);
+				incDetailFrame.setData(comDetailDAO.getCriminalListByIncidentId(id));
+				incDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			}
+		});
+		
+		
 //		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.PAGE_START);

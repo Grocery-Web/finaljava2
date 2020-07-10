@@ -53,4 +53,29 @@ public class CriminalDAO {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	public Criminal findCriminalByPersonAndComplaintId(int personId, int complaintId) {
+		Criminal cri = new Criminal();
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call findCriminalByPersonAndComplaintId(?,?)}");
+			) 
+		{
+			ps.setInt(1, personId);
+			ps.setInt(2, complaintId);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				cri.setCriminalId(rs.getInt("id"));
+				cri.setPersonalId(rs.getInt("personId"));
+				cri.setComplaintId(rs.getInt("complaintId"));
+				cri.setPunishment(rs.getString("punishment"));
+				cri.setRating(rs.getInt("Rating"));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return cri;
+	}
 }

@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import common.ConnectToProperties;
 import entity.ComplaintDetail;
+import entity.Criminal;
 import entity.Gender;
 import entity.Person;
 
@@ -119,5 +120,28 @@ public class ComplaintDetailDAO {
 		}
 		
 		return crimeTypeList;
+	}
+	
+	public List<Criminal> getCriminalListByIncidentId(int id) {
+
+		List<Criminal> list = new ArrayList<Criminal>();
+		
+
+		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getComplaintDetailByComplaintId(?)}");) {
+			ps.setInt(1, id);
+
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				CriminalDAO criminalDAO = new CriminalDAO();
+				int personId = rs.getInt("personId");
+				Criminal cri = criminalDAO.findCriminalByPersonAndComplaintId(personId, id);
+				list.add(cri);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+
+		return list;
 	}
 }

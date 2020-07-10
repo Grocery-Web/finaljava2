@@ -26,15 +26,14 @@ public class IncidentsPanel extends JPanel{
 	private JTable table;
 	private ComplaintTableModel tableModel;
 	private JPopupMenu popup;
+	private TableIncidentListener tableListener;
 	
 	public IncidentsPanel() {
 		tableModel = new ComplaintTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem removeItem = new JMenuItem("Delete Complaint");
-		JMenuItem detailItem = new JMenuItem("Complaint Details");
-		popup.add(removeItem);
+		JMenuItem detailItem = new JMenuItem("Incident Detail");
 		popup.add(detailItem);
 
 		table.addMouseListener(new MouseAdapter() {
@@ -48,6 +47,18 @@ public class IncidentsPanel extends JPanel{
 				}
 			}
 		});
+		
+		detailItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventDetail(id);
+				}
+			}
+		});
+
 		
 //		table.setAutoCreateRowSorter(true);  // Search data
 
@@ -72,9 +83,7 @@ public class IncidentsPanel extends JPanel{
 		tableModel.fireTableDataChanged();
 	}
 	
-	public void search(String txt) {
-		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
-		sorter.setRowFilter(RowFilter.regexFilter(txt));
-		sorter.setSortKeys(null);
+	public void setTableListener(TableIncidentListener tableListener) {
+		this.tableListener = tableListener;
 	}
 }
