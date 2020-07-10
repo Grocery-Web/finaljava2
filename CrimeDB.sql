@@ -71,6 +71,7 @@ create table PrisonList (
 	id int identity(1,1) primary key,
 	name nvarchar(50),
 	address nvarchar(MAX),
+	img varchar(100),
 	limit int,
 	prisonerNum int
 )
@@ -457,6 +458,12 @@ insert into Complaint values ('Vehicle Misuse or Reckless Driving', '2017-02-27 
 'GSA leased vehicles all have license plates that have the following structure (GXX-XXXXX).  If the license plate does not begin with a G, 
 then it is not owned by GSA',0)
 go
+
+
+--table prison list
+insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 'fox.png', 4, 2)
+insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 'sona.png', 1, 0)
+insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 1)
 
 /* END INSERT DATA IN TABLE*/ 
 
