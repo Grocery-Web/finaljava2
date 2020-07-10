@@ -225,7 +225,8 @@ public class MainFrame extends JFrame {
 					@Override
 					public void tableEventDeleted(int personId) {
 						comDetailDAO.removePerson(personId,id);
-						refresh();
+						cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
+						cplDetailFrame.refresh();
 					}
 
 					@Override
