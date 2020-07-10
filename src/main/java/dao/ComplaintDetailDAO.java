@@ -132,11 +132,17 @@ public class ComplaintDetailDAO {
 			ps.setInt(1, id);
 
 			var rs = ps.executeQuery();
+			List<Integer> personIdList = new ArrayList<Integer>();
 			while (rs.next()) {
 				CriminalDAO criminalDAO = new CriminalDAO();
 				int personId = rs.getInt("personId");
-				Criminal cri = criminalDAO.findCriminalByPersonAndComplaintId(personId, id);
-				list.add(cri);
+				if (personIdList.contains(personId)) {
+					continue;
+				} else {
+					personIdList.add(personId);
+					Criminal cri = criminalDAO.findCriminalByPersonAndComplaintId(personId, id);
+					list.add(cri);				
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
