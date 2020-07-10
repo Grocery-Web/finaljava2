@@ -73,6 +73,7 @@ public class IncidentDetailFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setTitle("Incident Detail");
 		
 //		INCIDENT NAME
 		JLabel lblName = new JLabel("Incident Name:");	
