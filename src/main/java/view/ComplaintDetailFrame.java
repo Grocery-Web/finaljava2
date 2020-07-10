@@ -46,6 +46,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.toedter.calendar.JDateChooser;
@@ -55,6 +57,7 @@ import entity.Complaint;
 import entity.Person;
 
 import entity.Criminal;
+import java.awt.Font;
 
 public class ComplaintDetailFrame extends JFrame {
 
@@ -77,14 +80,15 @@ public class ComplaintDetailFrame extends JFrame {
 	private JButton btnUpdate, btnSubmit;
 	private String s = Character.toString("\u2713".toCharArray()[0]);
 	private JLabel q1, q2, q4, q5, q3, q6;
-	private boolean cd1, cd2, cd3, cd4, cd5;
+	private boolean cd1, cd2, cd3, cd4, cd5, cd6, cd7, enabledMouseListener;
 	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
 	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
 	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public JLabel q7;
 	
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 500);
+		setBounds(100, 100, 913, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -274,6 +278,8 @@ public class ComplaintDetailFrame extends JFrame {
 		q5 = new JLabel();
 		q3 = new JLabel();
 		q6 = new JLabel();
+		q7 = new JLabel("?"); q7.setForeground(Color.RED);
+		q7.setToolTipText("Add one or more suspects to verify this complaint.");
 
 		// RADIO BUTTON GROUP
 		rdbtnUnverified = new JRadioButton("Unverified");
@@ -281,23 +287,39 @@ public class ComplaintDetailFrame extends JFrame {
 		
 		if (cpl.isStatus() == false) {
 			rdbtnUnverified.setSelected(true);
-		} else {
-			rdbtnApproved.setSelected(true);
 		}
 		
 	    group = new ButtonGroup();
 	    group.add(rdbtnUnverified);
 	    group.add(rdbtnApproved);
 	    
-	    new ItemListener() {
+	    ItemListener choice = new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				AbstractButton btn = (AbstractButton) e.getSource();
-				if (btn.getText() == "Unverified") {
-					
+				if (btn.getText() == "Approved") {
+					textCompName.setEnabled(false);
+					complaintDate.setEnabled(false);
+					timeSpinner.setEnabled(false);
+					textCompPlace.setEnabled(false);
+					textDeclarantName.setEnabled(false);
+					textCompDetail.setEnabled(false);
+					table.setBackground(new Color(240, 240, 240)); table.setFocusable(false);
+					enabledMouseListener = false; table.setRowSelectionAllowed(false);
+				} else {
+					textCompName.setEnabled(true);
+					complaintDate.setEnabled(true);
+					timeSpinner.setEnabled(true);
+					textCompPlace.setEnabled(true);
+					textDeclarantName.setEnabled(true);
+					textCompDetail.setEnabled(true);
+					table.setBackground(Color.WHITE); table.setFocusable(true);
+					enabledMouseListener = true; table.setRowSelectionAllowed(true);
 				}
 			}
 		};
+		rdbtnUnverified.addItemListener(choice);
+		rdbtnApproved.addItemListener(choice);
 	
 		// TABLE LIST OF SUSPECT
 		JLabel lblSuspectList = new JLabel("List of Suspect:");
@@ -306,9 +328,8 @@ public class ComplaintDetailFrame extends JFrame {
 		table = new JTable(tableModel);
 		jpTable = new JScrollPane(table);
 		jpTable.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
 		table.setBorder(BorderFactory.createEtchedBorder());
-
+		
 		// ALIGN TEXT IN CENTER
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -322,16 +343,19 @@ public class ComplaintDetailFrame extends JFrame {
 
 		JMenuItem removeItem = new JMenuItem("Remove person");
 		popup.add(removeItem);
+		enabledMouseListener = true;
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				int row = table.rowAtPoint(e.getPoint());
-				table.getSelectionModel().setSelectionInterval(row, row);
+				if (enabledMouseListener) {
+					int row = table.rowAtPoint(e.getPoint());
+					table.getSelectionModel().setSelectionInterval(row, row);
 
-				if (e.getButton() == MouseEvent.BUTTON3) {
-					// When right click on the row of table, the pop up will be showed up
-					popup.show(table, e.getX(), e.getY());
-				}
+					if (e.getButton() == MouseEvent.BUTTON3) {
+						// When right click on the row of table, the pop up will be showed up
+						popup.show(table, e.getX(), e.getY());
+					}
+				}	
 			}
 		});
 
@@ -419,7 +443,9 @@ public class ComplaintDetailFrame extends JFrame {
 											.addGap(24)
 											.addComponent(jpTable, GroupLayout.PREFERRED_SIZE, 707, Short.MAX_VALUE)))))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(q6, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(q6, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+								.addComponent(q7, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
 							.addGap(18))))
 		);
 		gl_contentPane.setVerticalGroup(
@@ -482,7 +508,9 @@ public class ComplaintDetailFrame extends JFrame {
 									.addPreferredGap(ComponentPlacement.RELATED))))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(216)
-							.addComponent(q6, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(q6, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+							.addGap(85)
+							.addComponent(q7, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(26, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
@@ -577,20 +605,42 @@ public class ComplaintDetailFrame extends JFrame {
         	textCompDetail.setBorder(new LineBorder(Color.GREEN, 1));
         	q6.setText(s); q6.setForeground(new Color(0, 153, 51));
         	q6.setToolTipText(null);
+        	cd6 = true;
         } else {
         	textCompDetail.setBorder(new LineBorder(Color.RED, 1));
         	q6.setText("?"); q6.setForeground(Color.RED);
         	q6.setToolTipText("Minimum length required is 20 characters");
+        	cd6 = false;
         }
 	}
 	
+	private void cd7Check() {
+		if (tableModel.getRowCount() > 0) {
+			jpTable.setBorder(new LineBorder(new Color(0, 153, 51), 2));
+			q7.setText(s); q7.setForeground(new Color(0, 153, 51));
+			q7.setToolTipText(null);
+			cd7 = true;
+		} else {
+			jpTable.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			q7.setText("?"); q7.setForeground(Color.RED);
+			q7.setToolTipText("Add one or more suspects to verify this complaint.");
+			cd7 = false;
+		}
+	}
+	
 	private void checkUnlock() {
-		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5;
+		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5 && cd6 && rdbtnUnverified.isSelected();
 		btnUpdate.setEnabled(unlock);
+		
+		boolean approve = cd1 && cd2 && cd3 && cd4 && cd5 && cd6 && cd7;
+		rdbtnApproved.setEnabled(approve);
+		
+		btnSubmit.setEnabled(rdbtnApproved.isSelected());
 	}
 	
 	public void setData(HashMap<Person, String> db) {
 		tableModel.setData(db);
+		cd7Check(); checkUnlock();
 	}
 
 	public void refresh() {
