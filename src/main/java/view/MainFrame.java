@@ -30,6 +30,7 @@ import dao.ComplaintDAO;
 import dao.ComplaintDetailDAO;
 import dao.CriminalDAO;
 import dao.PersonDAO;
+import dao.PrisonListDAO;
 import entity.Complaint;
 import entity.ComplaintDetail;
 import entity.Criminal;
@@ -50,12 +51,14 @@ public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
 	private IncidentsPanel incidentPanel;
 	private CriminalPanel criminalPanel;
+	private PrisonListPanel prisonListPanel;
 
 //	DAO
 	private PersonDAO personDAO;
 	private ComplaintDAO complaintDAO;
 	private ComplaintDetailDAO comDetailDAO;
 	private CriminalDAO criminalDAO;
+	private PrisonListDAO prisonListDAO;
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
@@ -100,12 +103,14 @@ public class MainFrame extends JFrame {
 		tabPane = new JTabbedPane();
 		incidentPanel =  new IncidentsPanel();
 		criminalPanel = new CriminalPanel();
+		prisonListPanel = new PrisonListPanel();
 
 //		CREAT DAO
 		personDAO = new PersonDAO();
 		complaintDAO = new ComplaintDAO();
 		comDetailDAO = new ComplaintDetailDAO();
 		criminalDAO = new CriminalDAO();
+		prisonListDAO = new PrisonListDAO();
 
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
@@ -122,12 +127,14 @@ public class MainFrame extends JFrame {
 		tabPane.addTab("Complaints", complaintPanel);
 		tabPane.addTab("Incidents", incidentPanel);
 		tabPane.addTab("Criminals", criminalPanel);
+		tabPane.addTab("Prison List", prisonListPanel);
 
 //		CALL BACK TABLES
 		personPanel.setData(personDAO.getAlivePeople());
 		complaintPanel.setData(complaintDAO.getAllUnverifiedComplaints());
 		incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
 		criminalPanel.setData(criminalDAO.getAllCriminals());
+		prisonListPanel.setData(prisonListDAO.getAllPrisonList());
 
 //		TOOLBAR LISTENER
 		toolbar.setToolbarListener(new ToolbarListener() {
