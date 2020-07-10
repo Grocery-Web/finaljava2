@@ -49,6 +49,7 @@ public class CriminalDAO {
 			ps.setString(3, cri.getPunishment());
 			ps.setInt(4, cri.getRating());
 			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Add New Criminal Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}

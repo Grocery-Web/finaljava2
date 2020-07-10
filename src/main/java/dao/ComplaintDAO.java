@@ -150,4 +150,6 @@ public class ComplaintDAO {
 	private java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
 	    return new java.sql.Date(date.getTime());
 	}
+	
+	
 }
