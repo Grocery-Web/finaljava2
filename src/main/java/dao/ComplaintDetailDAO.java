@@ -34,6 +34,7 @@ public class ComplaintDetailDAO {
 	}
 	
 	public HashMap<Person, String> getPeopleListByComplaintId(int id) {
+
 		HashMap<Person, String> map = new HashMap<Person, String>();
 		
 
@@ -46,22 +47,28 @@ public class ComplaintDetailDAO {
 				PersonDAO personDAO = new PersonDAO();
 				int personId = rs.getInt("personId");
 				Person person = personDAO.findPersonById(personId);
+
 				// Verify person with more than one crimeType and add they into Map
 				if (map.size() > 0) {
+					boolean flag = false;
 					for (Person perInMap : map.keySet()) {
 						if(perInMap.getPersonalId() == personId) {
+							flag = true;
 							String crimeType = map.get(perInMap) + "|" + rs.getString("crimeType");
 							map.put(perInMap, crimeType);
-						}else {
-							map.put(person, rs.getString("crimeType"));
+							break;
 						}
+					}
+					
+					if(flag != true) {
+						map.put(person, rs.getString("crimeType"));
 					}
 				}else {
 					map.put(person, rs.getString("crimeType"));
 				}
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 
 		return map;
