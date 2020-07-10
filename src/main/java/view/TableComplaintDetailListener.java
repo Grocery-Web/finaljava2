@@ -1,7 +1,7 @@
 package view;
 
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import entity.Complaint;
 import entity.Criminal;
@@ -9,5 +9,5 @@ import entity.Criminal;
 public interface TableComplaintDetailListener extends EventListener{
 	public void tableEventDeleted(int id);
 	public void tableEventUpdated(Complaint cpl);
-	public void tableEventSubmited(Complaint cpl, ArrayList<Criminal> lstCri);
+	public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri);
 }

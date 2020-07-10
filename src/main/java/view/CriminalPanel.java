@@ -68,4 +68,8 @@ public class CriminalPanel extends JPanel{
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);
 	}
+	
+	public void refresh() {
+		tableModel.fireTableDataChanged();
+	}
 }

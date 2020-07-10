@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.Color;
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -13,12 +12,15 @@ import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -46,18 +48,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
 import entity.Complaint;
-import entity.Person;
-
 import entity.Criminal;
-import java.awt.Font;
+import entity.Person;
 
 public class ComplaintDetailFrame extends JFrame {
 
@@ -678,17 +676,17 @@ public class ComplaintDetailFrame extends JFrame {
 					getCompDetail, true);
 
 			// GET LIST INFO OF CRIMINALS
-			Criminal cri = new Criminal();
 			HashMap<Person, String> map = tableModel.getListPerson();
-			ArrayList<Criminal> list = new ArrayList<Criminal>();
-
-			map.forEach((person, crimeType) -> {
+			List<Criminal> list = new ArrayList<Criminal>();		
+			
+			for (Map.Entry<Person, String> entry : map.entrySet()) {
 				int rating;
-
-				cri.setPersonalId(person.getPersonalId());
+				Criminal cri = new Criminal();
+				
+				cri.setPersonalId(entry.getKey().getPersonalId());
 				cri.setComplaintId(cplId);
 				cri.setPunishment("in process");
-				switch (crimeType) {
+				switch (entry.getValue()) {
 				case "Assault and Battery":
 					rating = 2;
 					break;
@@ -725,7 +723,7 @@ public class ComplaintDetailFrame extends JFrame {
 				;
 				cri.setRating(rating);
 				list.add(cri);
-			});
+			}
 			tableListener.tableEventSubmited(complaint, list);
 		}
 	}
