@@ -432,6 +432,19 @@ go
 
 /* END PROCEDURE PRISONER*/
 
+/* PROCEDURE PRISONER */
+
+create proc getAllPrisonList
+as
+begin
+	select *
+	from PrisonList	
+end
+go
+
+/* END PROCEDURE PRISONER */
+
+
 /* INSERT DATA IN TABLE*/ 
 
 -- table Person
@@ -466,13 +479,19 @@ insert into Complaint values ('Sexual Assault', '2007-07-13 07:07:33', 'Ho Chi M
 'Sexual assault is any kind of unwanted sexual activity, from touching to rape',0)
 insert into Complaint values ('File a Restraining Order', '2011-01-30 17:37:22', 'Ha Noi', 'Tan', 
 'Generally, you have to fill out paperwork and submit it to the county courthouse. If you need protection right away',0)
-insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh Bình', 'Truc', 
+insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh Bï¿½nh', 'Truc', 
 'Report suspected crime, like traffic violations and illegal drug use, to local authorities. Or you can report it to your 
 nearest state police office',0)
 insert into Complaint values ('Vehicle Misuse or Reckless Driving', '2017-02-27 22:56:01', 'An Giang', 'Tra My', 
 'GSA leased vehicles all have license plates that have the following structure (GXX-XXXXX).  If the license plate does not begin with a G, 
 then it is not owned by GSA',0)
 go
+
+
+--table prison list
+insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 4, 2)
+insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 1, 0)
+insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 3, 1)
 
 /* END INSERT DATA IN TABLE*/ 
 
