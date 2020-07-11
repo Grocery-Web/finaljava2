@@ -39,7 +39,6 @@ public class RelevantIncidentForm extends JDialog {
 
 		incDetailBox = new FilterComplaintComboBox(incidentList);
 		
-		punishmentFcb = new FilterComboBox(Arrays.asList("administrative sanctions", "imprisoner", "in process"));
 		crimeTypeFcb = new FilterComboBox(Arrays.asList("Assault and Battery", "Kidnapping", "Homicide", "Rape", "False Imprisonment",
 				"Theft", "Arson", "False Pretenses", "White Collar Crimes", "Receipt of Stolen Goods"));
 		
@@ -57,8 +56,8 @@ public class RelevantIncidentForm extends JDialog {
 				int rating;
 				cri.setPersonalId(comDetail.getPersonId());
 				cri.setComplaintId(comDetail.getCompId());
-				cri.setPunishment((String) punishmentFcb.getSelectedItem());
-				switch ((String) punishmentFcb.getSelectedItem()) {
+				cri.setPunishment("in process");
+				switch ((String) crimeTypeFcb.getSelectedItem()) {
 				case "Assault and Battery":
 					rating = 2;
 					break;
@@ -155,17 +154,6 @@ public class RelevantIncidentForm extends JDialog {
 		gc.insets = noPadding;
 		controlsPanel.add(incDetailBox, gc);
 		
-		////////////NEXT ROW /////////////////
-		gc.gridy++;
-		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.EAST;
-		gc.insets = rightPadding;
-		controlsPanel.add(new JLabel("Punishment Status: "), gc);
-	
-		gc.gridx++;
-		gc.anchor = GridBagConstraints.WEST;
-		gc.insets = noPadding;
-		controlsPanel.add(punishmentFcb, gc);
 		
 		////////////NEXT ROW /////////////////
 		gc.gridy++;
