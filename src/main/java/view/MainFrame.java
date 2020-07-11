@@ -248,6 +248,11 @@ public class MainFrame extends JFrame {
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
 						complaintDAO.updateComplaintById(id, cpl);
 						for (Criminal criminal : lstCri) {
+							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
+							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
+								String violentHistory = lastCriminal.getHisOfViolent() + " " + lastCriminal.getAppliedDate();
+								criminal.setHisOfViolent(violentHistory);
+							}
 							criminalDAO.addCriminal(criminal);
 						}
 						cplDetailFrame.dispose();
