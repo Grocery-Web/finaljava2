@@ -78,15 +78,12 @@ public class CriminalTableModel extends AbstractTableModel{
 			return per.getNationality();
 		}
 		case 7: {
-			return per.getAddress();
-		}
-		case 8: {
 			return cpl.getName();
 		}
-		case 9: {
+		case 8: {
 			return cri.getPunishment();
 		}
-		case 10: {
+		case 9: {
 			return cri.getRating();
 		}
 		default:

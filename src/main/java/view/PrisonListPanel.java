@@ -28,7 +28,7 @@ public class PrisonListPanel extends JPanel {
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem viewAllPrisoners = new JMenuItem("View all prisoners");
+		JMenuItem viewAllPrisoners = new JMenuItem("Details");
 		popup.add(viewAllPrisoners);
 		
 		table.addMouseListener(new MouseAdapter() {

@@ -7,16 +7,21 @@ public class Criminal extends Person{
 	private int personalId;
 	private int complaintId;
 	private String punishment;
+	private Date appliedDate;
+	private String hisOfViolent;
 	private int rating;
 	
 	public Criminal() {}
 
-	public Criminal(int criminalId, int personalId, int complaintId, String punishment, int rating) {
+	public Criminal(int criminalId, int personalId, int complaintId, String punishment, Date appliedDate,
+			String hisOfViolent, int rating) {
 		super();
 		this.criminalId = criminalId;
 		this.personalId = personalId;
 		this.complaintId = complaintId;
 		this.punishment = punishment;
+		this.appliedDate = appliedDate;
+		this.hisOfViolent = hisOfViolent;
 		this.rating = rating;
 	}
 
@@ -59,11 +64,27 @@ public class Criminal extends Person{
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
+	
+	public Date getAppliedDate() {
+		return appliedDate;
+	}
+
+	public void setAppliedDate(Date appliedDate) {
+		this.appliedDate = appliedDate;
+	}
+	
+	public String getHisOfViolent() {
+		return hisOfViolent;
+	}
+
+	public void setHisOfViolent(String hisOfViolent) {
+		this.hisOfViolent = hisOfViolent;
+	}
 
 	@Override
 	public String toString() {
 		return "Criminal [criminalId=" + criminalId + ", personalId=" + personalId + ", complaintId=" + complaintId
-				+ ", punishment=" + punishment + ", rating=" + rating + "]";
+				+ ", punishment=" + punishment + ", appliedDate=" + appliedDate + ", hisOfViolent=" + hisOfViolent
+				+ ", rating=" + rating + "]";
 	}
-
 }
