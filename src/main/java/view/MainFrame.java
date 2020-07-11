@@ -249,6 +249,11 @@ public class MainFrame extends JFrame {
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
 						complaintDAO.updateComplaintById(id, cpl);
 						for (Criminal criminal : lstCri) {
+							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
+							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
+								String violentHistory = lastCriminal.getHisOfViolent() + " " + lastCriminal.getAppliedDate();
+								criminal.setHisOfViolent(violentHistory);
+							}
 							criminalDAO.addCriminal(criminal);
 						}
 						cplDetailFrame.dispose();
@@ -375,7 +380,6 @@ public class MainFrame extends JFrame {
 		menuBar.add(windowMenu);
 
 		showFormItem.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 

@@ -32,9 +32,7 @@ public class IncidentsPanel extends JPanel{
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem removeItem = new JMenuItem("Delete Complaint");
 		JMenuItem detailItem = new JMenuItem("Complaint Details");
-		popup.add(removeItem);
 		popup.add(detailItem);
 
 		table.addMouseListener(new MouseAdapter() {

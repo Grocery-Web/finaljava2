@@ -58,6 +58,8 @@ create table Criminal (
 	id int identity(1,1) primary key,
 	personId int,
 	complaintID int,
+	appliedDate date NULL,
+	hisOfViolent varchar(Max) NULL,
 	punishment varchar(100) CHECK (punishment in('administrative sanctions', 'imprisoner', 'in process')),
 	constraint cp foreign key (personId) references Person(id),
 	constraint cc foreign key (complaintID) references Complaint(id),
@@ -395,21 +397,32 @@ go
 
 /* PROCEDURE CRIMINAL*/
 -- select all Criminal in table
-create proc getAllCriminals
+create proc getCriminalsInProcess
 as
 begin
-	select * from Criminal
+	select * from Criminal where punishment like 'in process'
 end
 go
 
 
 -- insert a new Criminal
 create proc addCriminal
-@personId int, @complaintID int, @punishment varchar(100), @rating int
+@personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX)
 as
 begin
-	insert into Criminal (personId, complaintID, punishment, rating)
-	values(@personId, @complaintID, @punishment, @rating)
+	insert into Criminal (personId, complaintID, punishment, rating, appliedDate, hisOfViolent)
+	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent)
+end
+go
+
+-- Find Criminal by Personal Id
+create proc findLastUpdatedByPersonalId
+@personId int
+as
+begin
+	SELECT TOP 1 * FROM
+	(select * from Criminal where personId = @personId) as temp
+	ORDER BY id DESC
 end
 go
 
@@ -494,4 +507,5 @@ insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Es
 insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 3, 1)
 
 /* END INSERT DATA IN TABLE*/ 
+
 
