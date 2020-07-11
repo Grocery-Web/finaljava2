@@ -89,6 +89,17 @@ public class PersonPanel extends JPanel {
 			}
 		});
 		
+		victimItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+				
+				if (tableListener != null) {
+					tableListener.tableEventAddVictim(id);
+				}
+			}
+		});
+		
 		table.setAutoCreateRowSorter(true);  // Search data
 		
 		setLayout(new BorderLayout());
