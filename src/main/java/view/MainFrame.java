@@ -375,6 +375,18 @@ public class MainFrame extends JFrame {
 				incDetailFrame.setLocationRelativeTo(null);
 				incDetailFrame.setVisible(true);
 				incDetailFrame.setData(comDetailDAO.getCriminalListByIncidentId(id));
+				
+				incDetailFrame.setTableListener(new TableIncidentDetailListener() {
+
+					@Override
+					public void tableEventUpdated(Complaint inc) {
+						complaintDAO.updateComplaintById(id, inc);
+						JOptionPane.showMessageDialog(null, "Update incident successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+						refresh();
+						incDetailFrame.dispose();
+					}
+					
+				});
 				incDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});

@@ -1,7 +1,9 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,20 +36,27 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
 
 public class IncidentDetailFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textName;
 	private JTextField textId;
-	private JDateChooser incidentDate;
+	private JDateChooser textDate;
 	private JTextFieldDateEditor editor;
 	private JSpinner timeSpinner;
 	private JTextField textPlace;
 	private JTextField textDeclarantName;
+	private JTextArea textDetail;
 	private JTable table;
 	private IncidentDetailTableModel tableModel;
+	private TableIncidentDetailListener tableListener;
 	private JScrollPane jpTable, jpDetail;
+	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
+	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	/**
 	 * Launch the application.
 	 */
@@ -69,7 +78,7 @@ public class IncidentDetailFrame extends JFrame {
 	 */
 	public IncidentDetailFrame(Complaint inc) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 843, 519);
+		setBounds(100, 100, 843, 588);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -80,7 +89,6 @@ public class IncidentDetailFrame extends JFrame {
 		textName = new JTextField();
 		textName.setColumns(10);
 		textName.setText(inc.getName());
-		textName.setEditable(false);
 
 //		INCIDENT ID
 		JLabel lblID = new JLabel("ID:");
@@ -91,9 +99,8 @@ public class IncidentDetailFrame extends JFrame {
 
 //		INCIDENT DATETIME
 		JLabel lblIDate = new JLabel("Date:");	
-		JDateChooser textDate = new JDateChooser();
+		textDate = new JDateChooser();
 		editor = (JTextFieldDateEditor) textDate.getDateEditor();
-		editor.setEditable(false);
 		textDate.setDateFormatString("yyyy-MM-dd");
 		textDate.setDate(inc.getDatetime());
 		
@@ -122,21 +129,18 @@ public class IncidentDetailFrame extends JFrame {
 		textPlace = new JTextField();
 		textPlace.setColumns(10);
 		textPlace.setText(inc.getPlace());
-		textPlace.setEditable(false);
 
 //		INCIDENT DECLARANT NAME
 		JLabel lblDeclarantName = new JLabel("Declarant Name:");		
 		textDeclarantName = new JTextField();
 		textDeclarantName.setColumns(10);
 		textDeclarantName.setText(inc.getDeclarantName());
-		textDeclarantName.setEditable(false);
 
 //		INCIDENT DETAIL
 		JLabel lblDetail = new JLabel("Detail:");		
-		JTextArea textDetail = new JTextArea();	
+		textDetail = new JTextArea();	
 		textDetail.setLineWrap(true);
 		textDetail.setWrapStyleWord(true);
-		textDetail.setEditable(true);
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -146,7 +150,7 @@ public class IncidentDetailFrame extends JFrame {
 		
 		jpDetail = new JScrollPane(textDetail);
 		jpDetail.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		textDetail.setEditable(false);
+
 
 // 		INCIDENT LIST OF CRIMINAL
 		JLabel lblCriminalTable = new JLabel("List of Criminals:");
@@ -165,6 +169,15 @@ public class IncidentDetailFrame extends JFrame {
 		for (int i = 0; i < 8; i++) {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnUpdateActionPerformed(e, inc.getId());
+			}
+		});
+		btnUpdate.setFocusPainted(false);
+		btnUpdate.setBackground(Color.YELLOW);
 		
 
 		
@@ -204,8 +217,9 @@ public class IncidentDetailFrame extends JFrame {
 										.addGap(413)))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(jpDetail, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
 										.addComponent(jpTable, Alignment.LEADING)
-										.addComponent(jpDetail, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE))
+										.addComponent(btnUpdate, GroupLayout.PREFERRED_SIZE, 171, GroupLayout.PREFERRED_SIZE))
 									.addContainerGap())))))
 		);
 		gl_contentPane.setVerticalGroup(
@@ -244,7 +258,9 @@ public class IncidentDetailFrame extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCriminalTable)
 						.addComponent(jpTable, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE))
-					.addGap(22))
+					.addGap(30)
+					.addComponent(btnUpdate)
+					.addGap(27))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
@@ -256,5 +272,31 @@ public class IncidentDetailFrame extends JFrame {
 	public void refresh() {
 		tableModel.fireTableDataChanged();
 	}
+	
+	public void setTableListener(TableIncidentDetailListener tableListener) {
+		this.tableListener = tableListener;
+	}
+	
+	protected void btnUpdateActionPerformed(ActionEvent e, int incId) {
+		// GET INFO OF COMPLAINT
+		String getIncName = textName.getText();
+		String getDeclarantName = textDeclarantName.getText();
+		String getCompDetail = textDetail.getText();
+		String getCompPlace = textPlace.getText();
 
+		Date getDateTime = null;
+		Date getDate = textDate.getDate();
+		Date getTime = (Date) timeSpinner.getValue();
+		String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
+		try {
+			getDateTime = sdf2.parse(DateTime);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+
+		Complaint incident = new Complaint(incId, getIncName, getDateTime, getCompPlace, getDeclarantName,
+				getCompDetail, true);
+
+		tableListener.tableEventUpdated(incident);
+	}
 }
