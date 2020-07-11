@@ -35,6 +35,7 @@ import entity.Complaint;
 import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
+import entity.PrisonList;
 
 public class MainFrame extends JFrame {
 
@@ -64,6 +65,7 @@ public class MainFrame extends JFrame {
 	private ComplaintDetailFrame cplDetailFrame;
 	private RelevantComplaintForm relComplain;
 	private PersonDetailFrame detailPersonFrame;
+	private PrisonListDetailFrame prisonListDetailFrame;
 
 	/**
 	 * Launch the application.
@@ -339,6 +341,23 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
+//		PRISONLIST LISTENER
+		
+		prisonListPanel.setTableListener(new TablePrisonListListener() {
+			
+			@Override
+			public void displayPrisonListDetail(int id) {
+				// TODO Auto-generated method stub
+				PrisonListDAO prDAO = new PrisonListDAO();
+				PrisonList pl = prDAO.getPrisonListByID(id);
+				prisonListDetailFrame = new PrisonListDetailFrame(pl);
+				prisonListDetailFrame.setLocationRelativeTo(null);
+				prisonListDetailFrame.setVisible(true);
+				
+				
+			}
+		});
+		
 
 //		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);

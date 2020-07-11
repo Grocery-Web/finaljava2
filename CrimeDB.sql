@@ -73,6 +73,7 @@ create table PrisonList (
 	id int identity(1,1) primary key,
 	name nvarchar(50),
 	address nvarchar(MAX),
+	img nvarchar(100),
 	limit int,
 	prisonerNum int
 )
@@ -455,6 +456,16 @@ begin
 end
 go
 
+create proc getPrisonListByID
+@id int
+as
+begin
+	select * 
+	from PrisonList
+	where id = @id
+end
+go
+
 /* END PROCEDURE PRISONER */
 
 
@@ -502,9 +513,9 @@ go
 
 
 --table prison list
-insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 4, 2)
-insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 1, 0)
-insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 3, 1)
+insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 'fox.png', 4, 0)
+insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 'sona.png', 1, 0)
+insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 0)
 
 /* END INSERT DATA IN TABLE*/ 
 
