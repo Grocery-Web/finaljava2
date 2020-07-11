@@ -17,7 +17,7 @@ public class CriminalDAO {
 
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call getAllCriminals}");
+				PreparedStatement ps = connect.prepareCall("{call getCriminalsInProcess}");
 				ResultSet rs = ps.executeQuery();
 			) 
 		{

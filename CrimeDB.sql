@@ -58,6 +58,7 @@ create table Criminal (
 	id int identity(1,1) primary key,
 	personId int,
 	complaintID int,
+	appliedDate date NULL,
 	punishment varchar(100) CHECK (punishment in('administrative sanctions', 'imprisoner', 'in process')),
 	constraint cp foreign key (personId) references Person(id),
 	constraint cc foreign key (complaintID) references Complaint(id),
@@ -395,10 +396,10 @@ go
 
 /* PROCEDURE CRIMINAL*/
 -- select all Criminal in table
-create proc getAllCriminals
+create proc getCriminalsInProcess
 as
 begin
-	select * from Criminal
+	select * from Criminal where punishment like 'in process'
 end
 go
 
@@ -494,4 +495,5 @@ insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Es
 insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 3, 1)
 
 /* END INSERT DATA IN TABLE*/ 
+
 

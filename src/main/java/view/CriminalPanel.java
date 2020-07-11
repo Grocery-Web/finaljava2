@@ -27,9 +27,9 @@ public class CriminalPanel extends JPanel{
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem releaseItem = new JMenuItem("Release Crimial");
+		JMenuItem punishItem = new JMenuItem("Release Criminal");
 		JMenuItem detailItem = new JMenuItem("Criminal Details");
-		popup.add(releaseItem);
+		popup.add(punishItem);
 		popup.add(detailItem);
 
 		table.addMouseListener(new MouseAdapter() {

@@ -364,7 +364,6 @@ public class MainFrame extends JFrame {
 		menuBar.add(windowMenu);
 
 		showFormItem.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 
