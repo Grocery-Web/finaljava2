@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 import javax.swing.DefaultRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -21,15 +24,14 @@ public class CriminalPanel extends JPanel{
 	private JTable table;
 	private CriminalTableModel tableModel;
 	private JPopupMenu popup;
+	private TableCriminalListener tableListener;
 	
 	public CriminalPanel() {
 		tableModel = new CriminalTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem punishItem = new JMenuItem("Release Criminal");
 		JMenuItem detailItem = new JMenuItem("Criminal Details");
-		popup.add(punishItem);
 		popup.add(detailItem);
 
 		table.addMouseListener(new MouseAdapter() {
@@ -40,6 +42,17 @@ public class CriminalPanel extends JPanel{
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					// When right click on the row of table, the pop up will be showed up
 					popup.show(table, e.getX(), e.getY());
+				}
+			}
+		});
+		
+		detailItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventDetail(id);
 				}
 			}
 		});
@@ -71,5 +84,9 @@ public class CriminalPanel extends JPanel{
 	
 	public void refresh() {
 		tableModel.fireTableDataChanged();
+	}
+	
+	public void setTableListener(TableCriminalListener tableListener) {
+		this.tableListener = tableListener;
 	}
 }

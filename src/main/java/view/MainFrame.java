@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -64,6 +63,7 @@ public class MainFrame extends JFrame {
 	private ComplaintDetailFrame cplDetailFrame;
 	private RelevantComplaintForm relComplain;
 	private PersonDetailFrame detailPersonFrame;
+	private CriminalDetailsFrame criDetailFrame;
 
 	/**
 	 * Launch the application.
@@ -339,6 +339,17 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
+		
+//		CRIMINAL TABLE LISTENER
+		criminalPanel.setTableListener(new TableCriminalListener() {
+			
+			@Override
+			public void tableEventDetail(int id) {
+				criDetailFrame = new CriminalDetailsFrame();
+				criDetailFrame.setVisible(true);
+			}
+		});
+		
 
 //		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);
