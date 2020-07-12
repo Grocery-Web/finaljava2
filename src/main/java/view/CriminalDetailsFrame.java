@@ -3,11 +3,14 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.UIManager;
 
 public class CriminalDetailsFrame extends JFrame {
 	private JSplitPane splitPane;
@@ -29,23 +32,52 @@ public class CriminalDetailsFrame extends JFrame {
 		
 		setLayout(new BorderLayout());
 		
+//		SPLIT FORM
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, criFormPanel, prisonerFormPanel);
 		splitPane.setOneTouchExpandable(true);
+		splitPane.setResizeWeight(0.5);
+		
+//		DESIGN BUTTON
+		okBtn.setPreferredSize(new Dimension(80, 30));
+		
+		Dimension btnSize = okBtn.getPreferredSize();
+		cancelBtn.setPreferredSize(btnSize);
+		
+		okBtn.setFocusPainted(false);
+		cancelBtn.setFocusPainted(false);
 		
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		buttonsPanel.add(okBtn);
 		buttonsPanel.add(cancelBtn);
+
+//		BUTTON ACTION
+		okBtn.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				
+				splitPane.setDividerLocation(350);
+				splitPane.setDividerSize((Integer) UIManager.get("SplitPane.dividerSize"));
+				splitPane.getRightComponent().setVisible(true);
+			}
+		});
 		
-		Dimension btnSize = cancelBtn.getPreferredSize();
-		okBtn.setPreferredSize(btnSize);
+		cancelBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
 		
+//		LAYOUT
 		add(splitPane, BorderLayout.CENTER);
+		splitPane.getRightComponent().setVisible(false);
 		add(buttonsPanel, BorderLayout.SOUTH);
-		
+
 		setMinimumSize(new Dimension(700,600));
+		setMaximumSize(new Dimension(1000,600));
 		setLocationRelativeTo(null);
 		setSize(600, 500);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+//		setResizable(false);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
 }

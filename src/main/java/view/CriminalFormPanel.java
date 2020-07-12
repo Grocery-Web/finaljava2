@@ -14,6 +14,7 @@ public class CriminalFormPanel extends JPanel{
 		setPreferredSize(dim);
 		setMinimumSize(dim);
 		
+		
 //		SET FORM LAYOUT
 		Border innerBorder = BorderFactory.createTitledBorder("Criminal Details");
 		Border outerBorder = BorderFactory.createEmptyBorder(4, 4, 4, 4);

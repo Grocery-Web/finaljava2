@@ -360,7 +360,6 @@ public class MainFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-
 	}
 
 	private JMenuBar createMenuBar() {
