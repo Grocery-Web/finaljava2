@@ -625,16 +625,16 @@ public class PersonFormPanel extends JPanel {
 	
 	public void resetProperties() {
 		personalID.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-		q1.setText("");
+		q1.setText(null);
 		nameField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-		q2.setText("");
+		q2.setText(null);
 		occupationField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-		q3.setText("");
+		q3.setText(null);
 		nationality.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-		q4.setText("");
+		q4.setText(null);
 		address.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
-		q5.setText("");
+		q5.setText(null);
 		dob.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("JDateChooser.border"));
-		q6.setText("");
+		q6.setText(null);
 	}
 }
