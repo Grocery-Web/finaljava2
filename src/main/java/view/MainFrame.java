@@ -36,6 +36,7 @@ import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
+import entity.PrisonerInList;
 
 public class MainFrame extends JFrame {
 
@@ -360,8 +361,11 @@ public class MainFrame extends JFrame {
 			public void displayPrisonListDetail(int id) {
 				// TODO Auto-generated method stub
 				PrisonListDAO prDAO = new PrisonListDAO();
+				
 				PrisonList pl = prDAO.getPrisonListByID(id);
-				prisonListDetailFrame = new PrisonListDetailFrame(pl);
+				List<PrisonerInList> prs = prDAO.getAllPrisonerByPrisonListID(id);
+				
+				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
 				prisonListDetailFrame.setLocationRelativeTo(null);
 				prisonListDetailFrame.setVisible(true);			
 			}

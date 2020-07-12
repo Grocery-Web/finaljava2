@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import entity.PrisonList;
+import entity.PrisonerInList;
 
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -16,6 +17,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Image;
+import java.util.List;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -61,7 +63,7 @@ public class PrisonListDetailFrame extends JFrame {
 		initFrame();
 	}
 
-	public PrisonListDetailFrame(PrisonList pr) {
+	public PrisonListDetailFrame(PrisonList pr, List<PrisonerInList> prs) {
 		initFrame();
 		txtName.setText(pr.getName());
 		txtAddress.setText(pr.getAddress());
@@ -91,9 +93,16 @@ public class PrisonListDetailFrame extends JFrame {
 		model.addColumn("End");
 		model.addColumn("Nationality");
 		
-		model.addRow(new Object[] {
-				1,2,3,4,5,6,7,8,9
-		});
+		for (var acc : prs) {
+			model.addRow(new Object[] {
+				acc.getPersonID(), acc.getPrisonID(), 
+				acc.getName(), acc.getDob(),
+				acc.getGender(),  acc.getStartDate(),
+				acc.getDuration(), 12121212, 
+				acc.getNationality()
+			});
+		}
+		
 		
 		table.setModel(model);
 		

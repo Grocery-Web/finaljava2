@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import common.ConnectToProperties;
 import entity.Gender;
 import entity.PrisonList;
+import entity.Prisoner;
+import entity.PrisonerInList;
 
 public class PrisonListDAO {
 	public List<PrisonList> getAllPrisonList() {
@@ -63,5 +65,43 @@ public class PrisonListDAO {
 		
 		return pr;
 		
+	}
+	
+	public List<PrisonerInList> getAllPrisonerByPrisonListID(int id){
+		
+		List<PrisonerInList> prisoners = new ArrayList<PrisonerInList>();
+		PrisonerInList prisoner = new PrisonerInList();
+		
+		try(
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getAllPrisonerByPrisonListID(?)}");
+		)
+		{
+			ps.setInt(1, id);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				
+				prisoner.setPersonID(rs.getInt("personId"));
+				prisoner.setPrisonID(rs.getInt("id"));
+				prisoner.setName(rs.getString("name"));
+				prisoner.setDob(rs.getDate("dob"));
+				if (rs.getBoolean("gender" )) {
+					prisoner.setGender(Gender.female);
+				}
+				else {
+					prisoner.setGender(Gender.male);
+				}
+				prisoner.setStartDate(rs.getDate("startDate"));	
+				prisoner.setDuration(rs.getInt("duration"));
+				prisoner.setNationality(rs.getString("nationality"));
+				
+				prisoners.add(prisoner);
+				
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+		
+		return prisoners;
 	}
 }
