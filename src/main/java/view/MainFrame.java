@@ -66,6 +66,7 @@ public class MainFrame extends JFrame {
 	private RelevantComplaintForm relComplain;
 	private PersonDetailFrame detailPersonFrame;
 	private PrisonListDetailFrame prisonListDetailFrame;
+	private RelevantIncidentForm relevantIncidentForm;
 
 	/**
 	 * Launch the application.
@@ -306,6 +307,16 @@ public class MainFrame extends JFrame {
 					}
 				});
 			}
+			
+			@Override
+			public void tableEventAddVictim(int id) {
+				Person ps = personDAO.findPersonById(id);
+				List<Complaint> list = complaintDAO.getAllApprovedComplaints();
+				
+				relevantIncidentForm = new RelevantIncidentForm(ps, list);
+				relevantIncidentForm.setLocationRelativeTo(null);
+				relevantIncidentForm.setVisible(true);
+			}
 
 			@Override
 			public void tableEventPersonDetail(int id) {
@@ -338,8 +349,8 @@ public class MainFrame extends JFrame {
 						MainFrame.this.setVisible(true);
 					}
 				});
-				
 			}
+			
 		});
 //		PRISONLIST LISTENER
 		
