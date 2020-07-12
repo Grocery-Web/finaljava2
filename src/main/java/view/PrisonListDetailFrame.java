@@ -17,6 +17,10 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Image;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JTextField;
@@ -94,7 +98,22 @@ public class PrisonListDetailFrame extends JFrame {
 		model.addColumn("Nationality");
 		
 		for (var acc : prs) {
-			model.addRow(new Object[] {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			Date startDate = acc.getStartDate();
+			Calendar c = Calendar.getInstance();
+			c.setTime(startDate);
+			
+			c.add(Calendar.DAY_OF_MONTH, 2);
+			
+			String endDate = sdf.format(c.getTime());
+			
+			System.out.println("start date " + acc.getStartDate());
+			System.out.println("end date" + endDate);
+			
+			model.addRow(new Object[] {		
+				
 				acc.getPersonID(), acc.getPrisonID(), 
 				acc.getName(), acc.getDob(),
 				acc.getGender(),  acc.getStartDate(),

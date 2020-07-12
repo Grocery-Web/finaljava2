@@ -2,6 +2,7 @@ drop database if exists CrimeDB;
 create database CrimeDB;
 go
 use CrimeDB
+go
 
 /* CREATE TABLES */ 
 
@@ -90,6 +91,7 @@ create table Prisoner (
 	duration int null,
 	type nvarchar(50),  /* type of crime */
 	criminalID int,
+	endDate date,
 	constraint pin foreign key (criminalID) references Criminal(id)
 )
 go
@@ -434,11 +436,11 @@ go
 
 --add prisoner
 create proc addPrisoner
-@startDate date, @prisonID int, @releaseStatus bit, @duration bit, @type nvarchar(50), @criminalID int
+@startDate date, @prisonID int, @releaseStatus bit, @duration bit, @type nvarchar(50), @criminalID int, @endDate date
 as
 begin
-	insert into Prisoner (startDate, prisonId, releaseStatus, duration, type, criminalID)
-	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID)
+	insert into Prisoner (startDate, prisonId, releaseStatus, duration, type, criminalID, endDate)
+	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID, @endDate)
 end
 go
 
@@ -477,6 +479,7 @@ begin
 		inner join Person on Criminal.personId = Person.id
 	where PrisonList.id = @id
 end
+go
 
 /* END PROCEDURE PRISONER */
 

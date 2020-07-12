@@ -9,22 +9,36 @@ public class PrisonerInList {
 	private Date dob;
 	private Gender gender;
 	private Date startDate;
+	private Date endDate;
 	private int duration;
 	private String nationality;
 	
 	public PrisonerInList() {};
 	
 	public PrisonerInList(String name, int personID, int prisonID, Date dob, Gender gender, Date startDate,
-			int duration, String nationality) {
+			Date endDate, int duration, String nationality) {
+		super();
 		this.name = name;
 		this.personID = personID;
 		this.prisonID = prisonID;
 		this.dob = dob;
 		this.gender = gender;
 		this.startDate = startDate;
+		this.endDate = endDate;
 		this.duration = duration;
 		this.nationality = nationality;
 	}
+
+
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -77,10 +91,9 @@ public class PrisonerInList {
 	@Override
 	public String toString() {
 		return "PrisonerInList [name=" + name + ", personID=" + personID + ", prisonID=" + prisonID + ", dob=" + dob
-				+ ", gender=" + gender + ", startDate=" + startDate + ", duration=" + duration + ", nationality="
-				+ nationality + "]";
-	}
-	
+				+ ", gender=" + gender + ", startDate=" + startDate + ", endDate=" + endDate + ", duration=" + duration
+				+ ", nationality=" + nationality + "]";
+	}	
 	
 
 }
