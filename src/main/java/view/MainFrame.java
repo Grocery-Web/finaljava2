@@ -363,9 +363,7 @@ public class MainFrame extends JFrame {
 				PrisonList pl = prDAO.getPrisonListByID(id);
 				prisonListDetailFrame = new PrisonListDetailFrame(pl);
 				prisonListDetailFrame.setLocationRelativeTo(null);
-				prisonListDetailFrame.setVisible(true);
-				
-				
+				prisonListDetailFrame.setVisible(true);			
 			}
 		});
 		
