@@ -17,11 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -35,10 +31,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -625,5 +620,21 @@ public class PersonFormPanel extends JPanel {
 		imgLabel.setIcon(null);
 		dob.setCalendar(null);
 		genderGroup.clearSelection();
+		resetProperties();
+	}
+	
+	public void resetProperties() {
+		personalID.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q1.setText("");
+		nameField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q2.setText("");
+		occupationField.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q3.setText("");
+		nationality.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q4.setText("");
+		address.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q5.setText("");
+		dob.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("JDateChooser.border"));
+		q6.setText("");
 	}
 }
