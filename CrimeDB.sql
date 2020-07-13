@@ -426,6 +426,15 @@ begin
 end
 go
 
+-- Find Criminal by Criminal Id
+create proc findCriminalbyId
+@criminalId int
+as
+begin
+	select * from Criminal where id = @criminalId
+end
+go
+
 /* END PROCEDURE CRIMINAL */
 
 /* PROCEDURE PRISONER */
