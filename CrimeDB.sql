@@ -438,10 +438,19 @@ begin
 end
 go
 
+-- Find all verified incidents commited by a Person
+CREATE PROC findIncidentsCommitedByPerson
+@personID int
+AS
+BEGIN
+	SELECT complaintID FROM Criminal
+	WHERE Criminal.personId = @personID
+END
+GO
+
 /* END PROCEDURE CRIMINAL */
 
 /* PROCEDURE PRISONER */
-
 
 --add prisoner
 create proc addPrisoner
@@ -452,8 +461,6 @@ begin
 	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID, @endDate)
 end
 go
-
-
 
 /* END PROCEDURE PRISONER*/
 

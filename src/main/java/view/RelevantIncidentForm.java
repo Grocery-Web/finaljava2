@@ -16,7 +16,6 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
 
 import java.util.List;
-import java.awt.FlowLayout;
 import javax.swing.JRadioButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.TitledBorder;
@@ -58,6 +57,7 @@ public class RelevantIncidentForm extends JDialog {
 	 * Create the dialog.
 	 */
 	public RelevantIncidentForm(Person ps, List<Complaint> list) {
+		setResizable(false);
 		setTitle("Add new victim");
 		setBounds(100, 100, 450, 443);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
