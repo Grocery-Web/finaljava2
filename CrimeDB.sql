@@ -2,6 +2,7 @@ drop database if exists CrimeDB;
 create database CrimeDB;
 go
 use CrimeDB
+go
 
 /* CREATE TABLES */ 
 
@@ -73,6 +74,7 @@ create table PrisonList (
 	id int identity(1,1) primary key,
 	name nvarchar(50),
 	address nvarchar(MAX),
+	img nvarchar(100),
 	limit int,
 	prisonerNum int
 )
@@ -89,6 +91,7 @@ create table Prisoner (
 	duration int null,
 	type nvarchar(50),  /* type of crime */
 	criminalID int,
+	endDate date,
 	constraint pin foreign key (criminalID) references Criminal(id)
 )
 go
@@ -442,11 +445,11 @@ go
 
 --add prisoner
 create proc addPrisoner
-@startDate date, @prisonID int, @releaseStatus bit, @duration bit, @type nvarchar(50), @criminalID int
+@startDate date, @prisonID int, @releaseStatus bit, @duration bit, @type nvarchar(50), @criminalID int, @endDate date
 as
 begin
-	insert into Prisoner (startDate, prisonId, releaseStatus, duration, type, criminalID)
-	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID)
+	insert into Prisoner (startDate, prisonId, releaseStatus, duration, type, criminalID, endDate)
+	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID, @endDate)
 end
 go
 
@@ -461,6 +464,29 @@ as
 begin
 	select *
 	from PrisonList	
+end
+go
+
+create proc getPrisonListByID
+@id int
+as
+begin
+	select * 
+	from PrisonList
+	where id = @id
+end
+go
+
+create proc getAllPrisonerByPrisonListID
+@id int
+as
+begin
+	select personId, Prisoner.id, Person.name, dob, person.gender, startDate, duration, nationality
+	from PrisonList 
+		inner join Prisoner on PrisonList.id = Prisoner.prisonId
+		inner join Criminal on Criminal.id = Prisoner.criminalID
+		inner join Person on Criminal.personId = Person.id
+	where PrisonList.id = @id
 end
 go
 
@@ -511,9 +537,9 @@ go
 
 
 --table prison list
-insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 4, 2)
-insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 1, 0)
-insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 3, 1)
+insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 'fox.png', 4, 0)
+insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 'sona.png', 1, 0)
+insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 0)
 
 /* END INSERT DATA IN TABLE*/ 
 
