@@ -3,6 +3,7 @@ package view;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -13,6 +14,7 @@ import java.util.StringJoiner;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -64,6 +66,30 @@ public class CriminalFormPanel extends JPanel{
 		imgLabel =  new JLabel();
 		imgLabel.setBorder(BorderFactory.createEtchedBorder());
 		imgLabel.setPreferredSize(new Dimension(100, 100));
+		var url ="avatar/" + cri.getImage();
+		try {
+			Image imgPerson = 
+					new ImageIcon(
+						getClass().getClassLoader()
+						.getResource(url)
+						).getImage().getScaledInstance(120, 100, Image.SCALE_SMOOTH);
+			
+			imgLabel.setIcon(new ImageIcon(imgPerson));
+			
+		} catch (Exception e) {
+			if (cri.getGender().toString() == "male") {
+				url = "images/male.png";
+			}
+			else url = "images/female.png";
+			
+			Image imgPerson = 
+					new ImageIcon(
+						getClass().getClassLoader()
+						.getResource(url)
+						).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			
+			imgLabel.setIcon(new ImageIcon(imgPerson));
+		}
 		
 		//Combobox Model
 		DefaultComboBoxModel punishModel = new DefaultComboBoxModel();
@@ -71,7 +97,6 @@ public class CriminalFormPanel extends JPanel{
 		punishModel.addElement("imprisoner");
 		punishModel.addElement("administrative sanctions");
 		punishCombo.setModel(punishModel);
-//		punishCombo.setSelectedIndex(0);
 		
 		//SET FORM LAYOUT
 		Border innerBorder = BorderFactory.createTitledBorder("Criminal Details");

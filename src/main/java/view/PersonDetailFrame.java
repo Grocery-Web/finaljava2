@@ -89,6 +89,7 @@ public class PersonDetailFrame extends JFrame {
 	 */
 	
 	
+	
 	public PersonDetailFrame( Person person ) {
 		//get person and save all data to userInFrame.
 		initPersonDetailFrame();
