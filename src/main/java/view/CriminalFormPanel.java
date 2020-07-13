@@ -4,6 +4,12 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.StringJoiner;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -12,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import entity.Criminal;
+
 public class CriminalFormPanel extends JPanel{
 	private JLabel criminalID;
 	private JLabel nameField;
@@ -19,24 +27,40 @@ public class CriminalFormPanel extends JPanel{
 	private JLabel dob;
 	private JLabel gender;
 	private JLabel crimeType;
+	private JLabel rating;
 	private JComboBox punishCombo;
 	private JLabel imgLabel;
 	
-	public CriminalFormPanel() {
+	//LISTENER
+	private CriminalFormListener criminalFormListener;
+	
+	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+	
+	public CriminalFormPanel(Criminal cri, List<String> crimeTypesLst) {
 		Dimension dim = getPreferredSize();
 		dim.width = 300;
 		setPreferredSize(dim);
 		setMinimumSize(dim);
-		
+				
 		//CREATE COMPONENTS
-		criminalID =  new JLabel("criminalID");
-		nameField =  new JLabel("nameField");
-		nationality =  new JLabel("nationality");
-		dob =  new JLabel("dob");
-		gender =  new JLabel("gender");
-		crimeType = new JLabel("crimeType");
+		criminalID =  new JLabel(Integer.toString(cri.getComplaintId()));
+		nameField =  new JLabel(cri.getName());
+		nationality =  new JLabel(cri.getNationality());
+		dob =  new JLabel(dateFormat.format(cri.getDob()));
+		gender =  new JLabel(cri.getGender().toString());
+		rating = new JLabel(Integer.toString(cri.getRating()));
+		
+		//CRIME TYPES
+		StringJoiner joiner = new StringJoiner("|");
+		for (String crimeType : crimeTypesLst) {
+			joiner.add(crimeType);
+		}
+		String crimeTypes = joiner.toString();
+		crimeType = new JLabel(crimeTypes);
+		
 		punishCombo = new JComboBox();
 		
+		// IMAGE LABEL
 		imgLabel =  new JLabel();
 		imgLabel.setBorder(BorderFactory.createEtchedBorder());
 		imgLabel.setPreferredSize(new Dimension(100, 100));
@@ -47,12 +71,29 @@ public class CriminalFormPanel extends JPanel{
 		punishModel.addElement("imprisoner");
 		punishModel.addElement("administrative sanctions");
 		punishCombo.setModel(punishModel);
-		punishCombo.setSelectedIndex(0);
+//		punishCombo.setSelectedIndex(0);
 		
 		//SET FORM LAYOUT
 		Border innerBorder = BorderFactory.createTitledBorder("Criminal Details");
 		Border outerBorder = BorderFactory.createEmptyBorder(4, 4, 4, 4);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
+		
+		//COMBOBOX LISTENER
+		punishCombo.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					if(criminalFormListener != null) {
+						criminalFormListener.formEventListener((String) punishCombo.getSelectedItem());
+					}
+                }
+
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    //do nothing
+                }
+			}
+		});
 		
 		layoutComponents();
 	}
@@ -76,7 +117,6 @@ public class CriminalFormPanel extends JPanel{
 
 		/////////////// CRIMINAL ID ///////////////////
 		
-//		gc.fill = GridBagConstraints.BOTH;
 		gc.gridwidth = 1;
 		
 		gc.gridy++;
@@ -159,10 +199,26 @@ public class CriminalFormPanel extends JPanel{
 	
 		gc.gridx = 1;
 		gc.gridy = 7;
-		gc.ipady = 0;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(punishCombo, gc);
+		
+		/////////////// Rating ///////////////////
+		gc.gridy++;
+		gc.gridx = 0;
+		gc.anchor = GridBagConstraints.LINE_START;
+		gc.insets = new Insets(0, 0, 0, 30);
+		add(new JLabel("Rating: "), gc);
+	
+		gc.gridx = 1;
+		gc.gridy = 8;
+		gc.ipady = 0;
+		gc.anchor = GridBagConstraints.LINE_START;
+		add(rating, gc);
 
 //		End of Edit Form
+	}
+	
+	public void setFormListener(CriminalFormListener criminalFormListener) {
+		this.criminalFormListener = criminalFormListener;
 	}
 }

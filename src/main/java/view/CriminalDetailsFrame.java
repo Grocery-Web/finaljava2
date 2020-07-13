@@ -5,12 +5,15 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
+
+import entity.Criminal;
 
 public class CriminalDetailsFrame extends JFrame {
 	private JSplitPane splitPane;
@@ -20,7 +23,7 @@ public class CriminalDetailsFrame extends JFrame {
 	private CriminalFormPanel criFormPanel;
 	private PrisonerFormPanel prisonerFormPanel;
 	
-	public CriminalDetailsFrame() {
+	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypes) {
 		super("Criminal Details");
 		
 		//CREATE COMPONENTS
@@ -28,7 +31,7 @@ public class CriminalDetailsFrame extends JFrame {
 		cancelBtn = new JButton("Cancel");
 		buttonsPanel =  new JPanel();
 		prisonerFormPanel = new PrisonerFormPanel();
-		criFormPanel = new CriminalFormPanel();
+		criFormPanel = new CriminalFormPanel(cri,crimeTypes);
 		
 		setLayout(new BorderLayout());
 		
@@ -54,16 +57,24 @@ public class CriminalDetailsFrame extends JFrame {
 		okBtn.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				
-				splitPane.setDividerLocation(350);
-				splitPane.setDividerSize((Integer) UIManager.get("SplitPane.dividerSize"));
-				splitPane.getRightComponent().setVisible(true);
 			}
 		});
 		
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
+			}
+		});
+		
+		criFormPanel.setFormListener(new CriminalFormListener() {
+			@Override
+			public void formEventListener(String punishment) {
+				if(punishment.equals("imprisoner")) {
+//					ADD SPLIT PANE BETWEEN TWO FORMS
+					splitPane.setDividerLocation(450);
+					splitPane.setDividerSize((Integer) UIManager.get("SplitPane.dividerSize"));
+					splitPane.getRightComponent().setVisible(true);
+				}
 			}
 		});
 		
@@ -75,8 +86,8 @@ public class CriminalDetailsFrame extends JFrame {
 		setMinimumSize(new Dimension(700,600));
 		setMaximumSize(new Dimension(1000,600));
 		setLocationRelativeTo(null);
-		setSize(600, 500);
-//		setResizable(false);
+		setSize(800, 500);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}

@@ -15,6 +15,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -356,8 +357,22 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void tableEventDetail(int id) {
-				criDetailFrame = new CriminalDetailsFrame();
+				
+				Criminal cri = criminalDAO.findCriminalbyId(id);
+				
+				Person per = personDAO.findPersonById(cri.getPersonalId());
+				cri.setImage(per.getImage());
+				cri.setName(per.getName());
+				cri.setNationality(per.getNationality());
+				cri.setDob(per.getDob());
+				cri.setGender(per.getGender());
+			
+				List<String> crimeTypes = comDetailDAO.getCrimeTypeOfPerson(cri.getPersonalId(), cri.getComplaintId());
+
+				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes);
 				criDetailFrame.setVisible(true);
+				MainFrame.this.setVisible(false);
+				
 			}
 		});
 		
