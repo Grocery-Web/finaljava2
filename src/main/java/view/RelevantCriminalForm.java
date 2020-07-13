@@ -23,7 +23,7 @@ import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
 
-public class RelevantIncidentForm extends JDialog {
+public class RelevantCriminalForm extends JDialog {
 	private JButton okBtn;
 	private JButton cancelBtn;
 	private JLabel nameField;
@@ -31,7 +31,7 @@ public class RelevantIncidentForm extends JDialog {
 	private FilterComboBox punishmentFcb, crimeTypeFcb;
 	private RelevantIncidentFormListener revListener;
 
-	public RelevantIncidentForm(Person per, List<Complaint> incidentList) {
+	public RelevantCriminalForm(Person per, List<Complaint> incidentList) {
 		setTitle("Add person to incident");
 		okBtn = new JButton("OK");
 		cancelBtn = new JButton("Cancel");
