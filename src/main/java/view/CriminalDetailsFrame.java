@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -18,11 +19,15 @@ import entity.PrisonList;
 
 public class CriminalDetailsFrame extends JFrame {
 	private JSplitPane splitPane;
+	private JSplitPane splitPane1;
 	private JButton okBtn;
 	private JButton cancelBtn;
 	private JPanel buttonsPanel;
 	private CriminalFormPanel criFormPanel;
 	private PrisonerFormPanel prisonerFormPanel;
+	private AdditonalCriminalInfoFormPanel additionalPanel;
+	private CardLayout cardLayout;
+	private JPanel panelCont;
 	
 	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypes,List<PrisonList> prisonLst) {
 		super("Criminal Details");
@@ -33,11 +38,19 @@ public class CriminalDetailsFrame extends JFrame {
 		buttonsPanel =  new JPanel();
 		prisonerFormPanel = new PrisonerFormPanel(cri,prisonLst);
 		criFormPanel = new CriminalFormPanel(cri,crimeTypes);
+		additionalPanel =  new AdditonalCriminalInfoFormPanel(cri);
+		panelCont = new JPanel();
 		
 		setLayout(new BorderLayout());
 		
+//		CARD LAYOUT
+		cardLayout = new CardLayout();
+		panelCont.setLayout(cardLayout);
+		panelCont.add(prisonerFormPanel, "1");
+		panelCont.add(additionalPanel, "2");
+		
 //		SPLIT FORM
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, criFormPanel, prisonerFormPanel);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, criFormPanel, panelCont);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setResizeWeight(0.5);
 		
@@ -71,7 +84,14 @@ public class CriminalDetailsFrame extends JFrame {
 			@Override
 			public void formEventListener(String punishment) {
 				if(punishment.equals("imprisoner")) {
-//					ADD SPLIT PANE BETWEEN TWO FORMS
+					// CALL PRISONER FORM
+					cardLayout.show(panelCont, "1");
+					splitPane.setDividerLocation(450);
+					splitPane.setDividerSize((Integer) UIManager.get("SplitPane.dividerSize"));
+					splitPane.getRightComponent().setVisible(true);
+				}else if(punishment.equals("administrative sanctions")) {
+					// CALL ADDITONAL FORM
+					cardLayout.show(panelCont, "2");
 					splitPane.setDividerLocation(450);
 					splitPane.setDividerSize((Integer) UIManager.get("SplitPane.dividerSize"));
 					splitPane.getRightComponent().setVisible(true);
