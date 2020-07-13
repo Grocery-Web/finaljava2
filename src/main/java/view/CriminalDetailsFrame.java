@@ -14,6 +14,7 @@ import javax.swing.JSplitPane;
 import javax.swing.UIManager;
 
 import entity.Criminal;
+import entity.PrisonList;
 
 public class CriminalDetailsFrame extends JFrame {
 	private JSplitPane splitPane;
@@ -23,14 +24,14 @@ public class CriminalDetailsFrame extends JFrame {
 	private CriminalFormPanel criFormPanel;
 	private PrisonerFormPanel prisonerFormPanel;
 	
-	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypes) {
+	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypes,List<PrisonList> prisonLst) {
 		super("Criminal Details");
 		
 		//CREATE COMPONENTS
 		okBtn = new JButton("Submit");
 		cancelBtn = new JButton("Cancel");
 		buttonsPanel =  new JPanel();
-		prisonerFormPanel = new PrisonerFormPanel();
+		prisonerFormPanel = new PrisonerFormPanel(cri,prisonLst);
 		criFormPanel = new CriminalFormPanel(cri,crimeTypes);
 		
 		setLayout(new BorderLayout());
@@ -74,7 +75,10 @@ public class CriminalDetailsFrame extends JFrame {
 					splitPane.setDividerLocation(450);
 					splitPane.setDividerSize((Integer) UIManager.get("SplitPane.dividerSize"));
 					splitPane.getRightComponent().setVisible(true);
+				}else {
+					splitPane.getRightComponent().setVisible(false);
 				}
+				
 			}
 		});
 		
@@ -86,8 +90,8 @@ public class CriminalDetailsFrame extends JFrame {
 		setMinimumSize(new Dimension(700,600));
 		setMaximumSize(new Dimension(1000,600));
 		setLocationRelativeTo(null);
-		setSize(800, 500);
-		setResizable(false);
+		setSize(900, 500);
+//		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}

@@ -35,6 +35,7 @@ import entity.Complaint;
 import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
+import entity.PrisonList;
 
 public class MainFrame extends JFrame {
 
@@ -368,8 +369,10 @@ public class MainFrame extends JFrame {
 				cri.setGender(per.getGender());
 			
 				List<String> crimeTypes = comDetailDAO.getCrimeTypeOfPerson(cri.getPersonalId(), cri.getComplaintId());
+				
+				List<PrisonList> prisonlst = prisonListDAO.getAllPrisonList();
 
-				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes);
+				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
 				criDetailFrame.setVisible(true);
 				MainFrame.this.setVisible(false);
 				
