@@ -64,7 +64,7 @@ public class MainFrame extends JFrame {
 	private ComplaintDetailFrame cplDetailFrame;
 	private IncidentDetailFrame incDetailFrame;
 	private RelevantComplaintForm relComplain;
-	private RelevantIncidentForm relIncident;
+	private RelevantCriminalForm relIncident;
 	private PersonDetailFrame detailPersonFrame;
 
 	/**
@@ -306,7 +306,7 @@ public class MainFrame extends JFrame {
 				Person per = personDAO.findPersonById(personalId);
 				List<Complaint> incidentList = complaintDAO.getAllApprovedComplaints();
 				
-				relIncident = new RelevantIncidentForm(per, incidentList);
+				relIncident = new RelevantCriminalForm(per, incidentList);
 				relIncident.setVisible(true);
 				relIncident.setFormListener(new RelevantIncidentFormListener() {
 					@Override
@@ -361,6 +361,12 @@ public class MainFrame extends JFrame {
 						MainFrame.this.setVisible(true);
 					}
 				});
+				
+			}
+
+			@Override
+			public void tableEventAddVictim(int id) {
+				// TODO Auto-generated method stub
 				
 			}
 		});
