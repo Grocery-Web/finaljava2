@@ -10,12 +10,12 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -68,6 +68,7 @@ public class MainFrame extends JFrame {
 	private PersonDetailFrame detailPersonFrame;
 	private PrisonListDetailFrame prisonListDetailFrame;
 	private RelevantIncidentForm relevantIncidentForm;
+	private CriminalDetailsFrame criDetailFrame;
 
 	/**
 	 * Launch the application.
@@ -371,6 +372,36 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
+		
+//		CRIMINAL TABLE LISTENER
+		criminalPanel.setTableListener(new TableCriminalListener() {
+			
+			@Override
+			public void tableEventDetail(int id) {
+				Criminal cri = criminalDAO.findCriminalbyId(id);
+		
+				Person per = personDAO.findPersonById(cri.getPersonalId());
+				cri.setImage(per.getImage());
+				cri.setName(per.getName());
+				cri.setNationality(per.getNationality());
+				cri.setDob(per.getDob());
+				cri.setGender(per.getGender());
+				
+				Criminal criminal = criminalDAO.findLastUpdatedByPersonalId(per.getPersonalId());
+				cri.setHisOfViolent(criminal.getHisOfViolent());
+				
+			
+				List<String> crimeTypes = comDetailDAO.getCrimeTypeOfPerson(cri.getPersonalId(), cri.getComplaintId());
+				
+				List<PrisonList> prisonlst = prisonListDAO.getAllPrisonList();
+
+				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
+				criDetailFrame.setVisible(true);
+				MainFrame.this.setVisible(false);
+				
+			}
+		});
+		
 
 //		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);
@@ -381,7 +412,6 @@ public class MainFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-
 	}
 
 	private JMenuBar createMenuBar() {

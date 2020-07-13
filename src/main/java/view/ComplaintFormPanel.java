@@ -23,6 +23,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -202,6 +203,7 @@ public class ComplaintFormPanel extends JPanel{
 				if(cplListener != null) {
 					cplListener.insertEventListener(cpt);
 				}
+				clearInput();
 			}
 		});
 		
@@ -232,24 +234,24 @@ public class ComplaintFormPanel extends JPanel{
 	
 	private void cd2Check() {
 		Date date1 = null;
-		try {
-			if (complaintDate.getDate() != null) {
+		if (complaintDate.getDate() != null) {
+			try {
 				String d = sdf0.format(complaintDate.getDate());
 				String t = sdf1.format(timeSpinner.getValue());
 				date1 = sdf2.parse(d + " " + t);
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		Date date2 = new Date();
-		if (date1.compareTo(date2) <= 0) {
-			q2.setText(s); q2.setForeground(new Color(0, 153, 51));
-			q2.setToolTipText(null);
-			cd2 = true;
-		} else {
-			q2.setText("?"); q2.setForeground(Color.RED);
-			q2.setToolTipText("Select a time that is no later than current time.");
-			cd2 = false;
+			Date date2 = new Date();
+			if (date1.compareTo(date2) <= 0) {
+				q2.setText(s); q2.setForeground(new Color(0, 153, 51));
+				q2.setToolTipText(null);
+				cd2 = true;
+			} else {
+				q2.setText("?"); q2.setForeground(Color.RED);
+				q2.setToolTipText("Select a time that is no later than current time.");
+				cd2 = false;
+			}
 		}
 	}
 	
@@ -441,5 +443,30 @@ public class ComplaintFormPanel extends JPanel{
 
 	public void setFormListener(FormComplaintListener cplListener) {
 		this.cplListener = cplListener;
+	}
+	
+	public void clearInput() {
+		name.setText(null);
+		complaintDate.setCalendar(null);
+		timeSpinner.setValue(new Date());
+		place.setText(null);
+		declarantName.setText(null);
+		detail.setText(null);
+		resetProperties();
+	}
+	
+	public void resetProperties() {
+		name.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q1.setText(null);
+		complaintDate.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("JDateChooser.border"));
+		q2.setText(null);
+		timeSpinner.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("JSpinner.border"));
+		q3.setText(null);
+		place.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q4.setText(null);
+		declarantName.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q5.setText(null);
+		detail.setBorder(UIManager.getLookAndFeel().getDefaults().getBorder("TextField.border"));
+		q6.setText(null);
 	}
 }
