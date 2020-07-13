@@ -10,7 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
@@ -313,9 +314,12 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventAddVictim(int id) {
 				Person ps = personDAO.findPersonById(id);
+				List<Complaint> filteredList = new ArrayList<Complaint>();
 				List<Complaint> list = complaintDAO.getAllApprovedComplaints();
-				
-				relevantIncidentForm = new RelevantIncidentForm(ps, list);
+				Set<Integer> committedIncidents = complaintDAO.findIncidentsCommitedByPerson(id)
+													.stream().collect(Collectors.toSet());
+				filteredList = list.stream().filter(i -> !committedIncidents.contains(i.getId())).collect(Collectors.toList());
+				relevantIncidentForm = new RelevantIncidentForm(ps, filteredList);
 				relevantIncidentForm.setLocationRelativeTo(null);
 				relevantIncidentForm.setVisible(true);
 			}
