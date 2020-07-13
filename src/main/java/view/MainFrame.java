@@ -358,15 +358,18 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void tableEventDetail(int id) {
-				
 				Criminal cri = criminalDAO.findCriminalbyId(id);
-				
+		
 				Person per = personDAO.findPersonById(cri.getPersonalId());
 				cri.setImage(per.getImage());
 				cri.setName(per.getName());
 				cri.setNationality(per.getNationality());
 				cri.setDob(per.getDob());
 				cri.setGender(per.getGender());
+				
+				Criminal criminal = criminalDAO.findLastUpdatedByPersonalId(per.getPersonalId());
+				cri.setHisOfViolent(criminal.getHisOfViolent());
+				
 			
 				List<String> crimeTypes = comDetailDAO.getCrimeTypeOfPerson(cri.getPersonalId(), cri.getComplaintId());
 				

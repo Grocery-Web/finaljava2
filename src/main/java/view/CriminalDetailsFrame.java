@@ -23,6 +23,7 @@ public class CriminalDetailsFrame extends JFrame {
 	private JPanel buttonsPanel;
 	private CriminalFormPanel criFormPanel;
 	private PrisonerFormPanel prisonerFormPanel;
+	private AdditonalCriminalInfoFormPanel additionalPanel;
 	
 	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypes,List<PrisonList> prisonLst) {
 		super("Criminal Details");
@@ -33,11 +34,11 @@ public class CriminalDetailsFrame extends JFrame {
 		buttonsPanel =  new JPanel();
 		prisonerFormPanel = new PrisonerFormPanel(cri,prisonLst);
 		criFormPanel = new CriminalFormPanel(cri,crimeTypes);
-		
+		additionalPanel =  new AdditonalCriminalInfoFormPanel(cri);
 		setLayout(new BorderLayout());
 		
 //		SPLIT FORM
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, criFormPanel, prisonerFormPanel);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, criFormPanel, additionalPanel);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setResizeWeight(0.5);
 		

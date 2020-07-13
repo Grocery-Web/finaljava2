@@ -1,13 +1,13 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -23,6 +23,7 @@ import entity.PrisonList;
 
 public class PrisonerFormPanel extends JPanel {
 	private JLabel criminalID;
+	private JLabel title;
 	private JTextField startDate;
 	private JTextField duration;
 	private JComboBox adjudged;
@@ -38,6 +39,9 @@ public class PrisonerFormPanel extends JPanel {
 		startDate = new JTextField(10);
 		duration = new JTextField(10);
 		duration.setEditable(false);
+		title = new JLabel("PRISONER INFOMATION");
+		title.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		title.setForeground(Color.RED);
 		
 		fpl = new FilterPrisonListComboBox(prisonLst);
 		
@@ -75,22 +79,27 @@ public class PrisonerFormPanel extends JPanel {
 		
 		GridBagConstraints gc = new GridBagConstraints();
 		
-//		This form just have one column, therefore we just use weighty to allocate the space between each components
-		
-		/////////////// CRIMINAL ID ///////////////////
+		/////////////// TITLE ///////////////////
 		gc.weighty = 0.5; // assign at least small additional space between each component on Vertical
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		
 		gc.gridx = 0;
 		gc.gridy = 0;
+		gc.gridwidth = 2;
+		add(title,gc);
+		
+		/////////////// CRIMINAL ID ///////////////////
+		gc.gridwidth = 1;
+		
+		gc.gridy++;
+		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(new JLabel("Criminal ID: "),gc);
+		add(new JLabel("Date in Jail: "),gc);
 		
 		gc.gridx = 1;
-		gc.gridy = 0;
 		gc.anchor = GridBagConstraints.LINE_START;
-		add(criminalID, gc);
+		add(criminalID,gc);
 		
 		/////////////// START DATE ///////////////////
 		gc.gridy++;
