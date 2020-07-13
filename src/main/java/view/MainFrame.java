@@ -10,12 +10,12 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -35,6 +35,7 @@ import entity.Complaint;
 import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
+import entity.PrisonList;
 
 public class MainFrame extends JFrame {
 
@@ -62,10 +63,10 @@ public class MainFrame extends JFrame {
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
-	private IncidentDetailFrame incDetailFrame;
 	private RelevantComplaintForm relComplain;
-	private RelevantCriminalForm relIncident;
 	private PersonDetailFrame detailPersonFrame;
+	private RelevantIncidentForm relevantIncidentForm;
+	private CriminalDetailsFrame criDetailFrame;
 
 	/**
 	 * Launch the application.
@@ -234,7 +235,8 @@ public class MainFrame extends JFrame {
 					@Override
 					public void tableEventDeleted(int personId) {
 						comDetailDAO.removePerson(personId,id);
-						refresh();
+						cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
+						cplDetailFrame.refresh();
 					}
 
 					@Override
@@ -249,6 +251,11 @@ public class MainFrame extends JFrame {
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
 						complaintDAO.updateComplaintById(id, cpl);
 						for (Criminal criminal : lstCri) {
+							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
+							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
+								String violentHistory = lastCriminal.getHisOfViolent() + " " + lastCriminal.getAppliedDate();
+								criminal.setHisOfViolent(violentHistory);
+							}
 							criminalDAO.addCriminal(criminal);
 						}
 						cplDetailFrame.dispose();
@@ -302,32 +309,13 @@ public class MainFrame extends JFrame {
 			}
 			
 			@Override
-			public void tableEventAddToCriminalList(int personalId) {
-				Person per = personDAO.findPersonById(personalId);
-				List<Complaint> incidentList = complaintDAO.getAllApprovedComplaints();
+			public void tableEventAddVictim(int id) {
+				Person ps = personDAO.findPersonById(id);
+				List<Complaint> list = complaintDAO.getAllApprovedComplaints();
 				
-				relIncident = new RelevantCriminalForm(per, incidentList);
-				relIncident.setVisible(true);
-				relIncident.setFormListener(new RelevantIncidentFormListener() {
-					@Override
-					public void incidentFormEventListener(ComplaintDetail comDetail, Criminal newCriminal) {
-						List<String> crimeTypeList = comDetailDAO.getCrimeTypeOfPerson(comDetail.getPersonId(), comDetail.getCompId());
-						int count = 0;
-						for (String crimeType : crimeTypeList) {
-							if(crimeType.equals(comDetail.getCrimeType())) {
-								count++;
-							}
-						}
-						if(count < 1) {
-							comDetailDAO.setComplaintDetail(comDetail);
-							criminalDAO.addCriminal(newCriminal);
-							relIncident.dispose();
-						}else {
-							JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
-									JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
-						}
-					}
-				});
+				relevantIncidentForm = new RelevantIncidentForm(ps, list);
+				relevantIncidentForm.setLocationRelativeTo(null);
+				relevantIncidentForm.setVisible(true);
 			}
 
 			@Override
@@ -361,43 +349,40 @@ public class MainFrame extends JFrame {
 						MainFrame.this.setVisible(true);
 					}
 				});
-				
 			}
-
-			@Override
-			public void tableEventAddVictim(int id) {
-				// TODO Auto-generated method stub
-				
-			}
+			
 		});
-
-//		INCIDENT TABLE LISTENER		
-		incidentPanel.setTableListener(new TableIncidentListener() {		
-			//INCIDENT DETALS TABLE LISTENER
+		
+//		CRIMINAL TABLE LISTENER
+		criminalPanel.setTableListener(new TableCriminalListener() {
+			
 			@Override
 			public void tableEventDetail(int id) {
-				Complaint incident = complaintDAO.findComplaintById(id);
-				incDetailFrame = new IncidentDetailFrame(incident);
-				incDetailFrame.setLocationRelativeTo(null);
-				incDetailFrame.setVisible(true);
-				incDetailFrame.setData(comDetailDAO.getCriminalListByIncidentId(id));
+				Criminal cri = criminalDAO.findCriminalbyId(id);
+		
+				Person per = personDAO.findPersonById(cri.getPersonalId());
+				cri.setImage(per.getImage());
+				cri.setName(per.getName());
+				cri.setNationality(per.getNationality());
+				cri.setDob(per.getDob());
+				cri.setGender(per.getGender());
 				
-				incDetailFrame.setTableListener(new TableIncidentDetailListener() {
+				Criminal criminal = criminalDAO.findLastUpdatedByPersonalId(per.getPersonalId());
+				cri.setHisOfViolent(criminal.getHisOfViolent());
+				
+			
+				List<String> crimeTypes = comDetailDAO.getCrimeTypeOfPerson(cri.getPersonalId(), cri.getComplaintId());
+				
+				List<PrisonList> prisonlst = prisonListDAO.getAllPrisonList();
 
-					@Override
-					public void tableEventUpdated(Complaint inc) {
-						complaintDAO.updateComplaintById(id, inc);
-						JOptionPane.showMessageDialog(null, "Update incident successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-						refresh();
-						incDetailFrame.dispose();
-					}
-					
-				});
-				incDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
+				criDetailFrame.setVisible(true);
+				MainFrame.this.setVisible(false);
+				
 			}
 		});
 		
-		
+
 //		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.PAGE_START);
@@ -407,7 +392,6 @@ public class MainFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-
 	}
 
 	private JMenuBar createMenuBar() {
@@ -427,7 +411,6 @@ public class MainFrame extends JFrame {
 		menuBar.add(windowMenu);
 
 		showFormItem.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 

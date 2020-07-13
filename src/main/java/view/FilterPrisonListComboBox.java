@@ -7,23 +7,20 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
-import dao.ComplaintDAO;
-import entity.Complaint;
+import entity.PrisonList;
 
-public class FilterComplaintComboBox extends JComboBox{
-	private List<Complaint> entries;
+public class FilterPrisonListComboBox extends JComboBox{
+	private List<PrisonList> entries;
 
-    public List<Complaint> getEntries()
+    public List<PrisonList> getEntries()
     {
         return entries;
     }
 
-    public FilterComplaintComboBox(List<Complaint> entries)
+    public FilterPrisonListComboBox(List<PrisonList> entries)
     {
         super(entries.toArray());
         this.entries = entries;
@@ -60,9 +57,9 @@ public class FilterComplaintComboBox extends JComboBox{
      */
     public void comboFilter(String enteredText)
     {
-        List<Complaint> entriesFiltered = new ArrayList<Complaint>();
+        List<PrisonList> entriesFiltered = new ArrayList<PrisonList>();
 
-        for (Complaint entry : getEntries())
+        for (PrisonList entry : getEntries())
         {
             if (entry.getName().toLowerCase().contains(enteredText.toLowerCase()))
             {

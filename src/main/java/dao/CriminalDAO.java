@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +18,7 @@ public class CriminalDAO {
 
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call getAllCriminals}");
+				PreparedStatement ps = connect.prepareCall("{call getCriminalsInProcess}");
 				ResultSet rs = ps.executeQuery();
 			) 
 		{
@@ -41,37 +42,65 @@ public class CriminalDAO {
 	public void addCriminal(Criminal cri) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, cri.getPersonalId());
 			ps.setInt(2, cri.getComplaintId());
 			ps.setString(3, cri.getPunishment());
 			ps.setInt(4, cri.getRating());
+			ps.setDate(5, (Date) cri.getAppliedDate());
+			ps.setString(6, cri.getHisOfViolent());
 			ps.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Add New Criminal Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
-	public Criminal findCriminalByPersonAndComplaintId(int personId, int complaintId) {
+	public Criminal findLastUpdatedByPersonalId(int personalId) {
 		Criminal cri = new Criminal();
 		
-		try (
+		try(
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call findCriminalByPersonAndComplaintId(?,?)}");
-			) 
+				PreparedStatement ps = connect.prepareCall("{call findLastUpdatedByPersonalId(?)}");
+		)
 		{
-			ps.setInt(1, personId);
-			ps.setInt(2, complaintId);
+			ps.setInt(1, personalId);
 			var rs = ps.executeQuery();
 			while (rs.next()) {
 				cri.setCriminalId(rs.getInt("id"));
 				cri.setPersonalId(rs.getInt("personId"));
-				cri.setComplaintId(rs.getInt("complaintId"));
+				cri.setComplaintId(rs.getInt("complaintID"));
+				cri.setAppliedDate(rs.getDate("appliedDate"));
+				cri.setHisOfViolent(rs.getString("hisOfViolent"));
 				cri.setPunishment(rs.getString("punishment"));
-				cri.setRating(rs.getInt("Rating"));
+				cri.setRating(rs.getInt("rating"));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return cri;
+	}
+	
+	public Criminal findCriminalbyId(int criminalId) {
+		Criminal cri = new Criminal();
+		
+		try(
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call findCriminalbyId(?)}");
+		)
+		{
+			ps.setInt(1, criminalId);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				cri.setCriminalId(rs.getInt("id"));
+				cri.setPersonalId(rs.getInt("personId"));
+				cri.setComplaintId(rs.getInt("complaintID"));
+				cri.setAppliedDate(rs.getDate("appliedDate"));
+				cri.setHisOfViolent(rs.getString("hisOfViolent"));
+				cri.setPunishment(rs.getString("punishment"));
+				cri.setRating(rs.getInt("rating"));
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
