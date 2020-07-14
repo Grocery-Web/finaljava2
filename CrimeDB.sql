@@ -435,6 +435,15 @@ begin
 end
 go
 
+-- find Criminal by id
+create proc findCriminalByPersonAndComplaintId
+@personId int, @complaintId int
+as
+begin
+	select * from Criminal where personId = @personId and complaintId = @complaintId
+end
+go
+
 /* END PROCEDURE CRIMINAL */
 
 /* PROCEDURE PRISONER */
