@@ -10,7 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
@@ -36,6 +37,7 @@ import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
+import entity.PrisonerInList;
 
 public class MainFrame extends JFrame {
 
@@ -65,6 +67,7 @@ public class MainFrame extends JFrame {
 	private ComplaintDetailFrame cplDetailFrame;
 	private RelevantComplaintForm relComplain;
 	private PersonDetailFrame detailPersonFrame;
+	private PrisonListDetailFrame prisonListDetailFrame;
 	private RelevantIncidentForm relevantIncidentForm;
 	private CriminalDetailsFrame criDetailFrame;
 
@@ -311,9 +314,12 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventAddVictim(int id) {
 				Person ps = personDAO.findPersonById(id);
+				List<Complaint> filteredList = new ArrayList<Complaint>();
 				List<Complaint> list = complaintDAO.getAllApprovedComplaints();
-				
-				relevantIncidentForm = new RelevantIncidentForm(ps, list);
+				Set<Integer> committedIncidents = complaintDAO.findIncidentsCommitedByPerson(id)
+													.stream().collect(Collectors.toSet());
+				filteredList = list.stream().filter(i -> !committedIncidents.contains(i.getId())).collect(Collectors.toList());
+				relevantIncidentForm = new RelevantIncidentForm(ps, filteredList);
 				relevantIncidentForm.setLocationRelativeTo(null);
 				relevantIncidentForm.setVisible(true);
 			}
@@ -352,6 +358,24 @@ public class MainFrame extends JFrame {
 			}
 			
 		});
+//		PRISONLIST LISTENER
+		
+		prisonListPanel.setTableListener(new TablePrisonListListener() {
+			
+			@Override
+			public void displayPrisonListDetail(int id) {
+				// TODO Auto-generated method stub
+				PrisonListDAO prDAO = new PrisonListDAO();
+				
+				PrisonList pl = prDAO.getPrisonListByID(id);
+				List<PrisonerInList> prs = prDAO.getAllPrisonerByPrisonListID(id);
+				
+				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
+				prisonListDetailFrame.setLocationRelativeTo(null);
+				prisonListDetailFrame.setVisible(true);			
+			}
+		});
+		
 		
 //		CRIMINAL TABLE LISTENER
 		criminalPanel.setTableListener(new TableCriminalListener() {

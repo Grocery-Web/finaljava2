@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -22,13 +24,14 @@ public class PrisonListPanel extends JPanel {
 	private JTable table;
 	private PrisonListTableModel tableModel;
 	private JPopupMenu popup;
+	private TablePrisonListListener tableListener;
 	
 	public PrisonListPanel() {
 		tableModel = new PrisonListTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem viewAllPrisoners = new JMenuItem("Details");
+		JMenuItem viewAllPrisoners = new JMenuItem("View all prisoners ");
 		popup.add(viewAllPrisoners);
 		
 		table.addMouseListener(new MouseAdapter() {
@@ -42,6 +45,22 @@ public class PrisonListPanel extends JPanel {
 				}
 			}
 		});
+		
+		viewAllPrisoners.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.displayPrisonListDetail(id);
+				}
+							
+			}
+		});
+		
 		setLayout(new BorderLayout());
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -64,5 +83,9 @@ public class PrisonListPanel extends JPanel {
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);
+	}
+	
+	public void setTableListener(TablePrisonListListener tableListener) {
+		this.tableListener = tableListener;
 	}
 }

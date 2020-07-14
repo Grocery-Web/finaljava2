@@ -68,6 +68,24 @@ public class ComplaintDAO {
 		return list;
 	}
 	
+	public List<Integer> findIncidentsCommitedByPerson(int id) {
+		List<Integer> list = new ArrayList<Integer>();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call findIncidentsCommitedByPerson(?)}");
+			)
+		{
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				list.add(rs.getInt(1));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return list;
+	}
+	
 	public void addComplaint(Complaint cpt) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());

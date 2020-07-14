@@ -6,15 +6,25 @@ public class PrisonList {
 	private String address;
 	private int quantity;
 	private int capacity;
+	private String img;
 	
 	public PrisonList() {}
 	
-	public PrisonList(int id, String name, String address, int quantity, int capacity) {
+	public PrisonList(int id, String name, String address, int quantity, int capacity, String img) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.quantity = quantity;
 		this.capacity = capacity;
+		this.img = img;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 	public int getId() {
@@ -59,8 +69,11 @@ public class PrisonList {
 
 	@Override
 	public String toString() {
-		return name;
+		return "PrisonList [id=" + id + ", name=" + name + ", address=" + address + ", quantity=" + quantity
+				+ ", capacity=" + capacity + ", img=" + img + "]";
 	}
+
+
 	
 
 }
