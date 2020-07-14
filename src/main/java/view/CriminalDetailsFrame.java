@@ -30,6 +30,9 @@ public class CriminalDetailsFrame extends JFrame {
 	private CardLayout cardLayout;
 	private JPanel panelCont;
 	
+//	LISTENER
+	private TableCriminalDetailsListener criDetailListener;
+	
 	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypesLst,List<PrisonList> prisonLst) {
 		super("Criminal Details");
 		
@@ -79,10 +82,17 @@ public class CriminalDetailsFrame extends JFrame {
 		okBtn.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-//				if(criFormPanel.getPunishment().equals(anObject))
-				System.out.println(criFormPanel.getPunishment());
-				System.out.println(prisonerFormPanel.getPrisoner());
-				System.out.println(additionalPanel.getUpdatedCriminal());
+				if(criFormPanel.getPunishment().equals("administrative sanctions")) {
+					Criminal criminal = additionalPanel.getUpdatedCriminal();
+					if(criDetailListener != null) {
+						criDetailListener.tableEventUpdated(criminal);
+					}
+				}
+				
+				
+//				System.out.println(criFormPanel.getPunishment());
+//				System.out.println(prisonerFormPanel.getPrisoner());
+//				System.out.println(additionalPanel.getUpdatedCriminal());
 			}
 		});
 		
@@ -123,8 +133,12 @@ public class CriminalDetailsFrame extends JFrame {
 		setMaximumSize(new Dimension(1000,600));
 		setLocationRelativeTo(null);
 		setSize(900, 500);
-//		setResizable(false);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
+	}
+	
+	public void setTableListener(TableCriminalDetailsListener criDetailListener) {
+		this.criDetailListener = criDetailListener;
 	}
 }

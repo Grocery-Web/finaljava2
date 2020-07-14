@@ -442,7 +442,6 @@ begin
 end
 go
 
-
 -- insert a new Criminal
 create proc addCriminal
 @personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX)
@@ -452,6 +451,28 @@ begin
 	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent)
 end
 go
+
+-- update Criminal
+CREATE PROC updateCriminal
+	@personId int, 
+	@complaintID int,  
+	@appliedDate date,
+	@hisOfViolent varchar(MAX),
+	@punishment varchar(100), 
+	@rating int,
+	@criminalId int
+AS
+BEGIN
+	UPDATE Criminal
+	SET personId = @personId, 
+		complaintID = @complaintID,  
+		appliedDate = @appliedDate, 
+		hisOfViolent = @hisOfViolent, 
+		punishment = @punishment,
+		rating = @rating
+	WHERE id = @criminalId
+END
+GO
 
 -- Find Criminal by Personal Id
 create proc findLastUpdatedByPersonalId
@@ -584,5 +605,4 @@ insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Es
 insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 0)
 
 /* END INSERT DATA IN TABLE*/ 
-
 

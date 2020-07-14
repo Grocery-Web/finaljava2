@@ -420,7 +420,16 @@ public class MainFrame extends JFrame {
 				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
 				criDetailFrame.setVisible(true);
 				MainFrame.this.setVisible(false);
-				
+				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
+					
+					@Override
+					public void tableEventUpdated(Criminal cri) {
+						criminalDAO.updateCriminal(cri);
+//						refresh();
+//						criDetailFrame.dispose();
+//						MainFrame.this.setVisible(true);
+					}
+				});
 			}
 		});
 		
