@@ -84,14 +84,14 @@ go
 /* prisoner table */
 create table Prisoner (
 	id int identity(1,1) primary key,
-	startDate date,
 	prisonId int,
-	constraint pp foreign key (prisonId) references PrisonList(id),
-	releaseStatus bit null,
-	duration int null,
-	type nvarchar(50),  /* type of crime */
 	criminalID int,
+	startDate date,
 	endDate date,
+	constraint pp foreign key (prisonId) references PrisonList(id),
+	duration int null,
+	releaseStatus bit null,
+	type nvarchar(50),  /* type of crime */
 	constraint pin foreign key (criminalID) references Criminal(id)
 )
 go
@@ -279,6 +279,41 @@ BEGIN
 END
 GO
 
+/*Find if person in jail*/
+create proc checkPersonInJail
+@personalId int
+as
+begin
+	select count(*) as count from Person per
+	inner join Criminal cri on per.id = cri.personId
+	inner join Prisoner pri on cri.id = pri.criminalID
+	where per.id = @personalId
+end
+go
+
+/*Find if person is a Criminal*/
+create proc checkPersonIsCriminal
+@personalId int
+as
+begin
+	select count(*) as count from Criminal
+	where personId = @personalId and punishment like 'in process'
+end
+go
+
+/*Find if person existed in two defferent Complaints*/
+create proc checkPersonExistedInComplaint
+@compId int, @personalId int
+as
+begin
+	select count(*) as count from person per
+	inner join 
+	(select * from ComplaintDetail  where compId <> @compId) temp
+	on per.id = temp.personId
+	where per.id = @personalId
+end
+go
+
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */
@@ -464,7 +499,7 @@ go
 
 /* END PROCEDURE PRISONER*/
 
-/* PROCEDURE PRISONER */
+/* PROCEDURE PRISONLIST */
 
 create proc getAllPrisonList
 as
