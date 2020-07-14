@@ -307,10 +307,11 @@ create proc checkPersonExistedInComplaint
 as
 begin
 	select count(*) as count from person per
-	inner join 
-	(select * from ComplaintDetail  where compId <> @compId) temp
+	inner join (select * from ComplaintDetail  where compId <> @compId) temp
 	on per.id = temp.personId
-	where per.id = @personalId
+	inner join Complaint com
+	on temp.compId = com.id
+	where per.id = @personalId and com.verifyStatus = 0
 end
 go
 
@@ -442,7 +443,6 @@ begin
 end
 go
 
-
 -- insert a new Criminal
 create proc addCriminal
 @personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX)
@@ -452,6 +452,28 @@ begin
 	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent)
 end
 go
+
+-- update Criminal
+CREATE PROC updateCriminal
+	@personId int, 
+	@complaintID int,  
+	@appliedDate date,
+	@hisOfViolent varchar(MAX),
+	@punishment varchar(100), 
+	@rating int,
+	@criminalId int
+AS
+BEGIN
+	UPDATE Criminal
+	SET personId = @personId, 
+		complaintID = @complaintID,  
+		appliedDate = @appliedDate, 
+		hisOfViolent = @hisOfViolent, 
+		punishment = @punishment,
+		rating = @rating
+	WHERE id = @criminalId
+END
+GO
 
 -- Find Criminal by Personal Id
 create proc findLastUpdatedByPersonalId

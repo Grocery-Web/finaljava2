@@ -256,8 +256,7 @@ public class MainFrame extends JFrame {
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
 							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
-								String violentHistory = lastCriminal.getHisOfViolent() + " " + lastCriminal.getAppliedDate();
-								criminal.setHisOfViolent(violentHistory);
+								criminal.setHisOfViolent(lastCriminal.getHisOfViolent());
 							}
 							criminalDAO.addCriminal(criminal);
 						}
@@ -375,7 +374,6 @@ public class MainFrame extends JFrame {
 					}
 				});
 			}
-			
 		});
 //		PRISONLIST LISTENER
 		
@@ -421,7 +419,16 @@ public class MainFrame extends JFrame {
 				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
 				criDetailFrame.setVisible(true);
 				MainFrame.this.setVisible(false);
-				
+				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
+					
+					@Override
+					public void tableEventUpdated(Criminal cri) {
+						criminalDAO.updateCriminal(cri);
+						refresh();
+						criDetailFrame.dispose();
+						MainFrame.this.setVisible(true);
+					}
+				});
 			}
 		});
 		

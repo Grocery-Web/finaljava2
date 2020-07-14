@@ -108,4 +108,28 @@ public class CriminalDAO {
 		
 		return cri;
 	}
+	
+	public void updateCriminal(Criminal cri) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call updateCriminal(?,?,?,?,?,?,?)}");
+			) 
+		{
+			ps.setInt(1, cri.getPersonalId());
+			ps.setInt(2, cri.getComplaintId());
+			ps.setDate(3, new java.sql.Date(cri.getAppliedDate().getTime()));
+			ps.setString(4, cri.getHisOfViolent());
+			ps.setString(5, cri.getPunishment());
+			ps.setInt(6, cri.getRating());
+			ps.setInt(7, cri.getCriminalId());
+			
+			if (ps.executeUpdate() > 0) {
+				JOptionPane.showMessageDialog(null, "Criminal has already updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "Criminal not found", "Failed", JOptionPane.ERROR_MESSAGE);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }

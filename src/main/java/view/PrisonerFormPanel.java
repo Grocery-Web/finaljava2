@@ -187,21 +187,26 @@ public class PrisonerFormPanel extends JPanel {
 	
 	public Prisoner getPrisoner() {
 		Date getstartDate = null;
-		
-		try {
-			Calendar c = Calendar.getInstance();
-			c.setTime(dateFormat.parse(startDate.getText()));
-			c.add(Calendar.DAY_OF_MONTH, Integer.parseInt(duration.getText()));
-			
-			endDate = c.getTime();
-			getstartDate = dateFormat.parse(startDate.getText());
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
+		Prisoner prisoner;
+
+		if(type.equals("Termed imprisonment")) {
+			try {
+				Calendar c = Calendar.getInstance();
+				c.setTime(dateFormat.parse(startDate.getText()));
+				c.add(Calendar.DAY_OF_MONTH, Integer.parseInt(duration.getText()));
+				
+				endDate = c.getTime();
+				getstartDate = dateFormat.parse(startDate.getText());
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
+			}
+			prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, Integer.parseInt(duration.getText()), 
+					endDate, false);
+		}else {
+			prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, 0, 
+					null, false);
 		}
-	
-		Prisoner prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, Integer.parseInt(duration.getText()), 
-				endDate, false);
-		
+
 		return prisoner;
 	}
 }

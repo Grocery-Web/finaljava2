@@ -29,6 +29,7 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 	private String updatedViolent;
 	private Criminal criminal;
 	private String crimeTypes;
+	private String html = "<html><body style='width: %1spx'>%1s";
 	
 	public AdditonalCriminalInfoFormPanel(Criminal cri,String crimeTypes) {
 		Dimension dim = getPreferredSize();
@@ -42,11 +43,11 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		if(cri.getHisOfViolent() == null) {
 			hisOfViolent =  new JLabel("No Records Recognition");
 		}else {
-			hisOfViolent =  new JLabel(cri.getHisOfViolent());
+			hisOfViolent =  new JLabel(String.format(html, 200, cri.getHisOfViolent()));
 		}
 				
 		//DEFINE PARAMETERS
-		criminal = new Criminal(cri.getCriminalId(), cri.getPersonalId(), cri.getComplaintId(), cri.getPunishment(), null, 
+		criminal = new Criminal(cri.getCriminalId(), cri.getPersonalId(), cri.getComplaintId(), "administrative sanctions", null, 
 				cri.getHisOfViolent(), cri.getRating());
 		this.crimeTypes = crimeTypes;
 		
@@ -70,7 +71,7 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		
 		/////////////// TITLE ///////////////////
 		gc.weighty = 0.5; // assign at least small additional space between each component on Vertical
-		gc.fill = GridBagConstraints.HORIZONTAL;
+//		gc.fill = GridBagConstraints.HORIZONTAL;
 		
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -115,11 +116,11 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 			e.printStackTrace();
 			System.out.println("wrong input date");
 		}
-		
 		if(hisOfViolent.getText().equals("No Records Recognition")) {
-			updatedViolent = "In jail: " + appliedDate.getText() + " | Guilt: " + crimeTypes;
+			updatedViolent = "Pecuniary penalty:" + appliedDate.getText() + " | Guilt:" + crimeTypes;
 		}else {
-			updatedViolent = criminal.getHisOfViolent() + "/n" + "In jail: " + appliedDate.getText() + " | Guilt: " + crimeTypes;
+			updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Pecuniary penalty:" + appliedDate.getText() + 
+					" | Guilt:" + crimeTypes;
 		}
 		
 		criminal.setAppliedDate(getApplidated);
