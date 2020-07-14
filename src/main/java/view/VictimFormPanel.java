@@ -38,7 +38,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.SimpleDateFormat;
 
-public class RelevantIncidentForm extends JDialog {
+public class VictimFormPanel extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JPanel buttonPane;
@@ -63,7 +63,7 @@ public class RelevantIncidentForm extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RelevantIncidentForm(Person ps, List<Complaint> list) {
+	public VictimFormPanel(Person ps, List<Complaint> list) {
 		setResizable(false);
 		setTitle("Add new victim");
 		setBounds(100, 100, 450, 443);

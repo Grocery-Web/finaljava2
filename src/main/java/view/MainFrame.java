@@ -68,7 +68,7 @@ public class MainFrame extends JFrame {
 	private RelevantComplaintForm relComplain;
 	private PersonDetailFrame detailPersonFrame;
 	private PrisonListDetailFrame prisonListDetailFrame;
-	private RelevantIncidentForm relevantIncidentForm;
+	private VictimFormPanel victimForm;
 	private CriminalDetailsFrame criDetailFrame;
 
 	/**
@@ -319,9 +319,9 @@ public class MainFrame extends JFrame {
 				Set<Integer> committedIncidents = complaintDAO.findIncidentsCommitedByPerson(id)
 													.stream().collect(Collectors.toSet());
 				filteredList = list.stream().filter(i -> !committedIncidents.contains(i.getId())).collect(Collectors.toList());
-				relevantIncidentForm = new RelevantIncidentForm(ps, filteredList);
-				relevantIncidentForm.setLocationRelativeTo(null);
-				relevantIncidentForm.setVisible(true);
+				victimForm = new VictimFormPanel(ps, filteredList);
+				victimForm.setLocationRelativeTo(null);
+				victimForm.setVisible(true);
 			}
 
 			@Override
@@ -364,7 +364,6 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void displayPrisonListDetail(int id) {
-				// TODO Auto-generated method stub
 				PrisonListDAO prDAO = new PrisonListDAO();
 				
 				PrisonList pl = prDAO.getPrisonListByID(id);
