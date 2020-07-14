@@ -123,7 +123,6 @@ public class PersonDetailFrame extends JFrame {
 			lblImgUser.setIcon(new ImageIcon(imgPerson));
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 			if (person.getGender().toString() == "male") {
 				url = "images/male.png";
 			}

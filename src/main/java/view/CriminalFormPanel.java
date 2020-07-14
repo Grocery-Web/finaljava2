@@ -7,10 +7,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.StringJoiner;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -23,6 +20,10 @@ import javax.swing.border.Border;
 import entity.Criminal;
 
 public class CriminalFormPanel extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel criminalID;
 	private JLabel nameField;
 	private JLabel nationality;
@@ -36,9 +37,11 @@ public class CriminalFormPanel extends JPanel{
 	//LISTENER
 	private CriminalFormListener criminalFormListener;
 	
-	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+	//local Variables;
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private String getPunishment;
 	
-	public CriminalFormPanel(Criminal cri, List<String> crimeTypesLst) {
+	public CriminalFormPanel(Criminal cri, String crimeTypes) {
 		Dimension dim = getPreferredSize();
 		dim.width = 300;
 		setPreferredSize(dim);
@@ -52,12 +55,7 @@ public class CriminalFormPanel extends JPanel{
 		gender =  new JLabel(cri.getGender().toString());
 		rating = new JLabel(Integer.toString(cri.getRating()));
 		
-		//CRIME TYPES
-		StringJoiner joiner = new StringJoiner("|");
-		for (String crimeType : crimeTypesLst) {
-			joiner.add(crimeType);
-		}
-		String crimeTypes = joiner.toString();
+		
 		crimeType = new JLabel(crimeTypes);
 		
 		punishCombo = new JComboBox();
@@ -111,6 +109,7 @@ public class CriminalFormPanel extends JPanel{
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					if(criminalFormListener != null) {
 						criminalFormListener.formEventListener((String) punishCombo.getSelectedItem());
+						getPunishment = punishCombo.getSelectedItem().toString();
 					}
                 }
 
@@ -245,5 +244,9 @@ public class CriminalFormPanel extends JPanel{
 	
 	public void setFormListener(CriminalFormListener criminalFormListener) {
 		this.criminalFormListener = criminalFormListener;
+	}
+	
+	public String getPunishment() {
+		return getPunishment;
 	}
 }
