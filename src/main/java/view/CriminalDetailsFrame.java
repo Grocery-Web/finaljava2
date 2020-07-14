@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.StringJoiner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,8 +30,15 @@ public class CriminalDetailsFrame extends JFrame {
 	private CardLayout cardLayout;
 	private JPanel panelCont;
 	
-	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypes,List<PrisonList> prisonLst) {
+	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypesLst,List<PrisonList> prisonLst) {
 		super("Criminal Details");
+		
+		//CRIME TYPES
+		StringJoiner joiner = new StringJoiner("|");
+		for (String crimeType : crimeTypesLst) {
+			joiner.add(crimeType);
+		}
+		String crimeTypes = joiner.toString();
 		
 		//CREATE COMPONENTS
 		okBtn = new JButton("Submit");
@@ -38,7 +46,7 @@ public class CriminalDetailsFrame extends JFrame {
 		buttonsPanel =  new JPanel();
 		prisonerFormPanel = new PrisonerFormPanel(cri,prisonLst);
 		criFormPanel = new CriminalFormPanel(cri,crimeTypes);
-		additionalPanel =  new AdditonalCriminalInfoFormPanel(cri);
+		additionalPanel =  new AdditonalCriminalInfoFormPanel(cri,crimeTypes);
 		panelCont = new JPanel();
 		
 		setLayout(new BorderLayout());
@@ -71,6 +79,10 @@ public class CriminalDetailsFrame extends JFrame {
 		okBtn.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+//				if(criFormPanel.getPunishment().equals(anObject))
+				System.out.println(criFormPanel.getPunishment());
+				System.out.println(prisonerFormPanel.getPrisoner());
+				System.out.println(additionalPanel.getUpdatedCriminal());
 			}
 		});
 		

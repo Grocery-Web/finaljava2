@@ -6,7 +6,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -17,11 +19,18 @@ import javax.swing.border.Border;
 import entity.Criminal;
 
 public class AdditonalCriminalInfoFormPanel extends JPanel{
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	private JLabel title;
 	private JLabel hisOfViolent;
 	private JTextField appliedDate;
 	
-	public AdditonalCriminalInfoFormPanel(Criminal cri) {
+//	updated Criminal
+	private String updatedViolent;
+	private Criminal criminal;
+	private String crimeTypes;
+	
+	public AdditonalCriminalInfoFormPanel(Criminal cri,String crimeTypes) {
 		Dimension dim = getPreferredSize();
 		dim.width = 300;
 		setPreferredSize(dim);
@@ -29,12 +38,17 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		
 		appliedDate = new JTextField(10);
 		
+		//SET HISTORY OF VIOLENT ON RENDER AND 
 		if(cri.getHisOfViolent() == null) {
 			hisOfViolent =  new JLabel("No Records Recognition");
 		}else {
 			hisOfViolent =  new JLabel(cri.getHisOfViolent());
 		}
-		
+				
+		//DEFINE PARAMETERS
+		criminal = new Criminal(cri.getCriminalId(), cri.getPersonalId(), cri.getComplaintId(), cri.getPunishment(), null, 
+				cri.getHisOfViolent(), cri.getRating());
+		this.crimeTypes = crimeTypes;
 		
 		//TITLE
 		title = new JLabel("ADDITIONAL INFOMATION");
@@ -91,5 +105,26 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		add(appliedDate,gc);
 		
 //		End of Edit Form
+	}
+	
+	public Criminal getUpdatedCriminal() {
+		Date getApplidated = null;
+		try {
+			getApplidated = dateFormat.parse(appliedDate.getText());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			System.out.println("wrong input date");
+		}
+		
+		if(hisOfViolent.getText().equals("No Records Recognition")) {
+			updatedViolent = "In jail: " + appliedDate.getText() + " | Guilt: " + crimeTypes;
+		}else {
+			updatedViolent = criminal.getHisOfViolent() + "/n" + "In jail: " + appliedDate.getText() + " | Guilt: " + crimeTypes;
+		}
+		
+		criminal.setAppliedDate(getApplidated);
+		criminal.setHisOfViolent(updatedViolent);
+		
+		return criminal;
 	}
 }

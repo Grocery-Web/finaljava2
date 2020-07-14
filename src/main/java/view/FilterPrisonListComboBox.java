@@ -24,7 +24,7 @@ public class FilterPrisonListComboBox extends JComboBox{
     {
         super(entries.toArray());
         this.entries = entries;
-        this.setEditable(true);
+//        this.setEditable(true);
 
         final JTextField textfield =
             (JTextField) this.getEditor().getEditorComponent();
