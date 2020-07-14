@@ -6,7 +6,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entity.Complaint;
+import entity.Gender;
 import entity.Person;
+import entity.Victim;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -15,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
 
+import java.util.Date;
 import java.util.List;
 import javax.swing.JRadioButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -33,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.SimpleDateFormat;
 
 public class RelevantIncidentForm extends JDialog {
 
@@ -52,6 +56,9 @@ public class RelevantIncidentForm extends JDialog {
 	public JScrollPane scrollPane;
 	public JTextArea txtReason;
 	private RelevantFormListener revListener;
+	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
+	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	/**
 	 * Create the dialog.
@@ -65,6 +72,36 @@ public class RelevantIncidentForm extends JDialog {
 			buttonPane = new JPanel();
 			{
 				okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Victim victim = new Victim();
+						victim.setPersonalId(ps.getPersonalId());
+						victim.setName(ps.getName());
+						victim.setGender(ps.getGender());
+						victim.setDob(ps.getDob());
+						victim.setAddress(ps.getAddress());
+						victim.setNationality(ps.getNationality());
+						victim.setJob(ps.getJob());
+						if (rdbtnAlive.isSelected()) {
+							victim.setStatus(true);
+						} else {
+							victim.setStatus(false);
+							Date deathTime = null;
+							String d = sdf0.format(dateChooser.getDate());
+							String t = sdf1.format(timeSpinner.getValue());
+							try {
+								deathTime = sdf2.parse(d + " " + t);
+							} catch (Exception e2) {
+								e2.printStackTrace();
+							}
+							victim.setDeathTime(deathTime);
+							victim.setDeathPlace(txtScene.getText());
+							victim.setDeathReason(txtReason.getText());
+						}
+						
+						
+					}
+				});
 				okButton.setFocusPainted(false);
 				okButton.setActionCommand("OK");
 			}
