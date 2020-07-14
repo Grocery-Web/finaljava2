@@ -69,11 +69,6 @@ public class PrisonList {
 
 	@Override
 	public String toString() {
-		return "PrisonList [id=" + id + ", name=" + name + ", address=" + address + ", quantity=" + quantity
-				+ ", capacity=" + capacity + ", img=" + img + "]";
+		return name;
 	}
-
-
-	
-
 }
