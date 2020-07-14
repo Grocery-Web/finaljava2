@@ -256,8 +256,7 @@ public class MainFrame extends JFrame {
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
 							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
-								String violentHistory = lastCriminal.getHisOfViolent() + " " + lastCriminal.getAppliedDate();
-								criminal.setHisOfViolent(violentHistory);
+								criminal.setHisOfViolent(lastCriminal.getHisOfViolent());
 							}
 							criminalDAO.addCriminal(criminal);
 						}
@@ -425,9 +424,9 @@ public class MainFrame extends JFrame {
 					@Override
 					public void tableEventUpdated(Criminal cri) {
 						criminalDAO.updateCriminal(cri);
-//						refresh();
-//						criDetailFrame.dispose();
-//						MainFrame.this.setVisible(true);
+						refresh();
+						criDetailFrame.dispose();
+						MainFrame.this.setVisible(true);
 					}
 				});
 			}

@@ -116,11 +116,11 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 			e.printStackTrace();
 			System.out.println("wrong input date");
 		}
-
 		if(hisOfViolent.getText().equals("No Records Recognition")) {
 			updatedViolent = "Pecuniary penalty:" + appliedDate.getText() + " | Guilt:" + crimeTypes;
 		}else {
-			updatedViolent = criminal.getHisOfViolent() + "<br> ******************** <br>" + "Pecuniary penalty:" + appliedDate.getText() + " | Guilt:" + crimeTypes;
+			updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Pecuniary penalty:" + appliedDate.getText() + 
+					" | Guilt:" + crimeTypes;
 		}
 		
 		criminal.setAppliedDate(getApplidated);

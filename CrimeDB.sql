@@ -307,10 +307,11 @@ create proc checkPersonExistedInComplaint
 as
 begin
 	select count(*) as count from person per
-	inner join 
-	(select * from ComplaintDetail  where compId <> @compId) temp
+	inner join (select * from ComplaintDetail  where compId <> @compId) temp
 	on per.id = temp.personId
-	where per.id = @personalId
+	inner join Complaint com
+	on temp.compId = com.id
+	where per.id = @personalId and com.verifyStatus = 0
 end
 go
 
@@ -605,4 +606,5 @@ insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Es
 insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 0)
 
 /* END INSERT DATA IN TABLE*/ 
+
 
