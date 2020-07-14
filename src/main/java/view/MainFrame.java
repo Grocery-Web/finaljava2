@@ -375,7 +375,6 @@ public class MainFrame extends JFrame {
 					}
 				});
 			}
-			
 		});
 //		PRISONLIST LISTENER
 		
