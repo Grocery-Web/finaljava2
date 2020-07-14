@@ -35,7 +35,6 @@ public class PersonDAO {
 	
 	public List<Person> getAlivePeople() {
 		List<Person> list = new ArrayList<Person>();
-		boolean gen;
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call getAlivePeople}");
@@ -190,5 +189,66 @@ public class PersonDAO {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	public int checkPersonInJail (int personalId) {
+		int count = 0;
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call checkPersonInJail(?)}");
+			) 
+		{
+			ps.setInt(1, personalId);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				count = rs.getInt("count");
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return count;
+	}
+	
+	public int checkPersonIsCriminal (int personalId) {
+		int count = 0;
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call checkPersonIsCriminal(?)}");
+			) 
+		{
+			ps.setInt(1, personalId);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				count = rs.getInt("count");
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return count;
+	}
+	
+	public int checkPersonExistedInComplaint (int personalId, int compId) {
+		int count = 0;
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call checkPersonExistedInComplaint(?,?)}");
+			) 
+		{
+			ps.setInt(1, compId);
+			ps.setInt(2, personalId);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				count = rs.getInt("count");
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return count;
 	}
 }

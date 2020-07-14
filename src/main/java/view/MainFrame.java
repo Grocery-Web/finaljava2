@@ -10,7 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
@@ -36,6 +37,8 @@ import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
+import entity.PrisonerInList;
+import entity.Victim;
 
 public class MainFrame extends JFrame {
 
@@ -65,7 +68,8 @@ public class MainFrame extends JFrame {
 	private ComplaintDetailFrame cplDetailFrame;
 	private RelevantComplaintForm relComplain;
 	private PersonDetailFrame detailPersonFrame;
-	private RelevantIncidentForm relevantIncidentForm;
+	private PrisonListDetailFrame prisonListDetailFrame;
+	private VictimFormPanel victimForm;
 	private CriminalDetailsFrame criDetailFrame;
 	private RelevantCriminalForm relCriminal;
 	private IncidentDetailFrame incDetailFrame;
@@ -255,8 +259,7 @@ public class MainFrame extends JFrame {
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
 							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
-								String violentHistory = lastCriminal.getHisOfViolent() + " " + lastCriminal.getAppliedDate();
-								criminal.setHisOfViolent(violentHistory);
+								criminal.setHisOfViolent(lastCriminal.getHisOfViolent());
 							}
 							criminalDAO.addCriminal(criminal);
 						}
@@ -313,40 +316,68 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void tableEventAttached(int personalId) {
-				Person per = personDAO.findPersonById(personalId);
-				List<Complaint> listComplaints = complaintDAO.getAllUnverifiedComplaints();
+				// IF PERSON IN JAIL
+				int inJail = personDAO.checkPersonInJail(personalId);
+				// IF PERSON IS A CRIMINAL
+				int isCriminal = personDAO.checkPersonIsCriminal(personalId);
 				
-				relComplain = new RelevantComplaintForm(per, listComplaints);
-				relComplain.setVisible(true);
-				relComplain.setFormListener(new RelevantFormListener() {
-					@Override
-					public void formEventListener(ComplaintDetail comDetail) {
-						List<String> crimeTypeList = comDetailDAO.getCrimeTypeOfPerson(comDetail.getPersonId(), comDetail.getCompId());
-						int count = 0;
-						for (String crimeType : crimeTypeList) {
-							if(crimeType.equals(comDetail.getCrimeType())) {
-								count++;
+				if(inJail == 1) {
+					JOptionPane.showMessageDialog(MainFrame.this, "Person is serving in Jail. Could not choose!", "Oops! something went wrong", 
+							JOptionPane.WARNING_MESSAGE);
+				}else if(isCriminal == 1) {
+					JOptionPane.showMessageDialog(MainFrame.this, "Person is in Criminal list. Could not choose!", "Oops! something went wrong", 
+							JOptionPane.WARNING_MESSAGE);
+				}else {
+					Person per = personDAO.findPersonById(personalId);
+					List<Complaint> listComplaints = complaintDAO.getAllUnverifiedComplaints();
+					
+					relComplain = new RelevantComplaintForm(per, listComplaints);
+					relComplain.setVisible(true);
+					relComplain.setFormListener(new RelevantFormListener() {
+						@Override
+						public void formEventListener(ComplaintDetail comDetail) {
+							int ExistedInComplaint = personDAO.checkPersonExistedInComplaint(personalId, comDetail.getCompId());
+							if(ExistedInComplaint != 0) {
+								JOptionPane.showMessageDialog(MainFrame.this, "Person is in the other complaint. Could not choose!", "Oops! something went wrong", 
+										JOptionPane.WARNING_MESSAGE);
+							}else {
+								List<String> crimeTypeList = comDetailDAO.getCrimeTypeOfPerson(comDetail.getPersonId(), comDetail.getCompId());
+								int count = 0;
+								for (String crimeType : crimeTypeList) {
+									if(crimeType.equals(comDetail.getCrimeType())) {
+										count++;
+									}
+								}
+								if(count < 1) {
+									comDetailDAO.setComplaintDetail(comDetail);
+									relComplain.dispose();
+								}else {
+									JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
+											JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
+								}
 							}
 						}
-						if(count < 1) {
-							comDetailDAO.setComplaintDetail(comDetail);
-							relComplain.dispose();
-						}else {
-							JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
-									JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
-						}
-					}
-				});
+					});
+				}
 			}
 			
 			@Override
 			public void tableEventAddVictim(int id) {
 				Person ps = personDAO.findPersonById(id);
+				List<Complaint> filteredList = new ArrayList<Complaint>();
 				List<Complaint> list = complaintDAO.getAllApprovedComplaints();
-				
-				relevantIncidentForm = new RelevantIncidentForm(ps, list);
-				relevantIncidentForm.setLocationRelativeTo(null);
-				relevantIncidentForm.setVisible(true);
+				Set<Integer> committedIncidents = complaintDAO.findIncidentsCommitedByPerson(id)
+													.stream().collect(Collectors.toSet());
+				filteredList = list.stream().filter(i -> !committedIncidents.contains(i.getId())).collect(Collectors.toList());
+				victimForm = new VictimFormPanel(ps, filteredList);
+				victimForm.setLocationRelativeTo(null);
+				victimForm.setVisible(true);
+				victimForm.setFormListener(new VictimFormListener() {
+					@Override
+					public void linkNewVictim(Victim victim, Complaint cpl) {
+						
+					}
+				});
 			}
 
 			@Override
@@ -381,7 +412,22 @@ public class MainFrame extends JFrame {
 					}
 				});
 			}
+		});
+//		PRISONLIST LISTENER
+		
+		prisonListPanel.setTableListener(new TablePrisonListListener() {
 			
+			@Override
+			public void displayPrisonListDetail(int id) {
+				PrisonListDAO prDAO = new PrisonListDAO();
+				
+				PrisonList pl = prDAO.getPrisonListByID(id);
+				List<PrisonerInList> prs = prDAO.getAllPrisonerByPrisonListID(id);
+				
+				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
+				prisonListDetailFrame.setLocationRelativeTo(null);
+				prisonListDetailFrame.setVisible(true);			
+			}
 		});
 		
 //		INCIDENT TABLE LISTENER		
@@ -435,7 +481,16 @@ public class MainFrame extends JFrame {
 				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
 				criDetailFrame.setVisible(true);
 				MainFrame.this.setVisible(false);
-				
+				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
+					
+					@Override
+					public void tableEventUpdated(Criminal cri) {
+						criminalDAO.updateCriminal(cri);
+						refresh();
+						criDetailFrame.dispose();
+						MainFrame.this.setVisible(true);
+					}
+				});
 			}
 		});
 		

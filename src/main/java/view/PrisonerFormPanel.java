@@ -8,26 +8,40 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 import entity.Criminal;
 import entity.PrisonList;
+import entity.Prisoner;
 
 public class PrisonerFormPanel extends JPanel {
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	private JLabel criminalID;
 	private JLabel title;
 	private JTextField startDate;
 	private JTextField duration;
 	private JComboBox adjudged;
 	private FilterPrisonListComboBox fpl;
+	
+//	Variables for info of Prisoner
+	private int prisonId = 1;
+	private String type = "";
+	private Date endDate;
 	
 	public PrisonerFormPanel(Criminal cri, List<PrisonList> prisonLst) {
 		Dimension dim = getPreferredSize();
@@ -45,6 +59,15 @@ public class PrisonerFormPanel extends JPanel {
 		
 		fpl = new FilterPrisonListComboBox(prisonLst);
 		
+		fpl.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					prisonId = ((PrisonList) fpl.getSelectedItem()).getId();
+                }
+			}
+		});
+		
 		String[] items = { "Death penalty", "Life-sentence", "Termed imprisonment"};
 		adjudged = new JComboBox(items);
 		
@@ -61,8 +84,18 @@ public class PrisonerFormPanel extends JPanel {
 				if(selecterItem.equals("Termed imprisonment")) {
 					duration.setEditable(true);
 				}else {
+					duration.setText(null);
 					duration.setEditable(false);
 				}
+			}
+		});
+		
+		adjudged.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					type = adjudged.getSelectedItem().toString();
+                }
 			}
 		});
 		
@@ -95,7 +128,7 @@ public class PrisonerFormPanel extends JPanel {
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(new JLabel("Date in Jail: "),gc);
+		add(new JLabel("Criminal ID: "),gc);
 		
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
@@ -150,5 +183,30 @@ public class PrisonerFormPanel extends JPanel {
 		add(duration,gc);
 		
 //		End of Edit Form
+	}
+	
+	public Prisoner getPrisoner() {
+		Date getstartDate = null;
+		Prisoner prisoner;
+
+		if(type.equals("Termed imprisonment")) {
+			try {
+				Calendar c = Calendar.getInstance();
+				c.setTime(dateFormat.parse(startDate.getText()));
+				c.add(Calendar.DAY_OF_MONTH, Integer.parseInt(duration.getText()));
+				
+				endDate = c.getTime();
+				getstartDate = dateFormat.parse(startDate.getText());
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
+			}
+			prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, Integer.parseInt(duration.getText()), 
+					endDate, false);
+		}else {
+			prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, 0, 
+					null, false);
+		}
+
+		return prisoner;
 	}
 }

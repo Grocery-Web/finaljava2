@@ -2,6 +2,7 @@ drop database if exists CrimeDB;
 create database CrimeDB;
 go
 use CrimeDB
+go
 
 /* CREATE TABLES */ 
 
@@ -73,6 +74,7 @@ create table PrisonList (
 	id int identity(1,1) primary key,
 	name nvarchar(50),
 	address nvarchar(MAX),
+	img nvarchar(100),
 	limit int,
 	prisonerNum int
 )
@@ -82,13 +84,14 @@ go
 /* prisoner table */
 create table Prisoner (
 	id int identity(1,1) primary key,
-	startDate date,
 	prisonId int,
-	constraint pp foreign key (prisonId) references PrisonList(id),
-	releaseStatus bit null,
-	duration int null,
-	type nvarchar(50),  /* type of crime */
 	criminalID int,
+	startDate date,
+	endDate date,
+	constraint pp foreign key (prisonId) references PrisonList(id),
+	duration int null,
+	releaseStatus bit null,
+	type nvarchar(50),  /* type of crime */
 	constraint pin foreign key (criminalID) references Criminal(id)
 )
 go
@@ -97,18 +100,14 @@ go
 /* victim table */
 create table Victim (
 	id int identity(1,1) primary key,
-	name nvarchar(50),
-	gender bit,
-	dob date,
-	address nvarchar(MAX),
-	image varchar(100),
-	nationality varchar(50),
+	personalID int,
 	status bit,  /* dead or not */
 	deathTime datetime null,
 	deathPlace nvarchar(MAX),
 	deathReason nvarchar(MAX),
 	complaintID int,
-	constraint vid foreign key (complaintID) references Complaint(id)
+	constraint vid foreign key (complaintID) references Complaint(id),
+	constraint pid foreign key (personalID) references Person(id)
 )
 go
 
@@ -276,6 +275,42 @@ BEGIN
 END
 GO
 
+/*Find if person in jail*/
+create proc checkPersonInJail
+@personalId int
+as
+begin
+	select count(*) as count from Person per
+	inner join Criminal cri on per.id = cri.personId
+	inner join Prisoner pri on cri.id = pri.criminalID
+	where per.id = @personalId
+end
+go
+
+/*Find if person is a Criminal*/
+create proc checkPersonIsCriminal
+@personalId int
+as
+begin
+	select count(*) as count from Criminal
+	where personId = @personalId and punishment like 'in process'
+end
+go
+
+/*Find if person existed in two defferent Complaints*/
+create proc checkPersonExistedInComplaint
+@compId int, @personalId int
+as
+begin
+	select count(*) as count from person per
+	inner join (select * from ComplaintDetail  where compId <> @compId) temp
+	on per.id = temp.personId
+	inner join Complaint com
+	on temp.compId = com.id
+	where per.id = @personalId and com.verifyStatus = 0
+end
+go
+
 /* END PROCEDURE PERSON */
 
 /* PROCEDURE COMPLAINT */
@@ -404,7 +439,6 @@ begin
 end
 go
 
-
 -- insert a new Criminal
 create proc addCriminal
 @personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX)
@@ -414,6 +448,28 @@ begin
 	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent)
 end
 go
+
+-- update Criminal
+CREATE PROC updateCriminal
+	@personId int, 
+	@complaintID int,  
+	@appliedDate date,
+	@hisOfViolent varchar(MAX),
+	@punishment varchar(100), 
+	@rating int,
+	@criminalId int
+AS
+BEGIN
+	UPDATE Criminal
+	SET personId = @personId, 
+		complaintID = @complaintID,  
+		appliedDate = @appliedDate, 
+		hisOfViolent = @hisOfViolent, 
+		punishment = @punishment,
+		rating = @rating
+	WHERE id = @criminalId
+END
+GO
 
 -- Find Criminal by Personal Id
 create proc findLastUpdatedByPersonalId
@@ -444,32 +500,74 @@ begin
 end
 go
 
+-- Find all verified incidents commited by a Person
+CREATE PROC findIncidentsCommitedByPerson
+@personID int
+AS
+BEGIN
+	SELECT complaintID FROM Criminal
+	WHERE Criminal.personId = @personID
+END
+GO
+
 /* END PROCEDURE CRIMINAL */
 
-/* PROCEDURE PRISONER */
+/* PROCEDURE VICTIM */
+-- Link new victim to a verified Incident
+CREATE PROC linkNewVictim
+AS
+BEGIN
+	
 
+END
+GO
+
+/* END PROCEDURE VICTIM */
+
+/* PROCEDURE PRISONER */
 
 --add prisoner
 create proc addPrisoner
-@startDate date, @prisonID int, @releaseStatus bit, @duration bit, @type nvarchar(50), @criminalID int
+@startDate date, @prisonID int, @releaseStatus bit, @duration bit, @type nvarchar(50), @criminalID int, @endDate date
 as
 begin
-	insert into Prisoner (startDate, prisonId, releaseStatus, duration, type, criminalID)
-	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID)
+	insert into Prisoner (startDate, prisonId, releaseStatus, duration, type, criminalID, endDate)
+	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID, @endDate)
 end
 go
 
-
-
 /* END PROCEDURE PRISONER*/
 
-/* PROCEDURE PRISONER */
+/* PROCEDURE PRISONLIST */
 
 create proc getAllPrisonList
 as
 begin
 	select *
 	from PrisonList	
+end
+go
+
+create proc getPrisonListByID
+@id int
+as
+begin
+	select * 
+	from PrisonList
+	where id = @id
+end
+go
+
+create proc getAllPrisonerByPrisonListID
+@id int
+as
+begin
+	select personId, Prisoner.id, Person.name, dob, person.gender, startDate, duration, nationality
+	from PrisonList 
+		inner join Prisoner on PrisonList.id = Prisoner.prisonId
+		inner join Criminal on Criminal.id = Prisoner.criminalID
+		inner join Person on Criminal.personId = Person.id
+	where PrisonList.id = @id
 end
 go
 
@@ -520,9 +618,9 @@ go
 
 
 --table prison list
-insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 4, 2)
-insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 1, 0)
-insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 3, 1)
+insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 'fox.png', 4, 0)
+insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 'sona.png', 1, 0)
+insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 0)
 
 /* END INSERT DATA IN TABLE*/ 
 

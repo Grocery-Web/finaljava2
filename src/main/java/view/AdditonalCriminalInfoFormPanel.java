@@ -6,7 +6,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -17,11 +19,19 @@ import javax.swing.border.Border;
 import entity.Criminal;
 
 public class AdditonalCriminalInfoFormPanel extends JPanel{
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	private JLabel title;
 	private JLabel hisOfViolent;
 	private JTextField appliedDate;
 	
-	public AdditonalCriminalInfoFormPanel(Criminal cri) {
+//	updated Criminal
+	private String updatedViolent;
+	private Criminal criminal;
+	private String crimeTypes;
+	private String html = "<html><body style='width: %1spx'>%1s";
+	
+	public AdditonalCriminalInfoFormPanel(Criminal cri,String crimeTypes) {
 		Dimension dim = getPreferredSize();
 		dim.width = 300;
 		setPreferredSize(dim);
@@ -29,12 +39,17 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		
 		appliedDate = new JTextField(10);
 		
+		//SET HISTORY OF VIOLENT ON RENDER AND 
 		if(cri.getHisOfViolent() == null) {
 			hisOfViolent =  new JLabel("No Records Recognition");
 		}else {
-			hisOfViolent =  new JLabel(cri.getHisOfViolent());
+			hisOfViolent =  new JLabel(String.format(html, 200, cri.getHisOfViolent()));
 		}
-		
+				
+		//DEFINE PARAMETERS
+		criminal = new Criminal(cri.getCriminalId(), cri.getPersonalId(), cri.getComplaintId(), "administrative sanctions", null, 
+				cri.getHisOfViolent(), cri.getRating());
+		this.crimeTypes = crimeTypes;
 		
 		//TITLE
 		title = new JLabel("ADDITIONAL INFOMATION");
@@ -56,7 +71,7 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		
 		/////////////// TITLE ///////////////////
 		gc.weighty = 0.5; // assign at least small additional space between each component on Vertical
-		gc.fill = GridBagConstraints.HORIZONTAL;
+//		gc.fill = GridBagConstraints.HORIZONTAL;
 		
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -91,5 +106,26 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		add(appliedDate,gc);
 		
 //		End of Edit Form
+	}
+	
+	public Criminal getUpdatedCriminal() {
+		Date getApplidated = null;
+		try {
+			getApplidated = dateFormat.parse(appliedDate.getText());
+		} catch (ParseException e) {
+			e.printStackTrace();
+			System.out.println("wrong input date");
+		}
+		if(hisOfViolent.getText().equals("No Records Recognition")) {
+			updatedViolent = "Pecuniary penalty:" + appliedDate.getText() + " | Guilt:" + crimeTypes;
+		}else {
+			updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Pecuniary penalty:" + appliedDate.getText() + 
+					" | Guilt:" + crimeTypes;
+		}
+		
+		criminal.setAppliedDate(getApplidated);
+		criminal.setHisOfViolent(updatedViolent);
+		
+		return criminal;
 	}
 }

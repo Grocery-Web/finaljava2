@@ -1,31 +1,53 @@
 package entity;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+
+import javax.swing.JOptionPane;
 
 public class Prisoner extends Person {
 	private int prisonerId;
-	private int startDate;
-	private int prisonId;
-	private boolean releasedStatus;
-	private int duration;
 	private int criminalId;
+	private int prisonId;
+	private String type;
+	private Date startDate;
+	private int duration;
+	private Date endDate;
+	private boolean releasedStatus;
 	
 	public Prisoner() {}
 
 	public Prisoner(int personalId, String name, Gender gender, Date dob, String address, String image,
 			String nationality, String job, Boolean alive) {
 		super(personalId, name, gender, dob, address, image, nationality, job, alive);
-		// TODO Auto-generated constructor stub
+	}
+	
+
+
+	public Prisoner(int criminalId, int prisonId, String type, Date startDate, int duration,
+			Date endDate, boolean releasedStatus) {
+		super();
+		this.criminalId = criminalId;
+		this.prisonId = prisonId;
+		this.type = type;
+		this.startDate = startDate;
+		this.duration = duration;
+		this.endDate = endDate;
+		this.releasedStatus = releasedStatus;
 	}
 
-	public Prisoner(int prisonerId, int startDate, int prisonId, boolean releasedStatus, int duration, int criminalId) {
+	public Prisoner(int prisonerId, int criminalId, int prisonId, String type, Date startDate, int duration,
+			Date endDate, boolean releasedStatus) {
 		super();
 		this.prisonerId = prisonerId;
-		this.startDate = startDate;
-		this.prisonId = prisonId;
-		this.releasedStatus = releasedStatus;
-		this.duration = duration;
 		this.criminalId = criminalId;
+		this.prisonId = prisonId;
+		this.type = type;
+		this.startDate = startDate;
+		this.duration = duration;
+		this.endDate = endDate;
+		this.releasedStatus = releasedStatus;
 	}
 
 	public int getPrisonerId() {
@@ -36,12 +58,12 @@ public class Prisoner extends Person {
 		this.prisonerId = prisonerId;
 	}
 
-	public int getStartDate() {
-		return startDate;
+	public int getCriminalId() {
+		return criminalId;
 	}
 
-	public void setStartDate(int startDate) {
-		this.startDate = startDate;
+	public void setCriminalId(int criminalId) {
+		this.criminalId = criminalId;
 	}
 
 	public int getPrisonId() {
@@ -52,12 +74,20 @@ public class Prisoner extends Person {
 		this.prisonId = prisonId;
 	}
 
-	public boolean isReleasedStatus() {
-		return releasedStatus;
+	public String getType() {
+		return type;
 	}
 
-	public void setReleasedStatus(boolean releasedStatus) {
-		this.releasedStatus = releasedStatus;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
 	public int getDuration() {
@@ -68,19 +98,26 @@ public class Prisoner extends Person {
 		this.duration = duration;
 	}
 
-	public int getCriminalId() {
-		return criminalId;
+	public Date getEndDate() {
+		return endDate;
 	}
 
-	public void setCriminalId(int criminalId) {
-		this.criminalId = criminalId;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public boolean isReleasedStatus() {
+		return releasedStatus;
+	}
+
+	public void setReleasedStatus(boolean releasedStatus) {
+		this.releasedStatus = releasedStatus;
 	}
 
 	@Override
 	public String toString() {
-		return "Prisoner [prisonerId=" + prisonerId + ", startDate=" + startDate + ", prisonId=" + prisonId
-				+ ", releasedStatus=" + releasedStatus + ", duration=" + duration + ", criminalId=" + criminalId + "]";
+		return "Prisoner [prisonerId=" + prisonerId + ", criminalId=" + criminalId + ", prisonId=" + prisonId
+				+ ", type=" + type + ", startDate=" + startDate + ", duration=" + duration + ", endDate=" + endDate
+				+ ", releasedStatus=" + releasedStatus + "]";
 	}
-	
-	
 }

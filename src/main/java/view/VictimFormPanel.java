@@ -6,7 +6,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entity.Complaint;
+import entity.Gender;
 import entity.Person;
+import entity.Victim;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -15,8 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
 
+import java.util.Date;
 import java.util.List;
-import java.awt.FlowLayout;
 import javax.swing.JRadioButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.TitledBorder;
@@ -34,8 +36,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.SimpleDateFormat;
 
-public class RelevantIncidentForm extends JDialog {
+public class VictimFormPanel extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JPanel buttonPane;
@@ -52,12 +55,16 @@ public class RelevantIncidentForm extends JDialog {
 	public JTextField txtScene;
 	public JScrollPane scrollPane;
 	public JTextArea txtReason;
-	private RelevantFormListener revListener;
+	private VictimFormListener victimListener;
+	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
+	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
+	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	/**
 	 * Create the dialog.
 	 */
-	public RelevantIncidentForm(Person ps, List<Complaint> list) {
+	public VictimFormPanel(Person ps, List<Complaint> list) {
+		setResizable(false);
 		setTitle("Add new victim");
 		setBounds(100, 100, 450, 443);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,6 +72,32 @@ public class RelevantIncidentForm extends JDialog {
 			buttonPane = new JPanel();
 			{
 				okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Victim victim = new Victim();
+						victim.setPersonalId(ps.getPersonalId());
+						Complaint cpl = (Complaint) filterComplaintComboBox.getSelectedItem();
+						if (rdbtnAlive.isSelected()) {
+							victim.setStatus(true);
+						} else {
+							victim.setStatus(false);
+							Date deathTime = null;
+							String d = sdf0.format(dateChooser.getDate());
+							String t = sdf1.format(timeSpinner.getValue());
+							try {
+								deathTime = sdf2.parse(d + " " + t);
+							} catch (Exception e2) {
+								e2.printStackTrace();
+							}
+							victim.setDeathTime(deathTime);
+							victim.setDeathPlace(txtScene.getText());
+							victim.setDeathReason(txtReason.getText());
+						}
+						if (victimListener != null) {
+							victimListener.linkNewVictim(victim, cpl);
+						}
+					}
+				});
 				okButton.setFocusPainted(false);
 				okButton.setActionCommand("OK");
 			}
@@ -286,7 +319,7 @@ public class RelevantIncidentForm extends JDialog {
 		getContentPane().setLayout(groupLayout);
 	}
 	
-	public void setFormListener(RelevantFormListener revListener) {
-		this.revListener = revListener;
+	public void setFormListener(VictimFormListener victimListener) {
+		this.victimListener = victimListener;
 	}
 }
