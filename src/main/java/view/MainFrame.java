@@ -37,6 +37,7 @@ import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
+import entity.Prisoner;
 import entity.PrisonerInList;
 
 public class MainFrame extends JFrame {
@@ -422,11 +423,19 @@ public class MainFrame extends JFrame {
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
 					
 					@Override
-					public void tableEventUpdated(Criminal cri) {
-						criminalDAO.updateCriminal(cri);
-						refresh();
-						criDetailFrame.dispose();
-						MainFrame.this.setVisible(true);
+					public void tableUpdatedCriminal(Criminal cri) {
+//						criminalDAO.updateCriminal(cri);
+//						refresh();
+//						criDetailFrame.dispose();
+//						MainFrame.this.setVisible(true);
+						
+						System.out.println(cri);
+					}
+
+					@Override
+					public void tableInsertPrisoner(Prisoner prisoner) {
+						System.out.println(prisoner);
+						
 					}
 				});
 			}

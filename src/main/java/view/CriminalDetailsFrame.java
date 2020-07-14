@@ -17,6 +17,7 @@ import javax.swing.UIManager;
 
 import entity.Criminal;
 import entity.PrisonList;
+import entity.Prisoner;
 
 public class CriminalDetailsFrame extends JFrame {
 	private JSplitPane splitPane;
@@ -37,7 +38,7 @@ public class CriminalDetailsFrame extends JFrame {
 		super("Criminal Details");
 		
 		//CRIME TYPES
-		StringJoiner joiner = new StringJoiner("|");
+		StringJoiner joiner = new StringJoiner(" | ");
 		for (String crimeType : crimeTypesLst) {
 			joiner.add(crimeType);
 		}
@@ -47,7 +48,7 @@ public class CriminalDetailsFrame extends JFrame {
 		okBtn = new JButton("Submit");
 		cancelBtn = new JButton("Cancel");
 		buttonsPanel =  new JPanel();
-		prisonerFormPanel = new PrisonerFormPanel(cri,prisonLst);
+		prisonerFormPanel = new PrisonerFormPanel(cri,prisonLst, crimeTypes);
 		criFormPanel = new CriminalFormPanel(cri,crimeTypes);
 		additionalPanel =  new AdditonalCriminalInfoFormPanel(cri,crimeTypes);
 		panelCont = new JPanel();
@@ -83,16 +84,20 @@ public class CriminalDetailsFrame extends JFrame {
 
 			public void actionPerformed(ActionEvent e) {
 				if(criFormPanel.getPunishment().equals("administrative sanctions")) {
-					Criminal criminal = additionalPanel.getUpdatedCriminal();
+					Criminal criminal = additionalPanel.getCriminal();
 					if(criDetailListener != null) {
-						criDetailListener.tableEventUpdated(criminal);
+						criDetailListener.tableUpdatedCriminal(criminal);
 					}
 				}
 				
-				
-//				System.out.println(criFormPanel.getPunishment());
-//				System.out.println(prisonerFormPanel.getPrisoner());
-//				System.out.println(additionalPanel.getUpdatedCriminal());
+				if(criFormPanel.getPunishment().equals("imprisoner")) {
+					Prisoner prisoner = prisonerFormPanel.getPrisoner();
+					Criminal criminal = prisonerFormPanel.getCriminal();
+					if(criDetailListener != null) {
+						criDetailListener.tableUpdatedCriminal(criminal);
+						criDetailListener.tableInsertPrisoner(prisoner);
+					}
+				}
 			}
 		});
 		

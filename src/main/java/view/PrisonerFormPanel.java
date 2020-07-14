@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,12 +31,14 @@ import entity.Prisoner;
 
 public class PrisonerFormPanel extends JPanel {
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private String html = "<html><body style='width: %1spx'>%1s";
 	
 	private JLabel criminalID;
 	private JLabel title;
 	private JTextField startDate;
 	private JTextField duration;
 	private JComboBox adjudged;
+	private JLabel hisOfViolent;
 	private FilterPrisonListComboBox fpl;
 	
 //	Variables for info of Prisoner
@@ -43,7 +46,16 @@ public class PrisonerFormPanel extends JPanel {
 	private String type = "";
 	private Date endDate;
 	
-	public PrisonerFormPanel(Criminal cri, List<PrisonList> prisonLst) {
+//	updated Criminal
+	private String updatedViolent;
+	private Criminal criminal;
+	private String crimeTypes;
+
+	public PrisonerFormPanel(Criminal cri, List<PrisonList> prisonLst,String crimeTypes) {
+		//DEFINE PARAMETERS
+		this.criminal = cri;
+		this.crimeTypes = crimeTypes;
+		
 		Dimension dim = getPreferredSize();
 		dim.width = 300;
 		setPreferredSize(dim);
@@ -51,14 +63,22 @@ public class PrisonerFormPanel extends JPanel {
 		
 		criminalID = new JLabel(Integer.toString(cri.getCriminalId()));
 		startDate = new JTextField(10);
+		
 		duration = new JTextField(10);
 		duration.setEditable(false);
+		
 		title = new JLabel("PRISONER INFOMATION");
 		title.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		title.setForeground(Color.RED);
 		
-		fpl = new FilterPrisonListComboBox(prisonLst);
+		//SET HISTORY OF VIOLENT ON RENDER AND 
+		if(cri.getHisOfViolent() == null) {
+			hisOfViolent =  new JLabel("No Records Recognition");
+		}else {
+			hisOfViolent =  new JLabel(String.format(html, 200, cri.getHisOfViolent()));
+		}
 		
+		fpl = new FilterPrisonListComboBox(prisonLst);
 		fpl.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -170,43 +190,106 @@ public class PrisonerFormPanel extends JPanel {
 		add(adjudged,gc);
 		
 		/////////////// DURATION ///////////////////
+		gc.gridy++;
+		
+		gc.gridx = 0;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 0, 0, 5);
+		add(new JLabel("Duration: "),gc);
+		
+		gc.gridx = 1;
+		gc.anchor = GridBagConstraints.LINE_START;
+		add(duration,gc);
+		
+		/////////////// HISTORY OF VIOLENT ///////////////////
 		gc.weighty = 2;
 		gc.gridy++;
 		
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.FIRST_LINE_END;
 		gc.insets = new Insets(20, 0, 0, 5);
-		add(new JLabel("Duration: "),gc);
+		add(new JLabel("History of Violent: "),gc);
 		
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
-		add(duration,gc);
+		add(hisOfViolent,gc);
 		
 //		End of Edit Form
 	}
 	
 	public Prisoner getPrisoner() {
 		Date getstartDate = null;
-		Prisoner prisoner;
+		Prisoner prisoner = null;
 
 		if(type.equals("Termed imprisonment")) {
-			try {
-				Calendar c = Calendar.getInstance();
-				c.setTime(dateFormat.parse(startDate.getText()));
-				c.add(Calendar.DAY_OF_MONTH, Integer.parseInt(duration.getText()));
-				
-				endDate = c.getTime();
-				getstartDate = dateFormat.parse(startDate.getText());
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
+			if(duration.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Duration must be inputed", "Oops!!", JOptionPane.ERROR_MESSAGE);
+			}else {
+				try {
+					Calendar c = Calendar.getInstance();
+					c.setTime(dateFormat.parse(startDate.getText()));
+					c.add(Calendar.DAY_OF_MONTH, Integer.parseInt(duration.getText()));
+					
+					endDate = c.getTime();
+					getstartDate = dateFormat.parse(startDate.getText());
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
+				}
+				prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, Integer.parseInt(duration.getText()), 
+						endDate, false);
 			}
-			prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, Integer.parseInt(duration.getText()), 
-					endDate, false);
 		}else {
-			prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, 0, 
-					null, false);
+			try {
+				getstartDate = dateFormat.parse(startDate.getText());
+				prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, 0, 
+						null, false);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return prisoner;
+	}
+	
+	public Criminal getCriminal() {
+		Date getApplidated = null;
+		try {
+			getApplidated = dateFormat.parse(startDate.getText());
+			criminal.setAppliedDate(getApplidated);
+		} catch (ParseException e) {
+			JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		// RECORD CRIME TYPE INTO HISTORY OF VIOLENT
+		if(type.equals("Death penalty")) {
+			if(hisOfViolent.getText().equals("No Records Recognition")) {
+				updatedViolent = "Death penalty from:" + startDate.getText() + " | Guilt:" + crimeTypes;
+			}else {
+				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Death penalty:" + startDate.getText() + 
+						" | Guilt:" + crimeTypes;
+			}
+			criminal.setHisOfViolent(updatedViolent);
+			criminal.setPunishment("imprisoner");
+		}else if(type.equals("Life-sentence")) {
+			if(hisOfViolent.getText().equals("No Records Recognition")) {
+				updatedViolent = "Life-sentence from:" + startDate.getText() + " | Guilt:" + crimeTypes;
+			}else {
+				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Life-sentence:" + startDate.getText() + 
+						" | Guilt:" + crimeTypes;
+			}
+			criminal.setHisOfViolent(updatedViolent);
+			criminal.setPunishment("imprisoner");
+		}else {
+			if(hisOfViolent.getText().equals("No Records Recognition")) {
+				updatedViolent = "Termed imprisonment from:" + startDate.getText() + ",Period:" + duration.getText() + " days | Guilt:" + crimeTypes;
+			}else {
+				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Termed imprisonment:" + startDate.getText() + 
+						" | Guilt:" + crimeTypes;
+			}
+			criminal.setHisOfViolent(updatedViolent);
+			criminal.setPunishment("imprisoner");
+		}
+
+		return criminal;
 	}
 }
