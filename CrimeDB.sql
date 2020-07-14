@@ -100,18 +100,14 @@ go
 /* victim table */
 create table Victim (
 	id int identity(1,1) primary key,
-	name nvarchar(50),
-	gender bit,
-	dob date,
-	address nvarchar(MAX),
-	image varchar(100),
-	nationality varchar(50),
+	personalID int,
 	status bit,  /* dead or not */
 	deathTime datetime null,
 	deathPlace nvarchar(MAX),
 	deathReason nvarchar(MAX),
 	complaintID int,
-	constraint vid foreign key (complaintID) references Complaint(id)
+	constraint vid foreign key (complaintID) references Complaint(id),
+	constraint pid foreign key (personalID) references Person(id)
 )
 go
 
@@ -449,6 +445,18 @@ END
 GO
 
 /* END PROCEDURE CRIMINAL */
+
+/* PROCEDURE VICTIM */
+-- Link new victim to a verified Incident
+CREATE PROC linkNewVictim
+AS
+BEGIN
+	
+
+END
+GO
+
+/* END PROCEDURE VICTIM */
 
 /* PROCEDURE PRISONER */
 

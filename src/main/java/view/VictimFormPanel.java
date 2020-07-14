@@ -55,7 +55,7 @@ public class VictimFormPanel extends JDialog {
 	public JTextField txtScene;
 	public JScrollPane scrollPane;
 	public JTextArea txtReason;
-	private RelevantFormListener revListener;
+	private VictimFormListener victimListener;
 	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
 	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
 	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -76,12 +76,7 @@ public class VictimFormPanel extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						Victim victim = new Victim();
 						victim.setPersonalId(ps.getPersonalId());
-						victim.setName(ps.getName());
-						victim.setGender(ps.getGender());
-						victim.setDob(ps.getDob());
-						victim.setAddress(ps.getAddress());
-						victim.setNationality(ps.getNationality());
-						victim.setJob(ps.getJob());
+						Complaint cpl = (Complaint) filterComplaintComboBox.getSelectedItem();
 						if (rdbtnAlive.isSelected()) {
 							victim.setStatus(true);
 						} else {
@@ -98,8 +93,9 @@ public class VictimFormPanel extends JDialog {
 							victim.setDeathPlace(txtScene.getText());
 							victim.setDeathReason(txtReason.getText());
 						}
-						
-						
+						if (victimListener != null) {
+							victimListener.linkNewVictim(victim, cpl);
+						}
 					}
 				});
 				okButton.setFocusPainted(false);
@@ -323,7 +319,7 @@ public class VictimFormPanel extends JDialog {
 		getContentPane().setLayout(groupLayout);
 	}
 	
-	public void setFormListener(RelevantFormListener revListener) {
-		this.revListener = revListener;
+	public void setFormListener(VictimFormListener victimListener) {
+		this.victimListener = victimListener;
 	}
 }

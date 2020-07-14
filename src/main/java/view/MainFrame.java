@@ -38,6 +38,7 @@ import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
 import entity.PrisonerInList;
+import entity.Victim;
 
 public class MainFrame extends JFrame {
 
@@ -322,6 +323,12 @@ public class MainFrame extends JFrame {
 				victimForm = new VictimFormPanel(ps, filteredList);
 				victimForm.setLocationRelativeTo(null);
 				victimForm.setVisible(true);
+				victimForm.setFormListener(new VictimFormListener() {
+					@Override
+					public void linkNewVictim(Victim victim, Complaint cpl) {
+						
+					}
+				});
 			}
 
 			@Override
