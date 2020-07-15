@@ -78,9 +78,9 @@ public class VictimFormPanel extends JDialog {
 						victim.setPersonalId(ps.getPersonalId());
 						victim.setComplaintID(((Complaint) filterComplaintComboBox.getSelectedItem()).getId());
 						if (rdbtnAlive.isSelected()) {
-							victim.setStatus(true);
+							victim.setAlive(true);
 						} else {
-							victim.setStatus(false);
+							victim.setAlive(false);
 							Date deathTime = null;
 							String d = sdf0.format(dateChooser.getDate());
 							String t = sdf1.format(timeSpinner.getValue());
