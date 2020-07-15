@@ -544,6 +544,40 @@ go
 
 /* END PROCEDURE PRISONER*/
 
+/*TRIGGER */
+
+create trigger insertPrisoner
+on Prisoner 
+after insert
+as
+begin
+	update PrisonList
+	set PrisonList.prisonerNum= (
+		select count(*)
+		from Prisoner
+		where (Prisoner.prisonId = prisonlist.id) and (Prisoner.releaseStatus = 0)
+	)
+end
+go
+
+create trigger updatePrisoner
+on Prisoner 
+after update
+as
+begin
+	update PrisonList
+	set PrisonList.prisonerNum= (
+		select count(*)
+		from Prisoner
+		where (Prisoner.prisonId = prisonlist.id) and (Prisoner.releaseStatus = 0)
+	)
+end
+go
+
+
+
+/* END TRIGGER*/
+
 /* PROCEDURE PRISONLIST */
 
 create proc getAllPrisonList
@@ -573,7 +607,17 @@ begin
 		inner join Prisoner on PrisonList.id = Prisoner.prisonId
 		inner join Criminal on Criminal.id = Prisoner.criminalID
 		inner join Person on Criminal.personId = Person.id
-	where PrisonList.id = @id
+	where (PrisonList.id = @id) and (releaseStatus = 0)
+end
+go
+
+create proc getAllPrisonListExceptPrisonID
+@id int
+as
+begin
+	select *
+	from PrisonList
+	where @id != id
 end
 go
 
