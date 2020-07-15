@@ -544,6 +544,40 @@ go
 
 /* END PROCEDURE PRISONER*/
 
+/*TRIGGER */
+
+create trigger insertPrisoner
+on Prisoner 
+after insert
+as
+begin
+	update PrisonList
+	set PrisonList.prisonerNum= (
+		select count(*)
+		from Prisoner
+		where (Prisoner.prisonId = prisonlist.id) and (Prisoner.releaseStatus = 0)
+	)
+end
+go
+
+create trigger updatePrisoner
+on Prisoner 
+after update
+as
+begin
+	update PrisonList
+	set PrisonList.prisonerNum= (
+		select count(*)
+		from Prisoner
+		where (Prisoner.prisonId = prisonlist.id) and (Prisoner.releaseStatus = 0)
+	)
+end
+go
+
+
+
+/* END TRIGGER*/
+
 /* PROCEDURE PRISONLIST */
 
 create proc getAllPrisonList
