@@ -67,6 +67,17 @@ public class PersonPanel extends JPanel {
 			}
 		});
 		
+		criminalItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventAddToCriminalList(id);
+				}
+			}
+		});
+		
 		removeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0

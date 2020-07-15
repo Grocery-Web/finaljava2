@@ -38,6 +38,7 @@ import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
 import entity.PrisonerInList;
+import entity.Victim;
 
 public class MainFrame extends JFrame {
 
@@ -68,8 +69,10 @@ public class MainFrame extends JFrame {
 	private RelevantComplaintForm relComplain;
 	private PersonDetailFrame detailPersonFrame;
 	private PrisonListDetailFrame prisonListDetailFrame;
-	private RelevantIncidentForm relevantIncidentForm;
+	private VictimFormPanel victimForm;
 	private CriminalDetailsFrame criDetailFrame;
+	private RelevantCriminalForm relCriminal;
+	private IncidentDetailFrame incDetailFrame;
 
 	/**
 	 * Launch the application.
@@ -281,6 +284,35 @@ public class MainFrame extends JFrame {
 					refresh();
 				}
 			}
+			
+			@Override
+			public void tableEventAddToCriminalList(int personalId) {
+				Person per = personDAO.findPersonById(personalId);
+				List<Complaint> incidentList = complaintDAO.getAllApprovedComplaints();
+				
+				relCriminal = new RelevantCriminalForm(per, incidentList);
+				relCriminal.setVisible(true);
+				relCriminal.setFormListener(new RelevantCriminalFormListener() {
+					@Override
+					public void criminalFormEventListener(ComplaintDetail comDetail, Criminal newCriminal) {
+						List<String> crimeTypeList = comDetailDAO.getCrimeTypeOfPerson(comDetail.getPersonId(), comDetail.getCompId());
+						int count = 0;
+						for (String crimeType : crimeTypeList) {
+							if(crimeType.equals(comDetail.getCrimeType())) {
+								count++;
+							}
+						}
+						if(count < 1) {
+							comDetailDAO.setComplaintDetail(comDetail);
+							criminalDAO.addCriminal(newCriminal);
+							relCriminal.dispose();
+						}else {
+							JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
+									JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+			}
 
 			@Override
 			public void tableEventAttached(int personalId) {
@@ -337,9 +369,15 @@ public class MainFrame extends JFrame {
 				Set<Integer> committedIncidents = complaintDAO.findIncidentsCommitedByPerson(id)
 													.stream().collect(Collectors.toSet());
 				filteredList = list.stream().filter(i -> !committedIncidents.contains(i.getId())).collect(Collectors.toList());
-				relevantIncidentForm = new RelevantIncidentForm(ps, filteredList);
-				relevantIncidentForm.setLocationRelativeTo(null);
-				relevantIncidentForm.setVisible(true);
+				victimForm = new VictimFormPanel(ps, filteredList);
+				victimForm.setLocationRelativeTo(null);
+				victimForm.setVisible(true);
+				victimForm.setFormListener(new VictimFormListener() {
+					@Override
+					public void linkNewVictim(Victim victim, Complaint cpl) {
+						
+					}
+				});
 			}
 
 			@Override
@@ -381,7 +419,6 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void displayPrisonListDetail(int id) {
-				// TODO Auto-generated method stub
 				PrisonListDAO prDAO = new PrisonListDAO();
 				
 				PrisonList pl = prDAO.getPrisonListByID(id);
@@ -393,6 +430,31 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
+//		INCIDENT TABLE LISTENER		
+		incidentPanel.setTableListener(new TableIncidentListener() {		
+			//INCIDENT DETALS TABLE LISTENER
+			@Override
+			public void tableEventDetail(int id) {
+				Complaint incident = complaintDAO.findComplaintById(id);
+				incDetailFrame = new IncidentDetailFrame(incident);
+				incDetailFrame.setLocationRelativeTo(null);
+				incDetailFrame.setVisible(true);
+				incDetailFrame.setData(comDetailDAO.getCriminalListByIncidentId(id));
+				
+				incDetailFrame.setTableListener(new TableIncidentDetailListener() {
+
+					@Override
+					public void tableEventUpdated(Complaint inc) {
+						complaintDAO.updateComplaintById(id, inc);
+						JOptionPane.showMessageDialog(null, "Update incident successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+						refresh();
+						incDetailFrame.dispose();
+					}
+					
+				});
+				incDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			}
+		});
 		
 //		CRIMINAL TABLE LISTENER
 		criminalPanel.setTableListener(new TableCriminalListener() {
