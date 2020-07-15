@@ -256,6 +256,8 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
+						System.out.println(cpl.getDatetime());
+						
 						complaintDAO.updateComplaintById(id, cpl);
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
@@ -509,8 +511,7 @@ public class MainFrame extends JFrame {
 		add(toolbar, BorderLayout.PAGE_START);
 
 		setMinimumSize(new Dimension(700, 600));
-		setSize(1000, 800);
-		setLocationRelativeTo(null);
+		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}

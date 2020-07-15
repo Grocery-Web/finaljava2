@@ -125,7 +125,6 @@ public class CriminalDetailsFrame extends JFrame {
 				}else {
 					splitPane.getRightComponent().setVisible(false);
 				}
-				
 			}
 		});
 		
