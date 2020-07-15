@@ -153,7 +153,7 @@ public class ComplaintDAO {
 		{
 			ps.setInt(1, id);
 			ps.setString(2, cpl.getName());
-			ps.setDate(3, convertJavaDateToSqlDate(cpl.getDatetime()));
+			ps.setTimestamp(3, new java.sql.Timestamp(cpl.getDatetime().getTime()));
 			ps.setString(4, cpl.getPlace());
 			ps.setString(5, cpl.getDeclarantName());
 			ps.setString(6, cpl.getDetail());

@@ -37,6 +37,7 @@ import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
+import entity.Prisoner;
 import entity.PrisonerInList;
 import entity.Victim;
 
@@ -255,6 +256,8 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
+						System.out.println(cpl.getDatetime());
+						
 						complaintDAO.updateComplaintById(id, cpl);
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
@@ -497,11 +500,19 @@ public class MainFrame extends JFrame {
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
 					
 					@Override
-					public void tableEventUpdated(Criminal cri) {
-						criminalDAO.updateCriminal(cri);
-						refresh();
-						criDetailFrame.dispose();
-						MainFrame.this.setVisible(true);
+					public void tableUpdatedCriminal(Criminal cri) {
+//						criminalDAO.updateCriminal(cri);
+//						refresh();
+//						criDetailFrame.dispose();
+//						MainFrame.this.setVisible(true);
+						
+						System.out.println(cri);
+					}
+
+					@Override
+					public void tableInsertPrisoner(Prisoner prisoner) {
+						System.out.println(prisoner);
+						
 					}
 				});
 			}
@@ -513,8 +524,7 @@ public class MainFrame extends JFrame {
 		add(toolbar, BorderLayout.PAGE_START);
 
 		setMinimumSize(new Dimension(700, 600));
-		setSize(1000, 800);
-		setLocationRelativeTo(null);
+		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
