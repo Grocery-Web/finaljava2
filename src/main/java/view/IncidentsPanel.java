@@ -26,13 +26,14 @@ public class IncidentsPanel extends JPanel{
 	private JTable table;
 	private ComplaintTableModel tableModel;
 	private JPopupMenu popup;
+	private TableIncidentListener tableListener;
 	
 	public IncidentsPanel() {
 		tableModel = new ComplaintTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem detailItem = new JMenuItem("Complaint Details");
+		JMenuItem detailItem = new JMenuItem("Incident Details");
 		popup.add(detailItem);
 
 		table.addMouseListener(new MouseAdapter() {
@@ -43,6 +44,17 @@ public class IncidentsPanel extends JPanel{
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					// When right click on the row of table, the pop up will be showed up
 					popup.show(table, e.getX(), e.getY());
+				}
+			}
+		});
+		
+		detailItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventDetail(id);
 				}
 			}
 		});
@@ -74,5 +86,9 @@ public class IncidentsPanel extends JPanel{
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);
+	}
+	
+	public void setTableListener(TableIncidentListener tableListener) {
+		this.tableListener = tableListener;
 	}
 }
