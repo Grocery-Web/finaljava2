@@ -491,6 +491,15 @@ begin
 end
 go
 
+-- find Criminal by id
+create proc findCriminalByPersonAndComplaintId
+@personId int, @complaintId int
+as
+begin
+	select * from Criminal where personId = @personId and complaintId = @complaintId
+end
+go
+
 -- Find all verified incidents commited by a Person
 CREATE PROC findIncidentsCommitedByPerson
 @personID int
