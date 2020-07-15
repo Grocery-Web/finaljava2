@@ -550,7 +550,17 @@ begin
 		inner join Prisoner on PrisonList.id = Prisoner.prisonId
 		inner join Criminal on Criminal.id = Prisoner.criminalID
 		inner join Person on Criminal.personId = Person.id
-	where PrisonList.id = @id
+	where (PrisonList.id = @id) and (releaseStatus = 0)
+end
+go
+
+create proc getAllPrisonListExceptPrisonID
+@id int
+as
+begin
+	select *
+	from PrisonList
+	where @id != id
 end
 go
 
