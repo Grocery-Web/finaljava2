@@ -287,33 +287,40 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void tableEventAddToCriminalList(int personalId) {
-				int count = personDAO.checkPersonIsCriminal(personalId);
-				if(count < 1) {
-					Person per = personDAO.findPersonById(personalId);
-					List<Complaint> incidentList = complaintDAO.getAllApprovedComplaints();
-					
-					relCriminal = new RelevantCriminalForm(per, incidentList);
-					relCriminal.setVisible(true);
-					relCriminal.setFormListener(new RelevantCriminalFormListener() {
-						@Override
-						public void criminalFormEventListener(ComplaintDetail comDetail, Criminal newCriminal) {
-							List<String> crimeTypeList = comDetailDAO.getCrimeTypeOfPerson(comDetail.getPersonId(), comDetail.getCompId());
-							int countCrimeType = 0;
-							for (String crimeType : crimeTypeList) {
-								if(crimeType.equals(comDetail.getCrimeType())) {
-									countCrimeType++;
+				int countInPrison = personDAO.checkPersonInJail(personalId);
+				if(countInPrison < 1) {
+					// check if person is criminal
+					int countCriminal = personDAO.checkPersonIsCriminal(personalId);
+					if(countCriminal < 1) {
+						Person per = personDAO.findPersonById(personalId);
+						List<Complaint> incidentList = complaintDAO.getAllApprovedComplaints();
+						
+						relCriminal = new RelevantCriminalForm(per, incidentList);
+						relCriminal.setVisible(true);
+						relCriminal.setFormListener(new RelevantCriminalFormListener() {
+							@Override
+							public void criminalFormEventListener(ComplaintDetail comDetail, Criminal newCriminal) {
+								List<String> crimeTypeList = comDetailDAO.getCrimeTypeOfPerson(comDetail.getPersonId(), comDetail.getCompId());
+								int countCrimeType = 0;
+								for (String crimeType : crimeTypeList) {
+									if(crimeType.equals(comDetail.getCrimeType())) {
+										countCrimeType++;
+									}
+								}
+								if(countCrimeType < 1) {
+									comDetailDAO.setComplaintDetail(comDetail);
+									criminalDAO.addCriminal(newCriminal);
+									relCriminal.dispose();
+								}else {
+									JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
+											JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
 								}
 							}
-							if(countCrimeType < 1) {
-								comDetailDAO.setComplaintDetail(comDetail);
-								criminalDAO.addCriminal(newCriminal);
-								relCriminal.dispose();
-							}else {
-								JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
-										JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
-							}
-						}
-					}); 
+						}); 
+					} else {
+						JOptionPane.showMessageDialog(null, "This person is already in another incident", "Error", 
+								JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
+					}
 				} else {
 					JOptionPane.showMessageDialog(null, "This person is already in prison", "Error", 
 							JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
