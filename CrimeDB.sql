@@ -515,10 +515,16 @@ GO
 /* PROCEDURE VICTIM */
 -- Link new victim to a verified Incident
 CREATE PROC linkNewVictim
+	@personalID int,
+	@status bit,
+	@deathTime datetime,
+	@deathPlace nvarchar(MAX),
+	@deathReason nvarchar(MAX),
+	@complaintID int
 AS
 BEGIN
-	
-
+	INSERT INTO Victim (personalID, status, deathTime, deathPlace, deathReason, complaintID)
+	VALUES (@personalID, @status, @deathTime, @deathPlace, @deathReason, @complaintID)
 END
 GO
 
