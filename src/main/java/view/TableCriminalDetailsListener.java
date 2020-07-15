@@ -3,7 +3,9 @@ package view;
 import java.util.EventListener;
 
 import entity.Criminal;
+import entity.Prisoner;
 
 public interface TableCriminalDetailsListener extends EventListener{
-	public void tableEventUpdated(Criminal cri);
+	public void tableUpdatedCriminal(Criminal criminal);
+	public void tableInsertPrisoner(Prisoner prisoner);
 }

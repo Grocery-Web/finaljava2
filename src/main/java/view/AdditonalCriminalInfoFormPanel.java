@@ -12,6 +12,7 @@ import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -108,14 +109,14 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 //		End of Edit Form
 	}
 	
-	public Criminal getUpdatedCriminal() {
+	public Criminal getCriminal() {
 		Date getApplidated = null;
 		try {
 			getApplidated = dateFormat.parse(appliedDate.getText());
 		} catch (ParseException e) {
-			e.printStackTrace();
-			System.out.println("wrong input date");
+			JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
 		}
+		
 		if(hisOfViolent.getText().equals("No Records Recognition")) {
 			updatedViolent = "Pecuniary penalty:" + appliedDate.getText() + " | Guilt:" + crimeTypes;
 		}else {
