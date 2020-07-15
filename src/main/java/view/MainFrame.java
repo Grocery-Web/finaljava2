@@ -32,6 +32,7 @@ import dao.ComplaintDetailDAO;
 import dao.CriminalDAO;
 import dao.PersonDAO;
 import dao.PrisonListDAO;
+import dao.VictimDAO;
 import entity.Complaint;
 import entity.ComplaintDetail;
 import entity.Criminal;
@@ -64,6 +65,7 @@ public class MainFrame extends JFrame {
 	private ComplaintDetailDAO comDetailDAO;
 	private CriminalDAO criminalDAO;
 	private PrisonListDAO prisonListDAO;
+	private VictimDAO victimDAO;
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
@@ -115,12 +117,13 @@ public class MainFrame extends JFrame {
 		criminalPanel = new CriminalPanel();
 		prisonListPanel = new PrisonListPanel();
 
-//		CREAT DAO
+//		CREATE DAO
 		personDAO = new PersonDAO();
 		complaintDAO = new ComplaintDAO();
 		comDetailDAO = new ComplaintDetailDAO();
 		criminalDAO = new CriminalDAO();
 		prisonListDAO = new PrisonListDAO();
+		victimDAO = new VictimDAO();
 
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
@@ -388,10 +391,11 @@ public class MainFrame extends JFrame {
 				victimForm = new VictimFormPanel(ps, filteredList);
 				victimForm.setLocationRelativeTo(null);
 				victimForm.setVisible(true);
-				victimForm.setFormListener(new VictimFormListener() {
+				victimForm.setFormListener(new TableVictimListener() {
 					@Override
-					public void linkNewVictim(Victim victim, Complaint cpl) {
-						
+					public void linkNewVictim(Victim victim) {
+						victimDAO.linkNewVictim(victim);
+						victimForm.dispose();
 					}
 				});
 			}
