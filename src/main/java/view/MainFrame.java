@@ -372,10 +372,10 @@ public class MainFrame extends JFrame {
 				victimForm = new VictimFormPanel(ps, filteredList);
 				victimForm.setLocationRelativeTo(null);
 				victimForm.setVisible(true);
-				victimForm.setFormListener(new VictimFormListener() {
+				victimForm.setFormListener(new TableVictimListener() {
 					@Override
-					public void linkNewVictim(Victim victim, Complaint cpl) {
-						
+					public void linkNewVictim(Victim victim) {
+						System.out.println(victim);
 					}
 				});
 			}

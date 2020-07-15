@@ -55,7 +55,7 @@ public class VictimFormPanel extends JDialog {
 	public JTextField txtScene;
 	public JScrollPane scrollPane;
 	public JTextArea txtReason;
-	private VictimFormListener victimListener;
+	private TableVictimListener victimListener;
 	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
 	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
 	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -76,7 +76,7 @@ public class VictimFormPanel extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						Victim victim = new Victim();
 						victim.setPersonalId(ps.getPersonalId());
-						Complaint cpl = (Complaint) filterComplaintComboBox.getSelectedItem();
+						victim.setComplaintID(((Complaint) filterComplaintComboBox.getSelectedItem()).getId());
 						if (rdbtnAlive.isSelected()) {
 							victim.setStatus(true);
 						} else {
@@ -94,7 +94,7 @@ public class VictimFormPanel extends JDialog {
 							victim.setDeathReason(txtReason.getText());
 						}
 						if (victimListener != null) {
-							victimListener.linkNewVictim(victim, cpl);
+							victimListener.linkNewVictim(victim);
 						}
 					}
 				});
@@ -319,7 +319,7 @@ public class VictimFormPanel extends JDialog {
 		getContentPane().setLayout(groupLayout);
 	}
 	
-	public void setFormListener(VictimFormListener victimListener) {
+	public void setFormListener(TableVictimListener victimListener) {
 		this.victimListener = victimListener;
 	}
 }

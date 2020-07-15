@@ -59,4 +59,10 @@ public class Victim extends Person {
 	public void setComplaintID(int complaintID) {
 		this.complaintID = complaintID;
 	}
+
+	@Override
+	public String toString() {
+		return "Victim [personalID = " + this.getPersonalId() + ", status = " + status + ", deathTime = " + deathTime + ", deathPlace = " + deathPlace + ", deathReason = "
+				+ deathReason + ", complaintID = " + complaintID + "]";
+	}
 }
