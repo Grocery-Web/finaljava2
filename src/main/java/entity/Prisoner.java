@@ -15,30 +15,18 @@ public class Prisoner extends Criminal {
 	private int duration;
 	private Date endDate;
 	private boolean releasedStatus;
+	private String prisonName;
 	
 	public Prisoner() {}
 
-
-	
 	public Prisoner(int criminalId, int personalId, int complaintId, String punishment, Date appliedDate,
 			String hisOfViolent, int rating) {
 		super(criminalId, personalId, complaintId, punishment, appliedDate, hisOfViolent, rating);
-	}
 
-	public Prisoner(int criminalId, int prisonId, String type, Date startDate, int duration,
-			Date endDate, boolean releasedStatus) {
-		super();
-		this.criminalId = criminalId;
-		this.prisonId = prisonId;
-		this.type = type;
-		this.startDate = startDate;
-		this.duration = duration;
-		this.endDate = endDate;
-		this.releasedStatus = releasedStatus;
 	}
 
 	public Prisoner(int prisonerId, int criminalId, int prisonId, String type, Date startDate, int duration,
-			Date endDate, boolean releasedStatus) {
+			Date endDate, boolean releasedStatus, String prisonName) {
 		super();
 		this.prisonerId = prisonerId;
 		this.criminalId = criminalId;
@@ -48,6 +36,20 @@ public class Prisoner extends Criminal {
 		this.duration = duration;
 		this.endDate = endDate;
 		this.releasedStatus = releasedStatus;
+		this.prisonName = prisonName;
+	}
+	
+	public Prisoner(int criminalId, int prisonId, String type, Date startDate, int duration,
+			Date endDate, boolean releasedStatus, String prisonName) {
+		super();
+		this.criminalId = criminalId;
+		this.prisonId = prisonId;
+		this.type = type;
+		this.startDate = startDate;
+		this.duration = duration;
+		this.endDate = endDate;
+		this.releasedStatus = releasedStatus;
+		this.prisonName = prisonName;
 	}
 
 	public int getPrisonerId() {
@@ -113,11 +115,21 @@ public class Prisoner extends Criminal {
 	public void setReleasedStatus(boolean releasedStatus) {
 		this.releasedStatus = releasedStatus;
 	}
+	
+	public String getPrisonName() {
+		return prisonName;
+	}
+
+	public void setPrisonName(String prisonName) {
+		this.prisonName = prisonName;
+	}
 
 	@Override
 	public String toString() {
 		return "Prisoner [prisonerId=" + prisonerId + ", criminalId=" + criminalId + ", prisonId=" + prisonId
 				+ ", type=" + type + ", startDate=" + startDate + ", duration=" + duration + ", endDate=" + endDate
-				+ ", releasedStatus=" + releasedStatus + "]";
+				+ ", releasedStatus=" + releasedStatus + ", prisonName=" + prisonName + "]";
 	}
+
+
 }

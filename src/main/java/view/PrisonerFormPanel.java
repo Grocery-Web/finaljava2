@@ -45,6 +45,7 @@ public class PrisonerFormPanel extends JPanel {
 	private int prisonId = 1;
 	private String type = "Death penalty";
 	private Date endDate;
+	private String prisonName = "";
 	
 //	updated Criminal
 	private String updatedViolent;
@@ -79,11 +80,16 @@ public class PrisonerFormPanel extends JPanel {
 		}
 		
 		fpl = new FilterPrisonListComboBox(prisonLst);
+		//By Default
+		prisonId = ((PrisonList) fpl.getItemAt(0)).getId();
+		prisonName = ((PrisonList) fpl.getItemAt(0)).getName();
+		
 		fpl.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					prisonId = ((PrisonList) fpl.getSelectedItem()).getId();
+					prisonName = ((PrisonList) fpl.getSelectedItem()).getName();
                 }
 			}
 		});
@@ -249,11 +255,11 @@ public class PrisonerFormPanel extends JPanel {
 				}
 				
 				prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getApplidated, Integer.parseInt(duration.getText()), 
-						endDate, releaseStatus);
+						endDate,releaseStatus,prisonName);
 			}
 		}else {
 			prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getApplidated, 0, 
-					null, false);
+					null, false,prisonName);
 		}
 
 		return prisoner;
