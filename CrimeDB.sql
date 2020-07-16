@@ -101,18 +101,15 @@ go
 create table Victim (
 	id int identity(1,1) primary key,
 	personalID int,
-	status bit,  /* dead or not */
+	status bit, -- dead or not
 	deathTime datetime null,
 	deathPlace nvarchar(MAX),
 	deathReason nvarchar(MAX),
 	complaintID int,
 	constraint vid foreign key (complaintID) references Complaint(id),
-	constraint pid foreign key (personalID) references Person(id)
+	constraint pid foreign key (personalID) references Person(id),
 )
 go
-
-
-
 
 /* END CREATE TABLES */ 
 
@@ -525,6 +522,10 @@ AS
 BEGIN
 	INSERT INTO Victim (personalID, status, deathTime, deathPlace, deathReason, complaintID)
 	VALUES (@personalID, @status, @deathTime, @deathPlace, @deathReason, @complaintID)
+
+	UPDATE Person
+	SET alive = @status
+	WHERE Person.id = @personalID
 END
 GO
 
@@ -543,6 +544,40 @@ end
 go
 
 /* END PROCEDURE PRISONER*/
+
+/*TRIGGER */
+
+create trigger insertPrisoner
+on Prisoner 
+after insert
+as
+begin
+	update PrisonList
+	set PrisonList.prisonerNum= (
+		select count(*)
+		from Prisoner
+		where (Prisoner.prisonId = prisonlist.id) and (Prisoner.releaseStatus = 0)
+	)
+end
+go
+
+create trigger updatePrisoner
+on Prisoner 
+after update
+as
+begin
+	update PrisonList
+	set PrisonList.prisonerNum= (
+		select count(*)
+		from Prisoner
+		where (Prisoner.prisonId = prisonlist.id) and (Prisoner.releaseStatus = 0)
+	)
+end
+go
+
+
+
+/* END TRIGGER*/
 
 /* PROCEDURE PRISONLIST */
 
@@ -573,7 +608,17 @@ begin
 		inner join Prisoner on PrisonList.id = Prisoner.prisonId
 		inner join Criminal on Criminal.id = Prisoner.criminalID
 		inner join Person on Criminal.personId = Person.id
-	where PrisonList.id = @id
+	where (PrisonList.id = @id) and (releaseStatus = 0)
+end
+go
+
+create proc getAllPrisonListExceptPrisonID
+@id int
+as
+begin
+	select *
+	from PrisonList
+	where @id != id
 end
 go
 

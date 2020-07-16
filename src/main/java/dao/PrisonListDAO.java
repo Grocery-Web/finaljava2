@@ -57,7 +57,8 @@ public class PrisonListDAO {
 				pr.setName(rs.getString("name"));
 				pr.setCapacity(rs.getInt("limit"));
 				pr.setQuantity(rs.getInt("prisonerNum"));
-				pr.setImg(rs.getString("img"));				
+				pr.setImg(rs.getString("img"));	
+				pr.setAddress(rs.getString("address"));
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
