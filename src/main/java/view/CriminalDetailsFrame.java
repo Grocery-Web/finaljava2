@@ -100,8 +100,8 @@ public class CriminalDetailsFrame extends JFrame {
 					Prisoner prisoner = prisonerFormPanel.getPrisoner();
 					Criminal criminal = prisonerFormPanel.getCriminal();
 					if(criDetailListener != null) {
-						criDetailListener.tableUpdatedCriminal(criminal);
 						criDetailListener.tableInsertPrisoner(prisoner);
+						criDetailListener.tableUpdatedCriminal(criminal);
 					}
 				}
 			}

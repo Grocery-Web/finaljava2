@@ -502,19 +502,18 @@ public class MainFrame extends JFrame {
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
 					
 					@Override
-					public void tableUpdatedCriminal(Criminal cri) {
-//						criminalDAO.updateCriminal(cri);
-//						refresh();
-//						criDetailFrame.dispose();
-//						MainFrame.this.setVisible(true);
-						
-						System.out.println(cri);
-					}
-
-					@Override
 					public void tableInsertPrisoner(Prisoner prisoner) {
 						System.out.println(prisoner);
 						
+					}
+					
+					
+					@Override
+					public void tableUpdatedCriminal(Criminal cri) {
+						criminalDAO.updateCriminal(cri);
+						refresh();
+						criDetailFrame.dispose();
+						MainFrame.this.setVisible(true);
 					}
 
 					@Override
