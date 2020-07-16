@@ -58,6 +58,7 @@ public class MainFrame extends JFrame {
 	private IncidentsPanel incidentPanel;
 	private CriminalPanel criminalPanel;
 	private PrisonListPanel prisonListPanel;
+	private PrisonerPanel prisonerPanel;
 
 //	DAO
 	private PersonDAO personDAO;
@@ -117,6 +118,7 @@ public class MainFrame extends JFrame {
 		incidentPanel =  new IncidentsPanel();
 		criminalPanel = new CriminalPanel();
 		prisonListPanel = new PrisonListPanel();
+		prisonerPanel = new PrisonerPanel();
 
 //		CREATE DAO
 		personDAO = new PersonDAO();
@@ -142,6 +144,7 @@ public class MainFrame extends JFrame {
 		tabPane.addTab("Complaints", complaintPanel);
 		tabPane.addTab("Incidents", incidentPanel);
 		tabPane.addTab("Criminals", criminalPanel);
+		tabPane.addTab("Prisoners", prisonerPanel);
 		tabPane.addTab("Prison List", prisonListPanel);
 
 //		CALL BACK TABLES
@@ -150,6 +153,7 @@ public class MainFrame extends JFrame {
 		incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
 		criminalPanel.setData(criminalDAO.getAllCriminals());
 		prisonListPanel.setData(prisonListDAO.getAllPrisonList());
+		prisonerPanel.setData(prisonerDAO.getUnreleasedPrisoners());
 
 //		TOOLBAR LISTENER
 		toolbar.setToolbarListener(new ToolbarListener() {
@@ -519,7 +523,7 @@ public class MainFrame extends JFrame {
 
 					@Override
 					public void tableDumpEvent() {
-						criDetailFrame.setVisible(false);;
+						criDetailFrame.setVisible(false);
 						MainFrame.this.setVisible(true);
 					}
 				});
@@ -621,5 +625,7 @@ public class MainFrame extends JFrame {
 		complaintPanel.refresh();
 		criminalPanel.setData(criminalDAO.getAllCriminals());
 		criminalPanel.refresh();
+		prisonerPanel.setData(prisonerDAO.getUnreleasedPrisoners());
+		prisonerPanel.refresh();
 	}
 }
