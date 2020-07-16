@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -32,6 +31,7 @@ import dao.ComplaintDetailDAO;
 import dao.CriminalDAO;
 import dao.PersonDAO;
 import dao.PrisonListDAO;
+import dao.PrisonerDAO;
 import dao.VictimDAO;
 import entity.Complaint;
 import entity.ComplaintDetail;
@@ -66,6 +66,7 @@ public class MainFrame extends JFrame {
 	private CriminalDAO criminalDAO;
 	private PrisonListDAO prisonListDAO;
 	private VictimDAO victimDAO;
+	private PrisonerDAO prisonerDAO;
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
@@ -124,6 +125,7 @@ public class MainFrame extends JFrame {
 		criminalDAO = new CriminalDAO();
 		prisonListDAO = new PrisonListDAO();
 		victimDAO = new VictimDAO();
+		prisonerDAO = new PrisonerDAO();
 
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
@@ -503,8 +505,7 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableInsertPrisoner(Prisoner prisoner) {
-						System.out.println(prisoner);
-						
+						prisonerDAO.addPrisoner(prisoner);
 					}
 					
 					

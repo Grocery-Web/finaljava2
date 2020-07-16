@@ -3,6 +3,7 @@ package dao;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +48,16 @@ public class PrisonerDAO {
 			ps.setInt(1, prisoner.getPrisonId());
 			ps.setInt(2, prisoner.getCriminalId());
 			ps.setDate(3, new java.sql.Date(prisoner.getStartDate().getTime()));
-			ps.setDate(4, new java.sql.Date(prisoner.getEndDate().getTime()));
+			if(prisoner.getEndDate() != null) {
+				ps.setDate(4, new java.sql.Date(prisoner.getEndDate().getTime()));
+			}else {
+				ps.setDate(4,null);
+			}
 			ps.setInt(5, prisoner.getDuration());
 			ps.setBoolean(6, prisoner.isReleasedStatus());
 			ps.setString(7, prisoner.getType());
 			ps.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Insert new prisoner successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "A new prisoner has been created", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
