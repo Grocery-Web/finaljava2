@@ -80,7 +80,6 @@ create table PrisonList (
 )
 go
 
-
 /* prisoner table */
 create table Prisoner (
 	id int identity(1,1) primary key,
@@ -280,7 +279,7 @@ begin
 	select count(*) as count from Person per
 	inner join Criminal cri on per.id = cri.personId
 	inner join Prisoner pri on cri.id = pri.criminalID
-	where per.id = @personalId
+	where per.id = @personalId and releaseStatus = 0
 end
 go
 
@@ -556,7 +555,7 @@ create proc getAllPrisonerByPrisonListID
 @id int
 as
 begin
-	select personId, Prisoner.id, Person.name, dob, person.gender, startDate, duration, nationality
+	select Prisoner.* , personId, Person.name, dob, person.gender, nationality
 	from PrisonList 
 		inner join Prisoner on PrisonList.id = Prisoner.prisonId
 		inner join Criminal on Criminal.id = Prisoner.criminalID
@@ -564,6 +563,20 @@ begin
 	where (PrisonList.id = @id) and (releaseStatus = 0)
 end
 go
+
+--find Prisoners by criminal ID
+create proc findUnreleasedPrisoners
+as
+begin
+	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName
+	from Prisoner pr
+	inner join PrisonList pl on pr.prisonId = pl.id
+	inner join Criminal cr on pr.criminalID = cr.id
+	inner join Person p on cr.personId = p.id
+	where releaseStatus = 0
+end
+go
+
 
 /* END PROCEDURE PRISONER*/
 
