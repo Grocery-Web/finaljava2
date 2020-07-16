@@ -27,7 +27,6 @@ public class VictimDAO {
 				victim.setDeathReason(rs.getString("deathReason"));
 				victim.setComplaintID(rs.getInt("complaintID"));
 				victim.setName(rs.getString("name"));
-				victim.setName(rs.getString("personName"));
 				victim.setNationality(rs.getString("nationality"));
 				victim.setIncidentName(rs.getString("complaintName"));
 				
