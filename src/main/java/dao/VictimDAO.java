@@ -55,14 +55,18 @@ public class VictimDAO {
 		{
 			ps.setInt(1, victim.getPersonalId());
 			ps.setBoolean(2, victim.getAlive());
-			ps.setTimestamp(3, new java.sql.Timestamp(victim.getDeathTime().getTime()));
+			if (victim.getDeathTime() == null) {
+				ps.setNull(3, java.sql.Types.TIMESTAMP);
+			} else {
+				ps.setTimestamp(3, new java.sql.Timestamp(victim.getDeathTime().getTime()));
+			}
 			ps.setString(4, victim.getDeathPlace());
 			ps.setString(5, victim.getDeathReason());
 			ps.setInt(6, victim.getComplaintID());
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Successfully link the victim to incident", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 	}
 }

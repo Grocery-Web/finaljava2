@@ -23,6 +23,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -70,7 +71,7 @@ public class ComplaintFormPanel extends JPanel{
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				cd1Check();
+				cd1Check(); cd2Check();
 				checkUnlock();
 			}
 		});
@@ -79,9 +80,12 @@ public class ComplaintFormPanel extends JPanel{
 		timeSpinner = new JSpinner( new SpinnerDateModel() );
 		JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
 		timeSpinner.setEditor(timeEditor);
-		timeSpinner.setValue(new Date());
+		try {
+			timeSpinner.setValue(sdf1.parse("00:00:00"));
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
 		timeSpinner.addChangeListener(new ChangeListener() {
-			
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				cd2Check();
@@ -211,6 +215,7 @@ public class ComplaintFormPanel extends JPanel{
 		Border innerBorder = BorderFactory.createTitledBorder("Add Complaint");
 		Border outerBorder = BorderFactory.createEmptyBorder(4, 4, 4, 4);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
+		ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 		
 		layoutComponents();
 	}
