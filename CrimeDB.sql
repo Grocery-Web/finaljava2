@@ -423,6 +423,15 @@ begin
 end 
 go
 
+-- get victim list by incident id
+CREATE PROC getVictimListByIncidentId
+@incidentId int
+AS
+BEGIN
+	SELECT * FROM Victim WHERE complaintID = @incidentId
+END 
+GO
+
 /* END PROCEDURE COMPLAINT DETAIL */
 
 

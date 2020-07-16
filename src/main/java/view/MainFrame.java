@@ -477,6 +477,7 @@ public class MainFrame extends JFrame {
 				incDetailFrame.setLocationRelativeTo(null);
 				incDetailFrame.setVisible(true);
 				incDetailFrame.setData(comDetailDAO.getCriminalListByIncidentId(id));
+				incDetailFrame.setDataVictim(comDetailDAO.getVictimListByIncidentId(id));
 				
 				incDetailFrame.setTableListener(new TableIncidentDetailListener() {
 
