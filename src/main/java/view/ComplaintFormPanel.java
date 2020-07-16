@@ -23,6 +23,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -214,6 +215,7 @@ public class ComplaintFormPanel extends JPanel{
 		Border innerBorder = BorderFactory.createTitledBorder("Add Complaint");
 		Border outerBorder = BorderFactory.createEmptyBorder(4, 4, 4, 4);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder,innerBorder));
+		ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 		
 		layoutComponents();
 	}
