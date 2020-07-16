@@ -3,19 +3,30 @@ package entity;
 import java.util.Date;
 
 public class Victim extends Person {
+	private int id;
 	private Date deathTime;
 	private String deathPlace;
 	private String deathReason;
 	private int complaintID;
+	private boolean status;
 	
 	public Victim() {}
 	
-	public Victim(boolean status, Date deathTime, String deathPlace, String deathReason, int complaintID) {
+	public Victim(int id, boolean status, Date deathTime, String deathPlace, String deathReason, int complaintID) {
 		super();
+		this.id = id;
 		this.deathTime = deathTime;
 		this.deathPlace = deathPlace;
 		this.deathReason = deathReason;
 		this.complaintID = complaintID;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public Date getDeathTime() {
@@ -48,6 +59,14 @@ public class Victim extends Person {
 	
 	public void setComplaintID(int complaintID) {
 		this.complaintID = complaintID;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 	@Override

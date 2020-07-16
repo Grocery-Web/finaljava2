@@ -22,6 +22,7 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import entity.Complaint;
 import entity.Criminal;
 import entity.Person;
+import entity.Victim;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -51,11 +52,13 @@ public class IncidentDetailFrame extends JFrame {
 	private JTextArea textDetail;
 	private JTable table;
 	private IncidentDetailTableModel tableModel;
+	private IncidentDetailVictimTableModel victimTableModel;
 	private TableIncidentDetailListener tableListener;
-	private JScrollPane jpTable, jpDetail;
+	private JScrollPane jpTable, jpDetail, jpVictimTable;
 	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
 	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
 	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private JTable tableVictim;
 	/**
 	 * Launch the application.
 	 */
@@ -77,7 +80,7 @@ public class IncidentDetailFrame extends JFrame {
 	 */
 	public IncidentDetailFrame(Complaint inc) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 843, 588);
+		setBounds(100, 100, 843, 737);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -161,14 +164,28 @@ public class IncidentDetailFrame extends JFrame {
 		jpTable.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		table.setBorder(BorderFactory.createEtchedBorder());
 		
+
+//		LIST OF VICTIM
+		JLabel lblVictimTable = new JLabel("List of Victims:");
+		
+		victimTableModel = new IncidentDetailVictimTableModel();
+		tableVictim = new JTable(victimTableModel);
+		
+		jpVictimTable = new JScrollPane(tableVictim);
+		jpVictimTable.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		tableVictim.setBorder(BorderFactory.createEtchedBorder());
+
 		// ALIGN TEXT IN CENTER
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
 		for (int i = 0; i < 8; i++) {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			tableVictim.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 		
+		
+// 		UPDATE BUTTON		
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -186,17 +203,20 @@ public class IncidentDetailFrame extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(32)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblDeclarantName, GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblName)
-								.addComponent(lblID)
-								.addComponent(lblIDate)
-								.addComponent(lblPlace)
-								.addComponent(lblDetail)
-								.addComponent(lblCriminalTable))
-							.addGap(52)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+							.addComponent(lblVictimTable)
+							.addContainerGap())
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+							.addComponent(lblDeclarantName, GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createSequentialGroup()
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addComponent(lblName)
+									.addComponent(lblID)
+									.addComponent(lblIDate)
+									.addComponent(lblPlace)
+									.addComponent(lblDetail)
+									.addComponent(lblCriminalTable))
+								.addGap(52)
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 									.addGroup(gl_contentPane.createSequentialGroup()
 										.addComponent(textId, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
@@ -213,13 +233,14 @@ public class IncidentDetailFrame extends JFrame {
 												.addComponent(lblTime)
 												.addPreferredGap(ComponentPlacement.RELATED)
 												.addComponent(timeSpinner, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)))
-										.addGap(413)))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-										.addComponent(jpDetail, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
-										.addComponent(jpTable, Alignment.LEADING)
-										.addComponent(btnUpdate, GroupLayout.PREFERRED_SIZE, 171, GroupLayout.PREFERRED_SIZE))
-									.addContainerGap())))))
+										.addGap(413))
+									.addGroup(gl_contentPane.createSequentialGroup()
+										.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+											.addComponent(jpVictimTable, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addComponent(jpDetail, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+											.addComponent(jpTable, Alignment.LEADING)
+											.addComponent(btnUpdate, GroupLayout.PREFERRED_SIZE, 171, GroupLayout.PREFERRED_SIZE))
+										.addContainerGap(38, Short.MAX_VALUE)))))))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -257,15 +278,23 @@ public class IncidentDetailFrame extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCriminalTable)
 						.addComponent(jpTable, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE))
-					.addGap(30)
-					.addComponent(btnUpdate)
-					.addGap(27))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblVictimTable)
+						.addComponent(jpVictimTable, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
+					.addGap(29)
+					.addComponent(btnUpdate, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+					.addGap(101))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
 	
 	public void setData(List<Criminal> db) {
 		tableModel.setData(db);
+	}
+	
+	public void setDataVictim(List<Victim> db) {
+		victimTableModel.setData(db);
 	}
 
 	public void refresh() {

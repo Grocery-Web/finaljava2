@@ -14,6 +14,7 @@ import entity.ComplaintDetail;
 import entity.Criminal;
 import entity.Gender;
 import entity.Person;
+import entity.Victim;
 
 public class ComplaintDetailDAO {
 	public List<Integer> findAllPersonByComplaintId(int id) {
@@ -143,6 +144,35 @@ public class ComplaintDetailDAO {
 					list.add(cri);				
 				}
 			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+
+		return list;
+	}
+	
+	public List<Victim> getVictimListByIncidentId(int id) {
+
+		List<Victim> list = new ArrayList<Victim>();
+		
+
+		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getVictimListByIncidentId(?)}");) {
+			ps.setInt(1, id);
+
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				Victim vic = new Victim();
+				vic.setId(rs.getInt("id"));
+				vic.setPersonalId(rs.getInt("personalID"));
+				vic.setDeathPlace(rs.getString("deathPlace"));
+				vic.setDeathReason(rs.getString("deathReason"));
+				vic.setDeathTime(rs.getDate("deathTime"));
+				vic.setComplaintID(rs.getInt("complaintID"));
+				vic.setStatus(rs.getBoolean("status"));
+				
+				list.add(vic);
+				}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
