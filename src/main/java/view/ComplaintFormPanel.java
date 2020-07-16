@@ -70,7 +70,7 @@ public class ComplaintFormPanel extends JPanel{
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				cd1Check();
+				cd1Check(); cd2Check();
 				checkUnlock();
 			}
 		});
@@ -79,9 +79,12 @@ public class ComplaintFormPanel extends JPanel{
 		timeSpinner = new JSpinner( new SpinnerDateModel() );
 		JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
 		timeSpinner.setEditor(timeEditor);
-		timeSpinner.setValue(new Date());
+		try {
+			timeSpinner.setValue(sdf1.parse("00:00:00"));
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+		}
 		timeSpinner.addChangeListener(new ChangeListener() {
-			
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				cd2Check();

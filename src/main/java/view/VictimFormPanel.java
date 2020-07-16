@@ -4,11 +4,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
-import entity.Complaint;
-import entity.Gender;
-import entity.Person;
-import entity.Victim;
+import entity.*;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -17,11 +15,16 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JRadioButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import com.toedter.calendar.JDateChooser;
@@ -30,13 +33,20 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import javax.swing.JSpinner;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class VictimFormPanel extends JDialog {
 
@@ -49,13 +59,16 @@ public class VictimFormPanel extends JDialog {
 	public JRadioButton rdbtnAlive, rdbtnDead;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	public JPanel panelDeathDetails;
-	public JDateChooser dateChooser;
+	public JDateChooser deadDay;
 	private JTextFieldDateEditor editor;
-	public JSpinner timeSpinner;
+	public JSpinner deadTime;
 	public JTextField txtScene;
 	public JScrollPane scrollPane;
 	public JTextArea txtReason;
 	private TableVictimListener victimListener;
+	private String s = Character.toString("\u2713".toCharArray()[0]);
+	public JLabel q1, q2, q3, q4, q5;
+	public boolean cd1, cd2, cd3, cd4, cd5;
 	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
 	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
 	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -66,7 +79,7 @@ public class VictimFormPanel extends JDialog {
 	public VictimFormPanel(Person ps, List<Complaint> list) {
 		setResizable(false);
 		setTitle("Add new victim");
-		setBounds(100, 100, 450, 443);
+		setBounds(100, 100, 470, 443);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		{
 			buttonPane = new JPanel();
@@ -82,8 +95,8 @@ public class VictimFormPanel extends JDialog {
 						} else {
 							victim.setAlive(false);
 							Date deathTime = null;
-							String d = sdf0.format(dateChooser.getDate());
-							String t = sdf1.format(timeSpinner.getValue());
+							String d = sdf0.format(deadDay.getDate());
+							String t = sdf1.format(deadTime.getValue());
 							try {
 								deathTime = sdf2.parse(d + " " + t);
 							} catch (Exception e2) {
@@ -124,6 +137,15 @@ public class VictimFormPanel extends JDialog {
 		
 		lblIncident = new JLabel("Incident");
 		filterComplaintComboBox = new FilterComplaintComboBox(list);
+		q1 = new JLabel();
+		filterComplaintComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cd1Check();
+				checkUnlock();
+			}
+		});
+		filterComplaintComboBox.setSelectedIndex(-1);
 		
 		lblNewLabel = new JLabel("Life Status");
 		rdbtnAlive = new JRadioButton("Alive");
@@ -148,13 +170,13 @@ public class VictimFormPanel extends JDialog {
 			public void itemStateChanged(ItemEvent e) {
 				AbstractButton btn = (AbstractButton) e.getSource();
 				if (btn.getText() == "Dead") {
-					dateChooser.setEnabled(true);
-					timeSpinner.setEnabled(true);
+					deadDay.setEnabled(true);
+					deadTime.setEnabled(true);
 					txtScene.setEditable(true);
 					txtReason.setEditable(true); txtReason.setBackground(SystemColor.WHITE);
 				} else {
-					dateChooser.setEnabled(false);
-					timeSpinner.setEnabled(false);
+					deadDay.setEnabled(false);
+					deadTime.setEnabled(false);
 					txtScene.setEditable(false);
 					txtReason.setEditable(false); txtReason.setBackground(SystemColor.menu);
 				}
@@ -166,21 +188,60 @@ public class VictimFormPanel extends JDialog {
 		panelDeathDetails = new JPanel();
 		panelDeathDetails.setBorder(new TitledBorder(null, "Death details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		
 		lblDeadDay = new JLabel("Dead day");
-		dateChooser = new JDateChooser();
-		editor = (JTextFieldDateEditor) dateChooser.getDateEditor();
+		deadDay = new JDateChooser();
+		editor = (JTextFieldDateEditor) deadDay.getDateEditor();
 		editor.setEditable(false);
-		dateChooser.setDateFormatString("yyyy-MM-dd");
+		deadDay.setDateFormatString("yyyy-MM-dd");
+		q2 = new JLabel();
+		deadDay.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				cd2Check(); cd3Check();
+				checkUnlock();
+			}
+		});
 		
 		lblDeadTime = new JLabel("Dead time");	
-		timeSpinner = new JSpinner(new SpinnerDateModel());
-		JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm:ss");
-		timeSpinner.setEditor(timeEditor);
+		deadTime = new JSpinner(new SpinnerDateModel());
+		JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(deadTime, "HH:mm:ss");
+		deadTime.setEditor(timeEditor);
+		try {
+			deadTime.setValue(sdf1.parse("00:00:00"));
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		q3 = new JLabel();
+		deadTime.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				cd3Check();
+				checkUnlock();
+			}
+		});
 		
 		lblScene = new JLabel("Scene");
 		txtScene = new JTextField();
 		txtScene.setColumns(10);
+		q4 = new JLabel();
+		txtScene.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+		});
 		
 		lblReason = new JLabel("Reason");
 		scrollPane = new JScrollPane();
@@ -189,20 +250,37 @@ public class VictimFormPanel extends JDialog {
 		txtReason.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtReason.setLineWrap(true);
 		scrollPane.setViewportView(txtReason);
+		q5 = new JLabel();
+		txtReason.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+		});
 		
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(buttonPane, GroupLayout.PREFERRED_SIZE, 434, GroupLayout.PREFERRED_SIZE)
-						.addComponent(contentPanel, GroupLayout.PREFERRED_SIZE, 434, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
+				.addComponent(contentPanel, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+				.addComponent(buttonPane, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(contentPanel, GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+					.addComponent(contentPanel, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(buttonPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 		);
@@ -238,13 +316,50 @@ public class VictimFormPanel extends JDialog {
 					.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelDeathDetails.createSequentialGroup()
 							.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(timeSpinner, Alignment.LEADING)
-								.addComponent(dateChooser, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(txtScene, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
-							.addGap(177))
+								.addComponent(deadDay, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(txtScene, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+								.addComponent(deadTime, Alignment.LEADING))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
+								.addComponent(q4, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+								.addComponent(q3, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+								.addComponent(q2, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_panelDeathDetails.createSequentialGroup()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-							.addContainerGap())))
+							.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(q5, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)))
+					.addGap(3))
+		);
+		gl_panelDeathDetails.setVerticalGroup(
+			gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelDeathDetails.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelDeathDetails.createSequentialGroup()
+							.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
+								.addComponent(q2, GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+								.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.TRAILING, false)
+									.addComponent(lblDeadDay)
+									.addComponent(deadDay, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblDeadTime)
+								.addComponent(deadTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(q3, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.BASELINE)
+									.addComponent(lblScene)
+									.addComponent(txtScene, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addComponent(q4, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblReason)
+								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
+							.addContainerGap())
+						.addGroup(Alignment.TRAILING, gl_panelDeathDetails.createSequentialGroup()
+							.addComponent(q5, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+							.addGap(48))))
 		);
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
@@ -258,18 +373,22 @@ public class VictimFormPanel extends JDialog {
 								.addComponent(lblIncident, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addComponent(lblVictimName, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
 							.addGap(18)
-							.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING)
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_contentPanel.createSequentialGroup()
 									.addComponent(rdbtnAlive, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
 									.addGap(18)
-									.addComponent(rdbtnDead, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 120, Short.MAX_VALUE))
-								.addGroup(Alignment.LEADING, gl_contentPanel.createParallelGroup(Alignment.TRAILING, false)
-									.addComponent(txtVictimName, Alignment.LEADING)
-									.addComponent(filterComplaintComboBox, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))))
+									.addComponent(rdbtnDead, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_contentPanel.createSequentialGroup()
+									.addGroup(gl_contentPanel.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(txtVictimName, Alignment.LEADING)
+										.addComponent(filterComplaintComboBox, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(q1, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)))
+							.addPreferredGap(ComponentPlacement.RELATED, 11, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPanel.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(panelDeathDetails, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+							.addComponent(panelDeathDetails, GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
 		gl_contentPanel.setVerticalGroup(
@@ -282,41 +401,107 @@ public class VictimFormPanel extends JDialog {
 					.addGap(18)
 					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblIncident)
-						.addComponent(filterComplaintComboBox, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE))
+						.addComponent(filterComplaintComboBox, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
+						.addComponent(q1))
 					.addGap(18)
 					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNewLabel)
 						.addComponent(rdbtnAlive)
 						.addComponent(rdbtnDead))
 					.addGap(18)
-					.addComponent(panelDeathDetails, GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
-		);
-		gl_panelDeathDetails.setVerticalGroup(
-			gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelDeathDetails.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblDeadDay)
-						.addComponent(dateChooser, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblDeadTime)
-						.addComponent(timeSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblScene)
-						.addComponent(txtScene, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panelDeathDetails.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblReason)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
-					.addContainerGap())
+					.addComponent(panelDeathDetails, GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
 		);
 		
 		panelDeathDetails.setLayout(gl_panelDeathDetails);
 		contentPanel.setLayout(gl_contentPanel);
 		buttonPane.setLayout(gl_buttonPane);
 		getContentPane().setLayout(groupLayout);
+	}
+	
+	public void cd1Check() {
+		if (filterComplaintComboBox.getSelectedIndex() != -1) {
+			q1.setText(s); q1.setForeground(new Color(0, 153, 51)); 
+			q1.setToolTipText(null);
+			cd1 = true;
+		} else {
+			q1.setText("?"); q1.setForeground(Color.RED); 
+			q1.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Please select an incident from list.</div></html>"); 
+			cd1 = false;
+		}
+	}
+	
+	public void cd2Check() {
+		Calendar cal = Calendar.getInstance();
+		if (deadDay.getDate() != null) {
+			cal.setTime(deadDay.getDate());
+			LocalDate date1 = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE));
+			LocalDate date2 = LocalDate.now();
+			if (date1.compareTo(date2) <= 0) {
+				q2.setText(s); q2.setForeground(new Color(0, 153, 51));
+				q2.setToolTipText(null);
+				cd2 = true;
+			} else {
+				q2.setText("?"); q2.setForeground(Color.RED);
+				q2.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Select a date that is no later than today.</div></html>");
+				cd2 = false;
+			}
+		}
+	}
+	
+	public void cd3Check() {
+		Date date1 = null;
+		try {
+			if (deadDay.getDate() != null) {
+				String d = sdf0.format(deadDay.getDate());
+				String t = sdf1.format(deadTime.getValue());
+				date1 = sdf2.parse(d + " " + t);
+				Date date2 = new Date();
+				if (date1.compareTo(date2) <= 0) {
+					q3.setText(s); q3.setForeground(new Color(0, 153, 51));
+					q3.setToolTipText(null); 
+					cd3 = true;
+				} else {
+					q3.setText("?"); q3.setForeground(Color.RED);
+					q3.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Select a time that is no later than current time.</div></html>");
+					cd3 = false;
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void cd4Check() {
+		if (!txtScene.getText().equals("") && txtScene.getText().matches("(.|\\s){2,}")) {
+			txtScene.setBorder(new LineBorder(Color.GREEN));
+			q4.setText(s); q4.setForeground(new Color(0, 153, 51));
+			q4.setToolTipText(null);
+			cd4 = true;
+		} else {
+			txtScene.setBorder(new LineBorder(Color.RED));
+			q4.setText("?"); q4.setForeground(Color.RED);
+			q4.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Minimum length required is 2 characters.</div></html>");
+			cd4 = false;
+		}
+	}
+	
+	public void cd5Check() {
+		if (!txtReason.getText().equals("") && txtReason.getText().matches("(.|\\s){10,}")) {
+			txtReason.setBorder(new LineBorder(Color.GREEN));
+			q5.setText(s); q5.setForeground(new Color(0, 153, 51));
+			q5.setToolTipText(null);
+			cd5 = true;
+		} else {
+			txtReason.setBorder(new LineBorder(Color.RED));
+			q5.setText("?"); q5.setForeground(Color.RED);
+			q5.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Minimum length required is 10 characters.</div></html>");
+			cd5 = false;
+		}
+	}
+	
+	public void checkUnlock() {
+		boolean unlock = (cd1 && rdbtnAlive.isSelected()) || (cd1 && rdbtnDead.isSelected() && cd2 && cd3 && cd4 && cd5);
+		okButton.setEnabled(unlock);
 	}
 	
 	public void setFormListener(TableVictimListener victimListener) {
