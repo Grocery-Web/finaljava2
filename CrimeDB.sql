@@ -528,6 +528,17 @@ BEGIN
 END
 GO
 
+-- Get all Victims
+CREATE PROC getAllVictims
+AS
+BEGIN
+	SELECT vt.*,p.name,p.gender,p.nationality ,cl.complaintName
+	FROM Victim vt
+	INNER JOIN Person p ON vt.personalID = p.id
+	INNER JOIN Complaint cl ON vt.complaintID = cl.id
+END
+GO
+
 /* END PROCEDURE VICTIM */
 
 /* PROCEDURE PRISONER */
@@ -679,7 +690,7 @@ insert into Complaint values ('Sexual Assault', '2007-07-13 07:07:33', 'Ho Chi M
 'Sexual assault is any kind of unwanted sexual activity, from touching to rape',0)
 insert into Complaint values ('File a Restraining Order', '2011-01-30 17:37:22', 'Ha Noi', 'Tan', 
 'Generally, you have to fill out paperwork and submit it to the county courthouse. If you need protection right away',0)
-insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh B�nh', 'Truc', 
+insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh Binh', 'Truc', 
 'Report suspected crime, like traffic violations and illegal drug use, to local authorities. Or you can report it to your 
 nearest state police office',0)
 insert into Complaint values ('Vehicle Misuse or Reckless Driving', '2017-02-27 22:56:01', 'An Giang', 'Tra My', 

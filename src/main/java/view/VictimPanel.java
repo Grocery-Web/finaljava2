@@ -16,23 +16,20 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import entity.Prisoner;
+import entity.Victim;
 
-public class PrisonerPanel extends JPanel{
+public class VictimPanel extends JPanel{
 	private JTable table;
-	private PrisonerTableModel tableModel;
+	private VictimTableModel tableModel;
 	private JPopupMenu popup;
 	
-	public PrisonerPanel() {
-		tableModel = new PrisonerTableModel();
+	public VictimPanel() {
+		tableModel = new VictimTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
-		JMenuItem detailItem = new JMenuItem("Prisoner Details");
-		JMenuItem releaseItem = new JMenuItem("Release");
-		JMenuItem transferItem = new JMenuItem("Transfer");
-		popup.add(detailItem);
-		popup.add(releaseItem);
-		popup.add(transferItem);
+		JMenuItem removeItem = new JMenuItem("Remove");
+		popup.add(removeItem);
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -61,7 +58,7 @@ public class PrisonerPanel extends JPanel{
 		}
 	}
 	
-	public void setData(List<Prisoner> db) {
+	public void setData(List<Victim> db) {
 		tableModel.setData(db);
 	}
 	
