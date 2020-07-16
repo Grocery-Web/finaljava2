@@ -65,7 +65,7 @@ public class VictimDAO {
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Successfully link the victim to incident", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
