@@ -222,6 +222,14 @@ begin
 end
 go
 
+create proc getPersonById
+@id int
+as
+begin
+	select * FROM Person WHERE id = @id; 
+end
+go
+
 /*insert new person*/
 create proc insertPerson
 @id int, @name nvarchar(50), @gender bit,  @dob date, @address nvarchar(MAX), @image varchar(100),
