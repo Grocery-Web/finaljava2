@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -46,7 +47,6 @@ import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class VictimFormPanel extends JDialog {
 
@@ -416,6 +416,7 @@ public class VictimFormPanel extends JDialog {
 		contentPanel.setLayout(gl_contentPanel);
 		buttonPane.setLayout(gl_buttonPane);
 		getContentPane().setLayout(groupLayout);
+		ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 	}
 	
 	public void cd1Check() {
@@ -431,18 +432,21 @@ public class VictimFormPanel extends JDialog {
 	}
 	
 	public void cd2Check() {
-		Calendar cal = Calendar.getInstance();
-		if (deadDay.getDate() != null) {
-			cal.setTime(deadDay.getDate());
-			LocalDate date1 = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE));
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal3 = Calendar.getInstance();
+		if (deadDay.getDate() != null && filterComplaintComboBox.getSelectedIndex() != -1) {
+			cal1.setTime(deadDay.getDate());
+			cal3.setTime(((Complaint) filterComplaintComboBox.getSelectedItem()).getDatetime());
+			LocalDate date1 = LocalDate.of(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH) + 1, cal1.get(Calendar.DATE));
 			LocalDate date2 = LocalDate.now();
-			if (date1.compareTo(date2) <= 0) {
+			LocalDate date3 = LocalDate.of(cal3.get(Calendar.YEAR), cal3.get(Calendar.MONTH) + 1, cal3.get(Calendar.DATE));
+			if (date1.compareTo(date2) <= 0 && date1.compareTo(date3) >= 0) {
 				q2.setText(s); q2.setForeground(new Color(0, 153, 51));
 				q2.setToolTipText(null);
 				cd2 = true;
 			} else {
 				q2.setText("?"); q2.setForeground(Color.RED);
-				q2.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Select a date that is no later than today.</div></html>");
+				q2.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Select a date that is no later than today but no sooner than incident date.</div></html>");
 				cd2 = false;
 			}
 		}
@@ -451,18 +455,19 @@ public class VictimFormPanel extends JDialog {
 	public void cd3Check() {
 		Date date1 = null;
 		try {
-			if (deadDay.getDate() != null) {
+			if (deadDay.getDate() != null && filterComplaintComboBox.getSelectedIndex() != -1) {
 				String d = sdf0.format(deadDay.getDate());
 				String t = sdf1.format(deadTime.getValue());
 				date1 = sdf2.parse(d + " " + t);
 				Date date2 = new Date();
-				if (date1.compareTo(date2) <= 0) {
+				Date date3 = ((Complaint) filterComplaintComboBox.getSelectedItem()).getDatetime();
+				if (date1.compareTo(date2) <= 0 && date1.compareTo(date3) >= 0) {
 					q3.setText(s); q3.setForeground(new Color(0, 153, 51));
 					q3.setToolTipText(null); 
 					cd3 = true;
 				} else {
 					q3.setText("?"); q3.setForeground(Color.RED);
-					q3.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Select a time that is no later than current time.</div></html>");
+					q3.setToolTipText("<html><div style='margin:0 -3 0 -3; padding: 0 3 0 3; background:yellow;'>Select a time that is no later than current time but no sooner than incident time.</div></html>");
 					cd3 = false;
 				}
 			}
