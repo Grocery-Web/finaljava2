@@ -222,21 +222,30 @@ public class PrisonerFormPanel extends JPanel {
 		Prisoner prisoner = null;
 
 		if(type.equals("Termed imprisonment")) {
+			Date getApplidated = null;
+			boolean releaseStatus = false;
 			if(duration.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Duration must be inputed", "Oops!!", JOptionPane.ERROR_MESSAGE);
 			}else {
 				try {
+					getApplidated = dateFormat.parse(startDate.getText());
+					
 					Calendar c = Calendar.getInstance();
 					c.setTime(dateFormat.parse(startDate.getText()));
 					c.add(Calendar.DAY_OF_MONTH, Integer.parseInt(duration.getText()));
 					
 					endDate = c.getTime();
-					getstartDate = dateFormat.parse(startDate.getText());
+					Date today = new Date();
+					if(endDate.compareTo(today) <= 0) {
+						releaseStatus = true;
+					}
+					
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
 				}
+				
 				prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, Integer.parseInt(duration.getText()), 
-						endDate, false);
+						endDate, releaseStatus);
 			}
 		}else {
 			try {

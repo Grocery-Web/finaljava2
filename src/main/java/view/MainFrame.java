@@ -256,8 +256,6 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
-						System.out.println(cpl.getDatetime());
-						
 						complaintDAO.updateComplaintById(id, cpl);
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
@@ -482,8 +480,8 @@ public class MainFrame extends JFrame {
 				List<PrisonList> prisonlst = prisonListDAO.getAllPrisonList();
 
 				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
-				criDetailFrame.setVisible(true);
 				MainFrame.this.setVisible(false);
+				criDetailFrame.setVisible(true);
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
 					
 					@Override
@@ -500,6 +498,12 @@ public class MainFrame extends JFrame {
 					public void tableInsertPrisoner(Prisoner prisoner) {
 						System.out.println(prisoner);
 						
+					}
+
+					@Override
+					public void tableDumpEvent() {
+						criDetailFrame.setVisible(false);;
+						MainFrame.this.setVisible(true);
 					}
 				});
 			}
