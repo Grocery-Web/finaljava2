@@ -80,7 +80,6 @@ create table PrisonList (
 )
 go
 
-
 /* prisoner table */
 create table Prisoner (
 	id int identity(1,1) primary key,
@@ -280,7 +279,7 @@ begin
 	select count(*) as count from Person per
 	inner join Criminal cri on per.id = cri.personId
 	inner join Prisoner pri on cri.id = pri.criminalID
-	where per.id = @personalId
+	where per.id = @personalId and releaseStatus = 0
 end
 go
 
@@ -538,6 +537,17 @@ BEGIN
 END
 GO
 
+-- Get all Victims
+CREATE PROC getAllVictims
+AS
+BEGIN
+	SELECT vt.*,p.name,p.gender,p.nationality ,cl.complaintName
+	FROM Victim vt
+	INNER JOIN Person p ON vt.personalID = p.id
+	INNER JOIN Complaint cl ON vt.complaintID = cl.id
+END
+GO
+
 /* END PROCEDURE VICTIM */
 
 /* PROCEDURE PRISONER */
@@ -565,7 +575,7 @@ create proc getAllPrisonerByPrisonListID
 @id int
 as
 begin
-	select personId, Prisoner.id, Person.name, dob, person.gender, startDate, duration, nationality
+	select Prisoner.* , personId, Person.name, dob, person.gender, nationality
 	from PrisonList 
 		inner join Prisoner on PrisonList.id = Prisoner.prisonId
 		inner join Criminal on Criminal.id = Prisoner.criminalID
@@ -573,6 +583,20 @@ begin
 	where (PrisonList.id = @id) and (releaseStatus = 0)
 end
 go
+
+--find Prisoners by criminal ID
+create proc findUnreleasedPrisoners
+as
+begin
+	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName
+	from Prisoner pr
+	inner join PrisonList pl on pr.prisonId = pl.id
+	inner join Criminal cr on pr.criminalID = cr.id
+	inner join Person p on cr.personId = p.id
+	where releaseStatus = 0
+end
+go
+
 
 /* END PROCEDURE PRISONER*/
 
@@ -675,7 +699,7 @@ insert into Complaint values ('Sexual Assault', '2007-07-13 07:07:33', 'Ho Chi M
 'Sexual assault is any kind of unwanted sexual activity, from touching to rape',0)
 insert into Complaint values ('File a Restraining Order', '2011-01-30 17:37:22', 'Ha Noi', 'Tan', 
 'Generally, you have to fill out paperwork and submit it to the county courthouse. If you need protection right away',0)
-insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh B�nh', 'Truc', 
+insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh Binh', 'Truc', 
 'Report suspected crime, like traffic violations and illegal drug use, to local authorities. Or you can report it to your 
 nearest state police office',0)
 insert into Complaint values ('Vehicle Misuse or Reckless Driving', '2017-02-27 22:56:01', 'An Giang', 'Tra My', 

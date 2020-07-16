@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -58,6 +59,8 @@ public class MainFrame extends JFrame {
 	private IncidentsPanel incidentPanel;
 	private CriminalPanel criminalPanel;
 	private PrisonListPanel prisonListPanel;
+	private PrisonerPanel prisonerPanel;
+	private VictimPanel victimPanel;
 
 //	DAO
 	private PersonDAO personDAO;
@@ -117,6 +120,8 @@ public class MainFrame extends JFrame {
 		incidentPanel =  new IncidentsPanel();
 		criminalPanel = new CriminalPanel();
 		prisonListPanel = new PrisonListPanel();
+		prisonerPanel = new PrisonerPanel();
+		victimPanel = new VictimPanel();
 
 //		CREATE DAO
 		personDAO = new PersonDAO();
@@ -142,6 +147,8 @@ public class MainFrame extends JFrame {
 		tabPane.addTab("Complaints", complaintPanel);
 		tabPane.addTab("Incidents", incidentPanel);
 		tabPane.addTab("Criminals", criminalPanel);
+		tabPane.addTab("Prisoners", prisonerPanel);
+		tabPane.addTab("Victims", victimPanel);
 		tabPane.addTab("Prison List", prisonListPanel);
 
 //		CALL BACK TABLES
@@ -150,6 +157,8 @@ public class MainFrame extends JFrame {
 		incidentPanel.setData(complaintDAO.getAllApprovedComplaints());
 		criminalPanel.setData(criminalDAO.getAllCriminals());
 		prisonListPanel.setData(prisonListDAO.getAllPrisonList());
+		prisonerPanel.setData(prisonerDAO.getUnreleasedPrisoners());
+		victimPanel.setData(victimDAO.getAllVictims());
 
 //		TOOLBAR LISTENER
 		toolbar.setToolbarListener(new ToolbarListener() {
@@ -383,6 +392,13 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventAddVictim(int id) {
 				Person ps = personDAO.findPersonById(id);
+				Criminal cri = criminalDAO.findLastUpdatedByPersonalId(id);
+				if (cri.getPunishment() != null && cri.getPunishment().equals("in process")) {
+					ImageIcon img = new ImageIcon(getClass().getResource("/images/handcuffs.png"));
+					JOptionPane.showMessageDialog(MainFrame.this, "This person is being supervised in custody. Cannot add to victim", "Failed", 
+							JOptionPane.WARNING_MESSAGE, img);
+					return;
+				}
 				List<Complaint> filteredList = new ArrayList<Complaint>();
 				List<Complaint> list = complaintDAO.getAllApprovedComplaints();
 				Set<Integer> committedIncidents = complaintDAO.findIncidentsCommitedByPerson(id)
@@ -396,6 +412,7 @@ public class MainFrame extends JFrame {
 					public void linkNewVictim(Victim victim) {
 						victimDAO.linkNewVictim(victim);
 						victimForm.dispose();
+						refresh();
 					}
 				});
 			}
@@ -520,7 +537,7 @@ public class MainFrame extends JFrame {
 
 					@Override
 					public void tableDumpEvent() {
-						criDetailFrame.setVisible(false);;
+						criDetailFrame.setVisible(false);
 						MainFrame.this.setVisible(true);
 					}
 				});
@@ -622,5 +639,9 @@ public class MainFrame extends JFrame {
 		complaintPanel.refresh();
 		criminalPanel.setData(criminalDAO.getAllCriminals());
 		criminalPanel.refresh();
+		prisonerPanel.setData(prisonerDAO.getUnreleasedPrisoners());
+		prisonerPanel.refresh();
+		victimPanel.setData(victimDAO.getAllVictims());
+		victimPanel.refresh();
 	}
 }
