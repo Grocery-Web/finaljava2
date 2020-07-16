@@ -6,7 +6,7 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-public class Prisoner extends Person {
+public class Prisoner extends Criminal {
 	private int prisonerId;
 	private int criminalId;
 	private int prisonId;
@@ -18,12 +18,12 @@ public class Prisoner extends Person {
 	
 	public Prisoner() {}
 
-	public Prisoner(int personalId, String name, Gender gender, Date dob, String address, String image,
-			String nationality, String job, Boolean alive) {
-		super(personalId, name, gender, dob, address, image, nationality, job, alive);
-	}
-	
 
+	
+	public Prisoner(int criminalId, int personalId, int complaintId, String punishment, Date appliedDate,
+			String hisOfViolent, int rating) {
+		super(criminalId, personalId, complaintId, punishment, appliedDate, hisOfViolent, rating);
+	}
 
 	public Prisoner(int criminalId, int prisonId, String type, Date startDate, int duration,
 			Date endDate, boolean releasedStatus) {

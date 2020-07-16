@@ -43,7 +43,7 @@ public class PrisonerFormPanel extends JPanel {
 	
 //	Variables for info of Prisoner
 	private int prisonId = 1;
-	private String type = "";
+	private String type = "Death penalty";
 	private Date endDate;
 	
 //	updated Criminal
@@ -217,35 +217,43 @@ public class PrisonerFormPanel extends JPanel {
 //		End of Edit Form
 	}
 	
-	public Prisoner getPrisoner() {
-		Date getstartDate = null;
+	public Prisoner getPrisoner(){
+		Date getApplidated = null;
+		boolean releaseStatus = false;
 		Prisoner prisoner = null;
-
+		
+		try {
+			getApplidated = dateFormat.parse(startDate.getText());
+			criminal.setAppliedDate(getApplidated);
+		} catch (ParseException e) {
+			JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
+		}
 		if(type.equals("Termed imprisonment")) {
 			if(duration.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Duration must be inputed", "Oops!!", JOptionPane.ERROR_MESSAGE);
 			}else {
 				try {
+					// GET END DATE
 					Calendar c = Calendar.getInstance();
 					c.setTime(dateFormat.parse(startDate.getText()));
 					c.add(Calendar.DAY_OF_MONTH, Integer.parseInt(duration.getText()));
-					
 					endDate = c.getTime();
-					getstartDate = dateFormat.parse(startDate.getText());
+					
+					// VALIDATION RELEASE STATUS
+					Date today = new Date();
+					if(endDate.compareTo(today) <= 0) {
+						releaseStatus = true;
+					}
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
 				}
-				prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, Integer.parseInt(duration.getText()), 
-						endDate, false);
+				
+				prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getApplidated, Integer.parseInt(duration.getText()), 
+						endDate, releaseStatus);
 			}
 		}else {
-			try {
-				getstartDate = dateFormat.parse(startDate.getText());
-				prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getstartDate, 0, 
-						null, false);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			prisoner = new Prisoner(Integer.parseInt(criminalID.getText()), prisonId, type, getApplidated, 0, 
+					null, false);
 		}
 
 		return prisoner;

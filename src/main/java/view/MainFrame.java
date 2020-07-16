@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -32,6 +31,7 @@ import dao.ComplaintDetailDAO;
 import dao.CriminalDAO;
 import dao.PersonDAO;
 import dao.PrisonListDAO;
+import dao.PrisonerDAO;
 import dao.VictimDAO;
 import entity.Complaint;
 import entity.ComplaintDetail;
@@ -66,6 +66,7 @@ public class MainFrame extends JFrame {
 	private CriminalDAO criminalDAO;
 	private PrisonListDAO prisonListDAO;
 	private VictimDAO victimDAO;
+	private PrisonerDAO prisonerDAO;
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
@@ -124,6 +125,7 @@ public class MainFrame extends JFrame {
 		criminalDAO = new CriminalDAO();
 		prisonListDAO = new PrisonListDAO();
 		victimDAO = new VictimDAO();
+		prisonerDAO = new PrisonerDAO();
 
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
@@ -259,8 +261,6 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
-						System.out.println(cpl.getDatetime());
-						
 						complaintDAO.updateComplaintById(id, cpl);
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
@@ -499,24 +499,28 @@ public class MainFrame extends JFrame {
 				List<PrisonList> prisonlst = prisonListDAO.getAllPrisonList();
 
 				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
-				criDetailFrame.setVisible(true);
 				MainFrame.this.setVisible(false);
+				criDetailFrame.setVisible(true);
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
 					
 					@Override
+					public void tableInsertPrisoner(Prisoner prisoner) {
+						prisonerDAO.addPrisoner(prisoner);
+					}
+					
+					
+					@Override
 					public void tableUpdatedCriminal(Criminal cri) {
-//						criminalDAO.updateCriminal(cri);
-//						refresh();
-//						criDetailFrame.dispose();
-//						MainFrame.this.setVisible(true);
-						
-						System.out.println(cri);
+						criminalDAO.updateCriminal(cri);
+						refresh();
+						criDetailFrame.dispose();
+						MainFrame.this.setVisible(true);
 					}
 
 					@Override
-					public void tableInsertPrisoner(Prisoner prisoner) {
-						System.out.println(prisoner);
-						
+					public void tableDumpEvent() {
+						criDetailFrame.setVisible(false);;
+						MainFrame.this.setVisible(true);
 					}
 				});
 			}

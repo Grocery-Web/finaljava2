@@ -8,4 +8,5 @@ import entity.Prisoner;
 public interface TableCriminalDetailsListener extends EventListener{
 	public void tableUpdatedCriminal(Criminal criminal);
 	public void tableInsertPrisoner(Prisoner prisoner);
+	public void tableDumpEvent();
 }
