@@ -80,7 +80,6 @@ create table PrisonList (
 )
 go
 
-
 /* prisoner table */
 create table Prisoner (
 	id int identity(1,1) primary key,
@@ -280,7 +279,7 @@ begin
 	select count(*) as count from Person per
 	inner join Criminal cri on per.id = cri.personId
 	inner join Prisoner pri on cri.id = pri.criminalID
-	where per.id = @personalId
+	where per.id = @personalId and releaseStatus = 0
 end
 go
 
@@ -533,15 +532,51 @@ GO
 
 /* PROCEDURE PRISONER */
 
---add prisoner
-create proc addPrisoner
-@startDate date, @prisonID int, @releaseStatus bit, @duration bit, @type nvarchar(50), @criminalID int, @endDate date
+--get all prisoners
+create proc getAllPrisoners
 as
 begin
-	insert into Prisoner (startDate, prisonId, releaseStatus, duration, type, criminalID, endDate)
-	values (@startDate, @prisonID, @releaseStatus, @duration, @type, @criminalID, @endDate)
+	select * from Prisoner where releaseStatus = 0
 end
 go
+
+--add prisoner
+create proc addPrisoner
+@prisonID int, @criminalID int, @startDate date, @endDate date, @duration int, @releaseStatus bit, @type nvarchar(50)
+as
+begin
+	insert into Prisoner (prisonId, criminalID, startDate, endDate, duration, releaseStatus, type)
+	values (@prisonId, @criminalID, @startDate, @endDate, @duration, @releaseStatus, @type)
+end
+go
+
+--get Prisoners by Prisonlist ID
+create proc getAllPrisonerByPrisonListID
+@id int
+as
+begin
+	select Prisoner.* , personId, Person.name, dob, person.gender, nationality
+	from PrisonList 
+		inner join Prisoner on PrisonList.id = Prisoner.prisonId
+		inner join Criminal on Criminal.id = Prisoner.criminalID
+		inner join Person on Criminal.personId = Person.id
+	where (PrisonList.id = @id) and (releaseStatus = 0)
+end
+go
+
+--find Prisoners by criminal ID
+create proc findUnreleasedPrisoners
+as
+begin
+	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName
+	from Prisoner pr
+	inner join PrisonList pl on pr.prisonId = pl.id
+	inner join Criminal cr on pr.criminalID = cr.id
+	inner join Person p on cr.personId = p.id
+	where releaseStatus = 0
+end
+go
+
 
 /* END PROCEDURE PRISONER*/
 
@@ -575,8 +610,6 @@ begin
 end
 go
 
-
-
 /* END TRIGGER*/
 
 /* PROCEDURE PRISONLIST */
@@ -596,19 +629,6 @@ begin
 	select * 
 	from PrisonList
 	where id = @id
-end
-go
-
-create proc getAllPrisonerByPrisonListID
-@id int
-as
-begin
-	select personId, Prisoner.id, Person.name, dob, person.gender, startDate, duration, nationality
-	from PrisonList 
-		inner join Prisoner on PrisonList.id = Prisoner.prisonId
-		inner join Criminal on Criminal.id = Prisoner.criminalID
-		inner join Person on Criminal.personId = Person.id
-	where (PrisonList.id = @id) and (releaseStatus = 0)
 end
 go
 
@@ -674,5 +694,3 @@ insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Es
 insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 0)
 
 /* END INSERT DATA IN TABLE*/ 
-
-

@@ -39,7 +39,7 @@ public class CriminalFormPanel extends JPanel{
 	
 	//local Variables;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	private String getPunishment;
+	private String getPunishment = "in process";
 	
 	public CriminalFormPanel(Criminal cri, String crimeTypes) {
 		Dimension dim = getPreferredSize();

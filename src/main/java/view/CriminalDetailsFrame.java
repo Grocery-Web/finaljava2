@@ -83,6 +83,12 @@ public class CriminalDetailsFrame extends JFrame {
 		okBtn.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				if(criFormPanel.getPunishment().equals("in process")) {
+					if(criDetailListener != null) {
+						criDetailListener.tableDumpEvent();
+					}
+				}
+				
 				if(criFormPanel.getPunishment().equals("administrative sanctions")) {
 					Criminal criminal = additionalPanel.getCriminal();
 					if(criDetailListener != null) {
@@ -94,8 +100,8 @@ public class CriminalDetailsFrame extends JFrame {
 					Prisoner prisoner = prisonerFormPanel.getPrisoner();
 					Criminal criminal = prisonerFormPanel.getCriminal();
 					if(criDetailListener != null) {
-						criDetailListener.tableUpdatedCriminal(criminal);
 						criDetailListener.tableInsertPrisoner(prisoner);
+						criDetailListener.tableUpdatedCriminal(criminal);
 					}
 				}
 			}
