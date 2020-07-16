@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -387,6 +388,13 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventAddVictim(int id) {
 				Person ps = personDAO.findPersonById(id);
+				Criminal cri = criminalDAO.findLastUpdatedByPersonalId(id);
+				if (cri.getPunishment() != null && cri.getPunishment().equals("in process")) {
+					ImageIcon img = new ImageIcon(getClass().getResource("/images/handcuffs.png"));
+					JOptionPane.showMessageDialog(MainFrame.this, "This person is being supervised in custody. Cannot add to victim", "Failed", 
+							JOptionPane.WARNING_MESSAGE, img);
+					return;
+				}
 				List<Complaint> filteredList = new ArrayList<Complaint>();
 				List<Complaint> list = complaintDAO.getAllApprovedComplaints();
 				Set<Integer> committedIncidents = complaintDAO.findIncidentsCommitedByPerson(id)
