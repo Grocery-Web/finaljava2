@@ -251,4 +251,40 @@ public class PersonDAO {
 		
 		return count;
 	}
+	
+	public Person getPersonById(int id) {
+		Person per = new Person();
+		
+		try(
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getPersonById(?)}");
+		)
+		{
+			ps.setInt(1, id);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				per.setPersonalId(rs.getInt("id"));
+				per.setName(rs.getString("name"));
+				
+				Gender gender;
+				if(rs.getBoolean("gender")) {
+					gender = Gender.male;
+				}else {
+					gender = Gender.female;
+				}
+				
+				per.setGender(gender);
+				per.setDob(rs.getDate("dob"));
+				per.setAddress(rs.getString("address"));
+				per.setNationality(rs.getString("nationality"));
+				per.setImage(rs.getString("image"));
+				per.setJob(rs.getString("job"));
+				per.setAlive(rs.getBoolean("alive"));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+		
+		return per;
+	}
 }
