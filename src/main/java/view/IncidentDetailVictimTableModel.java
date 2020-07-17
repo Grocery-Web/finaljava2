@@ -43,7 +43,7 @@ public class IncidentDetailVictimTableModel extends AbstractTableModel {
 		Victim victim = db.get(rowIndex);
 		PersonDAO personDAO = new PersonDAO();
 		Person per = new Person();
-		per = personDAO.findPersonById(victim.getPersonalId());
+		per = personDAO.getPersonById(victim.getPersonalId());
 		
 		switch (columnIndex) {
 		case 0: {
@@ -68,11 +68,11 @@ public class IncidentDetailVictimTableModel extends AbstractTableModel {
 			return per.getAddress();
 		}
 		case 7: {
-			if (victim.isStatus() == true) {
+			if (per.getAlive() == true) {
 				return "Alive";
-			} else {
-				return "Dead";
-			}
+			} 
+			return "Dead";
+			
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
