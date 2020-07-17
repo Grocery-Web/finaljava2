@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import common.ConnectToProperties;
 import entity.Criminal;
+import entity.Gender;
 
 public class CriminalDAO {
 	public List<Criminal> getAllCriminals() {
@@ -25,11 +26,24 @@ public class CriminalDAO {
 			while (rs.next()) {
 				Criminal cri = new Criminal();
 				
-				cri.setCriminalId(rs.getInt("id"));
-				cri.setPersonalId(rs.getInt("personId"));
-				cri.setComplaintId(rs.getInt("complaintID"));
+				cri.setCriminalId(rs.getInt("criminalId"));
+				cri.setPersonalId(rs.getInt("id"));
+				cri.setName(rs.getString("name"));
+				cri.setDob(rs.getDate("dob"));
+				cri.setAddress(rs.getString("address"));
+				cri.setImage(rs.getString("image"));
+				cri.setNationality(rs.getString("nationality"));
+				cri.setComplaintName(rs.getString("complaintName"));
 				cri.setPunishment(rs.getString("punishment"));
 				cri.setRating(rs.getInt("rating"));
+				
+				Gender gender;
+				if(rs.getBoolean("gender")) {
+					gender = Gender.male;
+				}else {
+					gender = Gender.female;
+				}
+				cri.setGender(gender);
 				
 				list.add(cri);
 			}

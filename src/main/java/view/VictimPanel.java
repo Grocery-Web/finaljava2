@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -15,13 +17,13 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import entity.Prisoner;
 import entity.Victim;
 
 public class VictimPanel extends JPanel{
 	private JTable table;
 	private VictimTableModel tableModel;
 	private JPopupMenu popup;
+	private TableVictimListener tableListener;
 	
 	public VictimPanel() {
 		tableModel = new VictimTableModel();
@@ -39,6 +41,17 @@ public class VictimPanel extends JPanel{
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					// When right click on the row of table, the pop up will be showed up
 					popup.show(table, e.getX(), e.getY());
+				}
+			}
+		});
+		
+		removeItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventDeleted(id);
 				}
 			}
 		});
@@ -70,5 +83,9 @@ public class VictimPanel extends JPanel{
 	
 	public void refresh() {
 		tableModel.fireTableDataChanged();
+	}
+	
+	public void setTableListener(TableVictimListener tableListener) {
+		this.tableListener = tableListener;
 	}
 }

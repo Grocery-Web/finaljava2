@@ -448,7 +448,10 @@ GO
 create proc getCriminalsInProcess
 as
 begin
-	select * from Criminal where punishment like 'in process'
+	select p.*, cr.id as criminalId, cr.punishment, cr.rating, cpl.complaintName from Criminal cr
+	inner join Person p on cr.personId = p.id
+	inner join Complaint cpl on cr.complaintID = cpl.id
+	where cr.punishment like 'in process'
 end
 go
 
@@ -553,6 +556,24 @@ BEGIN
 	FROM Victim vt
 	INNER JOIN Person p ON vt.personalID = p.id
 	INNER JOIN Complaint cl ON vt.complaintID = cl.id
+END
+GO
+
+-- remove Victim by personal Id
+CREATE PROC removeVictimbyPersonalId
+@personId int
+AS
+BEGIN
+	DELETE FROM Victim WHERE personalID in
+	(
+		SELECT TOP 1 personalID FROM
+		(select * from Victim where personalID = @personId) as temp
+		ORDER BY id DESC
+	) 
+
+	UPDATE Person
+	SET alive = 1
+	WHERE Person.id = @personId
 END
 GO
 
