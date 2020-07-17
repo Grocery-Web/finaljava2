@@ -18,7 +18,7 @@ public class CriminalTableModel extends AbstractTableModel{
 	PersonDAO perDAO = new PersonDAO();
 	ComplaintDAO cplDAO = new ComplaintDAO();
 	
-	private String[] colNames = {"CriminalId", "PersonalId", "Name" , "Gender", "Date Of Birth", "Address", "Nationality", "Relevant Complaint", "Punishment", "Rating"};
+	private String[] colNames = {"Criminal ID", "Personal ID", "Name" , "Gender", "Date Of Birth", "Address", "Nationality", "Relevant Complaint", "Punishment", "Rating"};
 	
 	public CriminalTableModel() {}
 	
@@ -48,37 +48,30 @@ public class CriminalTableModel extends AbstractTableModel{
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Criminal cri = db.get(rowIndex);
 		
-//		Person in case
-		int personalId = cri.getPersonalId();
-		Person per = perDAO.findPersonById(personalId);
-//		Complaint in case
-		int complainId = cri.getComplaintId();
-		Complaint cpl = cplDAO.findComplaintById(complainId);
-		
 		switch (columnIndex) {
 		case 0: {
 			return cri.getCriminalId();
 		}
 		case 1: {
-			return per.getPersonalId();
+			return cri.getPersonalId();
 		}
 		case 2: {
-			return per.getName();
+			return cri.getName();
 		}
 		case 3: {
-			return per.getGender().toString();
+			return cri.getGender().toString();
 		}
 		case 4: {
-			return per.getDob();
+			return cri.getDob();
 		}
 		case 5: {
-			return per.getAddress();
+			return cri.getAddress();
 		}
 		case 6: {
-			return per.getNationality();
+			return cri.getNationality();
 		}
 		case 7: {
-			return cpl.getName();
+			return cri.getComplaintName();
 		}
 		case 8: {
 			return cri.getPunishment();

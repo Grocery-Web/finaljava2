@@ -19,10 +19,11 @@ public class Prisoner extends Criminal {
 	
 	public Prisoner() {}
 
-	public Prisoner(int criminalId, int personalId, int complaintId, String punishment, Date appliedDate,
-			String hisOfViolent, int rating) {
-		super(criminalId, personalId, complaintId, punishment, appliedDate, hisOfViolent, rating);
 
+
+	public Prisoner(int criminalId, int personalId, int complaintId, String punishment, Date appliedDate,
+			String hisOfViolent, int rating, String complaintName) {
+		super(criminalId, personalId, complaintId, punishment, appliedDate, hisOfViolent, rating, complaintName);
 	}
 
 	public Prisoner(int prisonerId, int criminalId, int prisonId, String type, Date startDate, int duration,

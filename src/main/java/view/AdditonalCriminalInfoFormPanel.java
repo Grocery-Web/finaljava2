@@ -53,7 +53,7 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 				
 		//DEFINE PARAMETERS
 		criminal = new Criminal(cri.getCriminalId(), cri.getPersonalId(), cri.getComplaintId(), "administrative sanctions", null, 
-				cri.getHisOfViolent(), cri.getRating());
+				cri.getHisOfViolent(), cri.getRating(),cri.getComplaintName());
 		this.crimeTypes = crimeTypes;
 		
 		//TITLE

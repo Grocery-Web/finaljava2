@@ -448,7 +448,10 @@ GO
 create proc getCriminalsInProcess
 as
 begin
-	select * from Criminal where punishment like 'in process'
+	select p.*, cr.id as criminalId, cr.punishment, cr.rating, cpl.complaintName from Criminal cr
+	inner join Person p on cr.personId = p.id
+	inner join Complaint cpl on cr.complaintID = cpl.id
+	where cr.punishment like 'in process'
 end
 go
 
