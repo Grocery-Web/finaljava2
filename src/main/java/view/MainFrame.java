@@ -467,10 +467,12 @@ public class MainFrame extends JFrame {
 				
 				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
 					@Override
-					public void releasePrisoner(int id) {
+					public void releasePrisoner(int idPrison) {
 						// TODO Auto-generated method stub
 						PrisonerDAO psDAO = new PrisonerDAO();
-						psDAO.releasePrisoner(id);
+						psDAO.releasePrisoner(idPrison);
+						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
+						prisonListDetailFrame.loadData(refreshList);
 						refresh();
 					}
 
@@ -478,6 +480,8 @@ public class MainFrame extends JFrame {
 					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
 						// TODO Auto-generated method stub
 						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
+						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
+						prisonListDetailFrame.loadData(refreshList);
 						refresh();
 					}
 				});
@@ -671,6 +675,9 @@ public class MainFrame extends JFrame {
 		prisonerPanel.refresh();
 		victimPanel.setData(victimDAO.getAllVictims());
 		victimPanel.refresh();
+		
+		prisonListPanel.setData(prisonListDAO.getAllPrisonList());
+		prisonListPanel.refresh();
 
 	}
 }

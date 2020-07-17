@@ -116,6 +116,11 @@ public class PrisonListDetailFrame extends JFrame {
 		}
 		
 		//TABLE: GET ALL PRISONERS IN THIS PRISON
+		loadData(prs);
+		
+	}
+
+	public void loadData(List<PrisonerInList> prs) {
 		var model = new DefaultTableModel();
 		model.addColumn("PersonID");
 		model.addColumn("PrisonerID");
@@ -154,7 +159,6 @@ public class PrisonListDetailFrame extends JFrame {
 		
 		
 		table.setModel(model);
-		
 	}
 	
 	private void initFrame() {
