@@ -556,6 +556,24 @@ BEGIN
 END
 GO
 
+-- remove Victim by personal Id
+CREATE PROC removeVictimbyPersonalId
+@personId int
+AS
+BEGIN
+	DELETE FROM Victim WHERE personalID in
+	(
+		SELECT TOP 1 personalID FROM
+		(select * from Victim where personalID = @personId) as temp
+		ORDER BY id DESC
+	) 
+
+	UPDATE Person
+	SET alive = 1
+	WHERE Person.id = @personId
+END
+GO
+
 /* END PROCEDURE VICTIM */
 
 /* PROCEDURE PRISONER */
