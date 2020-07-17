@@ -633,6 +633,8 @@ begin
 	update Prisoner
 	set prisonId = @toPrison
 	where id = @prisonerID
+end
+go
 
 --find Prisoners by criminal ID
 create proc findUnreleasedPrisoners
