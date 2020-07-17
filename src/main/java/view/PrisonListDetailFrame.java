@@ -39,8 +39,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.MouseAdapter;
 
 public class PrisonListDetailFrame extends JFrame {
 
@@ -86,6 +88,7 @@ public class PrisonListDetailFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public PrisonListDetailFrame() {
+		setTitle("List of Prisoners");
 		initFrame();
 	}
 
@@ -202,6 +205,16 @@ public class PrisonListDetailFrame extends JFrame {
 		});
 		
 		scrollPane = new JScrollPane();
+		scrollPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				scrollPanemouseClicked(e);
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				scrollPanemouseReleased(e);
+			}
+		});
 		
 		btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
@@ -328,10 +341,15 @@ public class PrisonListDetailFrame extends JFrame {
 	
 	protected void btnReleaseactionPerformed(ActionEvent e) {
 		int selectRow = table.getSelectedRow();
-		int prisonerID = (int) table.getValueAt(selectRow, 1);
-		if (psListen !=null) {
-			psListen.releasePrisoner(prisonerID);
-		}	
+		if (selectRow >=0 ) {
+			int prisonerID = (int) table.getValueAt(selectRow, 1);
+			if (psListen !=null) {
+				psListen.releasePrisoner(prisonerID);
+			}	
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
+		}
 		
 	}
 	
@@ -382,9 +400,18 @@ public class PrisonListDetailFrame extends JFrame {
 		
 	}
 
+
 	private Object[] appendValue(Object[] obj, Object newObj) {
 		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
 		temp.add(newObj);
 		return temp.toArray();
+	}
+	protected void scrollPanemouseClicked(MouseEvent e) {
+		table.clearSelection();
+		table.setFocusable(false);
+	}
+	protected void scrollPanemouseReleased(MouseEvent e) {
+		table.clearSelection();
+		table.setFocusable(false);
 	}
 }
