@@ -12,14 +12,15 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import common.ConnectToProperties;
+import entity.Gender;
 import entity.Prisoner;
 
 public class PrisonerDAO {
-	public List<Prisoner> getAllPrisoners() {
+	public List<Prisoner> getUnreleasedPrisoners() {
 		List<Prisoner> list = new ArrayList<Prisoner>();
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call getAllPrisoners}");
+				PreparedStatement ps = connect.prepareCall("{call findUnreleasedPrisoners}");
 				ResultSet rs = ps.executeQuery();
 			) 
 		{
@@ -32,6 +33,17 @@ public class PrisonerDAO {
 				prisoner.setDuration(rs.getInt("duration"));
 				prisoner.setReleasedStatus(rs.getBoolean("releaseStatus"));
 				prisoner.setType(rs.getString("type"));
+				prisoner.setName(rs.getString("personName"));
+				prisoner.setNationality(rs.getString("nationality"));
+				prisoner.setPrisonName(rs.getString("prisonName"));
+				
+				Gender gender;
+				if(rs.getBoolean("gender")) {
+					gender = Gender.male;
+				}else {
+					gender = Gender.female;
+				}
+				prisoner.setGender(gender);
 				
 				list.add(prisoner);
 			}

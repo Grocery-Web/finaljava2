@@ -42,6 +42,7 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -511,6 +512,7 @@ public class ComplaintDetailFrame extends JFrame {
 							.addComponent(q7, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(26, Short.MAX_VALUE))
 		);
+		ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 		contentPane.setLayout(gl_contentPane);
 	}
 	

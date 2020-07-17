@@ -31,6 +31,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -323,6 +324,7 @@ public class PersonFormPanel extends JPanel {
 		Border innerBorder = BorderFactory.createTitledBorder("Add Person");
 		Border outerBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
+		ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 
 		layoutComponents();
 	}
