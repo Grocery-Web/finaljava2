@@ -456,6 +456,13 @@ public class MainFrame extends JFrame {
 						psDAO.releasePrisoner(id);
 						refresh();
 					}
+
+					@Override
+					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
+						// TODO Auto-generated method stub
+						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
+						refresh();
+					}
 				});
 			}
 		});

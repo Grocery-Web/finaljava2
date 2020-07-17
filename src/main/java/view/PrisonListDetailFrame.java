@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+import dao.PrisonListDAO;
 import entity.PrisonList;
 import entity.PrisonerInList;
 
@@ -26,6 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +64,8 @@ public class PrisonListDetailFrame extends JFrame {
 	private JButton btnTransfer;
 	private TablePrisonerInListListener psListen ;
 
+	private int prisonID;
+	private String prisonName;
 	/**
 	 * Launch the application.
 	 */
@@ -91,6 +96,9 @@ public class PrisonListDetailFrame extends JFrame {
 		txtCapacity.setText(Integer.toString(pr.getCapacity()));
 		txtQuantity.setText(Integer.toString(pr.getQuantity()));
 		imgName = pr.getImg();
+		
+		prisonID = pr.getId();
+		prisonName = pr.getName();
 	    
 		
 		//Display Prison's img
@@ -206,6 +214,11 @@ public class PrisonListDetailFrame extends JFrame {
 		});
 		
 		btnTransfer = new JButton("Transfer");
+		btnTransfer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnTransferactionPerformed(e);
+			}
+		});
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -308,6 +321,7 @@ public class PrisonListDetailFrame extends JFrame {
 			}
 		}
 	}
+	
 	protected void btnReleaseactionPerformed(ActionEvent e) {
 		int selectRow = table.getSelectedRow();
 		int prisonerID = (int) table.getValueAt(selectRow, 1);
@@ -319,5 +333,54 @@ public class PrisonListDetailFrame extends JFrame {
 	
 	public void setFormListener(TablePrisonerInListListener psListener) {
 		this.psListen = psListener;
+	}
+	protected void btnTransferactionPerformed(ActionEvent e) {
+		
+		PrisonListDAO plDAO = new PrisonListDAO();
+		List<PrisonList> prisonList = plDAO.getAllPrisonListExceptPrisonID(prisonID);
+		int toPrison = -1;
+		
+//		System.out.println(prisonList);
+		int selectRow = table.getSelectedRow();
+		if (selectRow >=0 ) {
+			int prisonerID = (int) table.getValueAt(selectRow, 1);
+			
+			Object[] obj = new Object[]  {};
+			for (PrisonList prison : prisonList) {
+				obj = appendValue(obj, prison.getName());
+			}
+			
+			String s = (String)JOptionPane.showInputDialog(
+                    null,
+                    "Please choose Prison Name:\n",
+                    "Transfer Prisoner",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    obj,
+                    obj[0]);
+			
+			int count = 0;
+			for (PrisonList prison : prisonList) {
+				if (s == prison.getName()) {
+					toPrison = prison.getId();
+					break;
+				}
+				count ++;
+			}
+			if (toPrison >= 0) {
+				psListen.transferPrisoner(prisonID, toPrison, prisonerID);
+			}
+			
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
+		}
+		
+	}
+
+	private Object[] appendValue(Object[] obj, Object newObj) {
+		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
+		temp.add(newObj);
+		return temp.toArray();
 	}
 }

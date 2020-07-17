@@ -576,6 +576,18 @@ begin
 end
 go
 
+create proc transferPrisonerByID
+@prisonerID int,
+@toPrison int
+as
+begin
+	update Prisoner
+	set prisonId = @toPrison
+	where id = @prisonerID
+end
+go
+
+
 /* END PROCEDURE PRISONER*/
 
 /*TRIGGER */
