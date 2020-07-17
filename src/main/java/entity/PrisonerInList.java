@@ -29,8 +29,6 @@ public class PrisonerInList {
 		this.nationality = nationality;
 	}
 
-
-
 	public Date getEndDate() {
 		return endDate;
 	}
