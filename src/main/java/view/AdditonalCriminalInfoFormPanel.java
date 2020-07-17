@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import com.toedter.calendar.JDateChooser;
+
 import entity.Criminal;
 
 public class AdditonalCriminalInfoFormPanel extends JPanel{
@@ -24,7 +26,7 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 	
 	private JLabel title;
 	private JLabel hisOfViolent;
-	private JTextField appliedDate;
+	private JDateChooser appliedDate;
 	
 //	updated Criminal
 	private String updatedViolent;
@@ -38,7 +40,9 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		setPreferredSize(dim);
 		setMinimumSize(dim);
 		
-		appliedDate = new JTextField(10);
+		appliedDate = new JDateChooser();
+		appliedDate.setDateFormatString("yyyy-MM-dd");
+		appliedDate.setPreferredSize(new Dimension(120, 20));
 		
 		//SET HISTORY OF VIOLENT ON RENDER AND 
 		if(cri.getHisOfViolent() == null) {
@@ -111,16 +115,12 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 	
 	public Criminal getCriminal() {
 		Date getApplidated = null;
-		try {
-			getApplidated = dateFormat.parse(appliedDate.getText());
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(null, "Time input is wrong", "info", JOptionPane.ERROR_MESSAGE);
-		}
+		getApplidated = appliedDate.getDate();
 		
 		if(hisOfViolent.getText().equals("No Records Recognition")) {
-			updatedViolent = "Pecuniary penalty:" + appliedDate.getText() + " | Guilt:" + crimeTypes;
+			updatedViolent = "Pecuniary penalty:" + appliedDate.getDate() + " | Guilt:" + crimeTypes;
 		}else {
-			updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Pecuniary penalty:" + appliedDate.getText() + 
+			updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Pecuniary penalty:" + appliedDate.getDate() + 
 					" | Guilt:" + crimeTypes;
 		}
 		
