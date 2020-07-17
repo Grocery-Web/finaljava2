@@ -68,4 +68,17 @@ public class VictimDAO {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	public void removeVictimbyPersonalId(int personalId) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call removeVictimbyPersonalId(?)}");
+			) 
+		{
+			ps.setInt(1, personalId);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }

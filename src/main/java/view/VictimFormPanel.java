@@ -65,7 +65,7 @@ public class VictimFormPanel extends JDialog {
 	public JTextField txtScene;
 	public JScrollPane scrollPane;
 	public JTextArea txtReason;
-	private TableVictimListener victimListener;
+	private VictimFormListener victimListener;
 	private String s = Character.toString("\u2713".toCharArray()[0]);
 	public JLabel q1, q2, q3, q4, q5;
 	public boolean cd1, cd2, cd3, cd4, cd5;
@@ -509,7 +509,7 @@ public class VictimFormPanel extends JDialog {
 		okButton.setEnabled(unlock);
 	}
 	
-	public void setFormListener(TableVictimListener victimListener) {
+	public void setFormListener(VictimFormListener victimListener) {
 		this.victimListener = victimListener;
 	}
 }

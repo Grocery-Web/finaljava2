@@ -407,7 +407,7 @@ public class MainFrame extends JFrame {
 				victimForm = new VictimFormPanel(ps, filteredList);
 				victimForm.setLocationRelativeTo(null);
 				victimForm.setVisible(true);
-				victimForm.setFormListener(new TableVictimListener() {
+				victimForm.setFormListener(new VictimFormListener() {
 					@Override
 					public void linkNewVictim(Victim victim) {
 						victimDAO.linkNewVictim(victim);
@@ -450,7 +450,7 @@ public class MainFrame extends JFrame {
 				});
 			}
 		});
-//		PRISONLIST LISTENER
+//		PRISONLIST TABLE LISTENER
 		
 		prisonListPanel.setTableListener(new TablePrisonListListener() {
 			
@@ -544,6 +544,16 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
+//		VICTIM TABLE LISTENER
+		victimPanel.setTableListener(new TableVictimListener() {
+
+			@Override
+			public void tableEventDeleted(int personalId) {
+				victimDAO.removeVictimbyPersonalId(personalId);
+				refresh();
+				JOptionPane.showMessageDialog(null, "Victim has been removed", "Success", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 
 //		ADD COMPONENTS INTO LAYOUT
 		add(splitPane, BorderLayout.CENTER);

@@ -109,7 +109,7 @@ public class CriminalDetailsFrame extends JFrame {
 		
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				criDetailListener.tableDumpEvent();
 			}
 		});
 		
