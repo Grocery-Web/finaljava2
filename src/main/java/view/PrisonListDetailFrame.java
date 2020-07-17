@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+import dao.PrisonListDAO;
 import entity.PrisonList;
 import entity.PrisonerInList;
 
@@ -26,6 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -36,8 +39,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.MouseAdapter;
 
 public class PrisonListDetailFrame extends JFrame {
 
@@ -59,7 +64,10 @@ public class PrisonListDetailFrame extends JFrame {
 	private String imgName;
 	private JButton btnRelease;
 	private JButton btnTransfer;
+	private TablePrisonerInListListener psListen ;
 
+	private int prisonID;
+	private String prisonName;
 	/**
 	 * Launch the application.
 	 */
@@ -80,6 +88,7 @@ public class PrisonListDetailFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public PrisonListDetailFrame() {
+		setTitle("List of Prisoners");
 		initFrame();
 	}
 
@@ -90,6 +99,9 @@ public class PrisonListDetailFrame extends JFrame {
 		txtCapacity.setText(Integer.toString(pr.getCapacity()));
 		txtQuantity.setText(Integer.toString(pr.getQuantity()));
 		imgName = pr.getImg();
+		
+		prisonID = pr.getId();
+		prisonName = pr.getName();
 	    
 		
 		//Display Prison's img
@@ -107,6 +119,11 @@ public class PrisonListDetailFrame extends JFrame {
 		}
 		
 		//TABLE: GET ALL PRISONERS IN THIS PRISON
+		loadData(prs);
+		
+	}
+
+	public void loadData(List<PrisonerInList> prs) {
 		var model = new DefaultTableModel();
 		model.addColumn("PersonID");
 		model.addColumn("PrisonerID");
@@ -120,18 +137,18 @@ public class PrisonListDetailFrame extends JFrame {
 		
 		for (var acc : prs) {
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			
-			Date startDate = acc.getStartDate();
-			Calendar c = Calendar.getInstance();
-			c.setTime(startDate);
-			
-			c.add(Calendar.DAY_OF_MONTH, 2);
-			
-			String endDate = sdf.format(c.getTime());
-			
-			System.out.println("start date " + acc.getStartDate());
-			System.out.println("end date" + endDate);
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//			
+//			Date startDate = acc.getStartDate();
+//			Calendar c = Calendar.getInstance();
+//			c.setTime(startDate);
+//			
+//			c.add(Calendar.DAY_OF_MONTH, 2);
+//			
+//			String endDate = sdf.format(c.getTime());
+//			
+//			System.out.println("start date " + acc.getStartDate());
+//			System.out.println("end date" + endDate);
 			
 			model.addRow(new Object[] {		
 				
@@ -145,7 +162,6 @@ public class PrisonListDetailFrame extends JFrame {
 		
 		
 		table.setModel(model);
-		
 	}
 	
 	private void initFrame() {
@@ -189,6 +205,16 @@ public class PrisonListDetailFrame extends JFrame {
 		});
 		
 		scrollPane = new JScrollPane();
+		scrollPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				scrollPanemouseClicked(e);
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				scrollPanemouseReleased(e);
+			}
+		});
 		
 		btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
@@ -205,6 +231,11 @@ public class PrisonListDetailFrame extends JFrame {
 		});
 		
 		btnTransfer = new JButton("Transfer");
+		btnTransfer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnTransferactionPerformed(e);
+			}
+		});
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -307,8 +338,80 @@ public class PrisonListDetailFrame extends JFrame {
 			}
 		}
 	}
+	
 	protected void btnReleaseactionPerformed(ActionEvent e) {
 		int selectRow = table.getSelectedRow();
-		System.out.println(selectRow);
+		if (selectRow >=0 ) {
+			int prisonerID = (int) table.getValueAt(selectRow, 1);
+			if (psListen !=null) {
+				psListen.releasePrisoner(prisonerID);
+			}	
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
+		}
+		
+	}
+	
+	public void setFormListener(TablePrisonerInListListener psListener) {
+		this.psListen = psListener;
+	}
+	protected void btnTransferactionPerformed(ActionEvent e) {
+		
+		PrisonListDAO plDAO = new PrisonListDAO();
+		List<PrisonList> prisonList = plDAO.getAllPrisonListExceptPrisonID(prisonID);
+		int toPrison = -1;
+		
+//		System.out.println(prisonList);
+		int selectRow = table.getSelectedRow();
+		if (selectRow >=0 ) {
+			int prisonerID = (int) table.getValueAt(selectRow, 1);
+			
+			Object[] obj = new Object[]  {};
+			for (PrisonList prison : prisonList) {
+				obj = appendValue(obj, prison.getName());
+			}
+			
+			String s = (String)JOptionPane.showInputDialog(
+                    null,
+                    "Please choose Prison Name:\n",
+                    "Transfer Prisoner",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    obj,
+                    obj[0]);
+			
+			int count = 0;
+			for (PrisonList prison : prisonList) {
+				if (s == prison.getName()) {
+					toPrison = prison.getId();
+					break;
+				}
+				count ++;
+			}
+			if (toPrison >= 0) {
+				psListen.transferPrisoner(prisonID, toPrison, prisonerID);
+			}
+			
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
+		}
+		
+	}
+
+
+	private Object[] appendValue(Object[] obj, Object newObj) {
+		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
+		temp.add(newObj);
+		return temp.toArray();
+	}
+	protected void scrollPanemouseClicked(MouseEvent e) {
+		table.clearSelection();
+		table.setFocusable(false);
+	}
+	protected void scrollPanemouseReleased(MouseEvent e) {
+		table.clearSelection();
+		table.setFocusable(false);
 	}
 }

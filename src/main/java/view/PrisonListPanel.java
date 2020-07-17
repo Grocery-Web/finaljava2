@@ -25,6 +25,7 @@ public class PrisonListPanel extends JPanel {
 	private PrisonListTableModel tableModel;
 	private JPopupMenu popup;
 	private TablePrisonListListener tableListener;
+	private TablePrisonerInListListener psListen;
 	
 	public PrisonListPanel() {
 		tableModel = new PrisonListTableModel();
@@ -87,5 +88,13 @@ public class PrisonListPanel extends JPanel {
 	
 	public void setTableListener(TablePrisonListListener tableListener) {
 		this.tableListener = tableListener;
+	}
+	
+	public void refresh() {
+		tableModel.fireTableDataChanged();
+	}
+	
+	public void setFormListener(TablePrisonerInListListener psListen) {
+		this.psListen = psListen;
 	}
 }

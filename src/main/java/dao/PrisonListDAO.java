@@ -40,6 +40,32 @@ public class PrisonListDAO {
 		return prisonList;
 	}
 	
+	public List<PrisonList> getAllPrisonListExceptPrisonID( int id) {
+		List<PrisonList> prisonList = new ArrayList<PrisonList>();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getAllPrisonListExceptPrisonID(?)}");
+			) 
+		{
+			ps.setInt(1, id);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				PrisonList pl = new PrisonList();
+				pl.setId(rs.getInt("id"));
+				pl.setName(rs.getString("name"));
+				pl.setAddress(rs.getString("address"));
+				pl.setImg(rs.getString("img"));
+				pl.setCapacity(rs.getInt("limit"));
+				pl.setQuantity(rs.getInt("prisonerNum"));	
+				
+				prisonList.add(pl);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return prisonList;
+	}
+	
 	public PrisonList getPrisonListByID(int id) {
 		
 		PrisonList pr = new PrisonList();
@@ -86,11 +112,11 @@ public class PrisonListDAO {
 				prisoner.setPrisonID(rs.getInt("id"));
 				prisoner.setName(rs.getString("name"));
 				prisoner.setDob(rs.getDate("dob"));
-				if (rs.getBoolean("gender" )) {
-					prisoner.setGender(Gender.female);
+				if (rs.getBoolean("gender" ) == true) {
+					prisoner.setGender(Gender.male);
 				}
 				else {
-					prisoner.setGender(Gender.male);
+					prisoner.setGender(Gender.female);
 				}
 				prisoner.setStartDate(rs.getDate("startDate"));	
 				prisoner.setDuration(rs.getInt("duration"));
@@ -104,5 +130,29 @@ public class PrisonListDAO {
 		}
 		
 		return prisoners;
+	}
+	
+	public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
+		
+		PrisonList prisonFrom = getPrisonListByID(idFrom);
+		PrisonList prisonTo = getPrisonListByID(idTo);
+		
+		if (prisonTo.getCapacity() >= prisonTo.getQuantity()) {
+			try (
+					var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+					PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
+				) 
+			{
+				ps.setInt(1, prisonerID);
+				ps.setInt(2, idTo);
+				
+				if ( ps.executeUpdate() > 0 ) {
+					JOptionPane.showMessageDialog(null, "Update account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+				}
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		else JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison");
 	}
 }

@@ -463,7 +463,28 @@ public class MainFrame extends JFrame {
 				
 				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
 				prisonListDetailFrame.setLocationRelativeTo(null);
-				prisonListDetailFrame.setVisible(true);			
+				prisonListDetailFrame.setVisible(true);	
+				
+				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
+					@Override
+					public void releasePrisoner(int idPrison) {
+						// TODO Auto-generated method stub
+						PrisonerDAO psDAO = new PrisonerDAO();
+						psDAO.releasePrisoner(idPrison);
+						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
+						prisonListDetailFrame.loadData(refreshList);
+						refresh();
+					}
+
+					@Override
+					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
+						// TODO Auto-generated method stub
+						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
+						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
+						prisonListDetailFrame.loadData(refreshList);
+						refresh();
+					}
+				});
 			}
 		});
 		
@@ -649,9 +670,14 @@ public class MainFrame extends JFrame {
 		complaintPanel.refresh();
 		criminalPanel.setData(criminalDAO.getAllCriminals());
 		criminalPanel.refresh();
+
 		prisonerPanel.setData(prisonerDAO.getUnreleasedPrisoners());
 		prisonerPanel.refresh();
 		victimPanel.setData(victimDAO.getAllVictims());
 		victimPanel.refresh();
+		
+		prisonListPanel.setData(prisonListDAO.getAllPrisonList());
+		prisonListPanel.refresh();
+
 	}
 }

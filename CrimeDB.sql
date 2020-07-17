@@ -609,9 +609,30 @@ begin
 		inner join Prisoner on PrisonList.id = Prisoner.prisonId
 		inner join Criminal on Criminal.id = Prisoner.criminalID
 		inner join Person on Criminal.personId = Person.id
-	where (PrisonList.id = @id) and (releaseStatus = 0)
+	where (PrisonList.id = @id) and (Prisoner.releaseStatus = 0)
 end
 go
+
+
+create proc releasePrisonerByID 
+@id int,
+@date date
+as
+begin
+	update Prisoner
+	set releaseStatus = 1, endDate = @date
+	where id = @id
+end
+go
+
+create proc transferPrisonerByID
+@prisonerID int,
+@toPrison int
+as
+begin
+	update Prisoner
+	set prisonId = @toPrison
+	where id = @prisonerID
 
 --find Prisoners by criminal ID
 create proc findUnreleasedPrisoners
@@ -623,6 +644,7 @@ begin
 	inner join Criminal cr on pr.criminalID = cr.id
 	inner join Person p on cr.personId = p.id
 	where releaseStatus = 0
+
 end
 go
 
