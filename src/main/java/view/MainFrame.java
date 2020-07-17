@@ -446,7 +446,17 @@ public class MainFrame extends JFrame {
 				
 				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
 				prisonListDetailFrame.setLocationRelativeTo(null);
-				prisonListDetailFrame.setVisible(true);			
+				prisonListDetailFrame.setVisible(true);	
+				
+				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
+					@Override
+					public void releasePrisoner(int id) {
+						// TODO Auto-generated method stub
+						PrisonerDAO psDAO = new PrisonerDAO();
+						psDAO.releasePrisoner(id);
+						refresh();
+					}
+				});
 			}
 		});
 		
@@ -621,5 +631,7 @@ public class MainFrame extends JFrame {
 		complaintPanel.refresh();
 		criminalPanel.setData(criminalDAO.getAllCriminals());
 		criminalPanel.refresh();
+		prisonListPanel.setData(prisonListDAO.getAllPrisonList());
+		prisonListPanel.refresh();
 	}
 }

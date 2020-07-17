@@ -59,6 +59,7 @@ public class PrisonListDetailFrame extends JFrame {
 	private String imgName;
 	private JButton btnRelease;
 	private JButton btnTransfer;
+	private TablePrisonerInListListener psListen ;
 
 	/**
 	 * Launch the application.
@@ -120,18 +121,18 @@ public class PrisonListDetailFrame extends JFrame {
 		
 		for (var acc : prs) {
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			
-			Date startDate = acc.getStartDate();
-			Calendar c = Calendar.getInstance();
-			c.setTime(startDate);
-			
-			c.add(Calendar.DAY_OF_MONTH, 2);
-			
-			String endDate = sdf.format(c.getTime());
-			
-			System.out.println("start date " + acc.getStartDate());
-			System.out.println("end date" + endDate);
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//			
+//			Date startDate = acc.getStartDate();
+//			Calendar c = Calendar.getInstance();
+//			c.setTime(startDate);
+//			
+//			c.add(Calendar.DAY_OF_MONTH, 2);
+//			
+//			String endDate = sdf.format(c.getTime());
+//			
+//			System.out.println("start date " + acc.getStartDate());
+//			System.out.println("end date" + endDate);
 			
 			model.addRow(new Object[] {		
 				
@@ -309,6 +310,14 @@ public class PrisonListDetailFrame extends JFrame {
 	}
 	protected void btnReleaseactionPerformed(ActionEvent e) {
 		int selectRow = table.getSelectedRow();
-		System.out.println(selectRow);
+		int prisonerID = (int) table.getValueAt(selectRow, 1);
+		if (psListen !=null) {
+			psListen.releasePrisoner(prisonerID);
+		}	
+		
+	}
+	
+	public void setFormListener(TablePrisonerInListListener psListener) {
+		this.psListen = psListener;
 	}
 }
