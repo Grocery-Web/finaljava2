@@ -646,7 +646,6 @@ begin
 	inner join Criminal cr on pr.criminalID = cr.id
 	inner join Person p on cr.personId = p.id
 	where releaseStatus = 0
-
 end
 go
 
