@@ -20,8 +20,11 @@ import entity.PrisonList;
 import entity.Prisoner;
 
 public class CriminalDetailsFrame extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JSplitPane splitPane;
-	private JSplitPane splitPane1;
 	private JButton okBtn;
 	private JButton cancelBtn;
 	private JPanel buttonsPanel;
@@ -46,6 +49,7 @@ public class CriminalDetailsFrame extends JFrame {
 		
 		//CREATE COMPONENTS
 		okBtn = new JButton("Submit");
+
 		cancelBtn = new JButton("Cancel");
 		buttonsPanel =  new JPanel();
 		prisonerFormPanel = new PrisonerFormPanel(cri,prisonLst, crimeTypes);
@@ -113,6 +117,7 @@ public class CriminalDetailsFrame extends JFrame {
 			}
 		});
 		
+//		FORM LISTENER
 		criFormPanel.setFormListener(new CriminalFormListener() {
 			@Override
 			public void formEventListener(String punishment) {
@@ -122,17 +127,37 @@ public class CriminalDetailsFrame extends JFrame {
 					splitPane.setDividerLocation(450);
 					splitPane.setDividerSize((Integer) UIManager.get("SplitPane.dividerSize"));
 					splitPane.getRightComponent().setVisible(true);
+					okBtn.setEnabled(false);
+					
+					prisonerFormPanel.getCondition(new PrisonerFormPanelListener() {
+						
+						@Override
+						public void tableEventValidation(boolean flag) {
+							okBtn.setEnabled(flag);
+						}
+					});
 				}else if(punishment.equals("administrative sanctions")) {
 					// CALL ADDITONAL FORM
 					cardLayout.show(panelCont, "2");
 					splitPane.setDividerLocation(450);
 					splitPane.setDividerSize((Integer) UIManager.get("SplitPane.dividerSize"));
 					splitPane.getRightComponent().setVisible(true);
+					okBtn.setEnabled(false);
+					
+					additionalPanel.getCondition(new AdditionalCriminalFormListener() {
+						
+						@Override
+						public void tableEventValidation(boolean flag) {
+							okBtn.setEnabled(flag);
+						}
+					});
 				}else {
 					splitPane.getRightComponent().setVisible(false);
+					okBtn.setEnabled(true);
 				}
 			}
 		});
+	
 		
 //		LAYOUT
 		add(splitPane, BorderLayout.CENTER);
