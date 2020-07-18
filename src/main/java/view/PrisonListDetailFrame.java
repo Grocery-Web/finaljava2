@@ -207,9 +207,13 @@ public class PrisonListDetailFrame extends JFrame {
 		txtAddress.setColumns(10);
 		
 		txtQuantity = new JTextField();
+		txtQuantity.setFont(new Font("Tahoma", Font.BOLD, 10));
+		txtQuantity.setEditable(false);
 		txtQuantity.setColumns(10);
 		
 		txtCapacity = new JTextField();
+		txtCapacity.setFont(new Font("Tahoma", Font.BOLD, 10));
+		txtCapacity.setEditable(false);
 		txtCapacity.setColumns(10);
 		
 		lblImg = new JLabel("");
