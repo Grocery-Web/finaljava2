@@ -26,6 +26,7 @@ public class PrisonerDAO {
 		{
 			while (rs.next()) {
 				Prisoner prisoner = new Prisoner();
+				prisoner.setPrisonerId(rs.getInt("id"));
 				prisoner.setPrisonId(rs.getInt("prisonId"));
 				prisoner.setCriminalId(rs.getInt("criminalID"));
 				prisoner.setStartDate(rs.getDate("startDate"));
