@@ -471,8 +471,13 @@ public class MainFrame extends JFrame {
 						// TODO Auto-generated method stub
 						PrisonerDAO psDAO = new PrisonerDAO();
 						psDAO.releasePrisoner(idPrison);
+						
 						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
 						prisonListDetailFrame.loadData(refreshList);
+						
+						PrisonList refreshPL = prDAO.getPrisonListByID(id);
+						prisonListDetailFrame.refreshQuantity(refreshPL);
+						
 						refresh();
 					}
 
@@ -482,6 +487,10 @@ public class MainFrame extends JFrame {
 						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
 						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
 						prisonListDetailFrame.loadData(refreshList);
+						
+						PrisonList refreshPL = prDAO.getPrisonListByID(id);
+						prisonListDetailFrame.refreshQuantity(refreshPL);
+						
 						refresh();
 					}
 				});
