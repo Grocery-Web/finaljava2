@@ -604,12 +604,12 @@ create proc getAllPrisonerByPrisonListID
 @id int
 as
 begin
-	select Prisoner.* , personId, Person.name, dob, person.gender, nationality
-	from PrisonList 
-		inner join Prisoner on PrisonList.id = Prisoner.prisonId
-		inner join Criminal on Criminal.id = Prisoner.criminalID
-		inner join Person on Criminal.personId = Person.id
-	where (PrisonList.id = @id) and (Prisoner.releaseStatus = 0)
+	select personId, Prisoner.id, Person.name, dob, gender, startDate, duration, endDate, nationality, type
+	from Criminal 
+		inner join Prisoner on Criminal.id = Prisoner.criminalID
+		inner join PrisonList on Prisoner.prisonId = PrisonList.id
+		inner join Person on Person.id = Criminal.personId
+	where (Prisoner.releaseStatus = 0) and (Prisoner.prisonId = @id)
 end
 go
 
@@ -648,6 +648,17 @@ begin
 	where releaseStatus = 0
 end
 go
+
+create proc findPrisonerByID 
+@id int
+as 
+begin
+	select *
+	from Prisoner
+	where @id = id
+end
+go
+
 
 
 /* END PROCEDURE PRISONER*/

@@ -97,7 +97,7 @@ public class PrisonListDAO {
 	public List<PrisonerInList> getAllPrisonerByPrisonListID(int id){
 		
 		List<PrisonerInList> prisoners = new ArrayList<PrisonerInList>();
-		PrisonerInList prisoner = new PrisonerInList();
+		
 		
 		try(
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
@@ -107,7 +107,7 @@ public class PrisonListDAO {
 			ps.setInt(1, id);
 			var rs = ps.executeQuery();
 			while (rs.next()) {
-				
+				PrisonerInList prisoner = new PrisonerInList();
 				prisoner.setPersonID(rs.getInt("personId"));
 				prisoner.setPrisonID(rs.getInt("id"));
 				prisoner.setName(rs.getString("name"));
@@ -121,6 +121,8 @@ public class PrisonListDAO {
 				prisoner.setStartDate(rs.getDate("startDate"));	
 				prisoner.setDuration(rs.getInt("duration"));
 				prisoner.setNationality(rs.getString("nationality"));
+				prisoner.setEndDate(rs.getDate("endDate"));
+				prisoner.setType(rs.getString("type"));
 				
 				prisoners.add(prisoner);
 				
@@ -137,7 +139,7 @@ public class PrisonListDAO {
 		PrisonList prisonFrom = getPrisonListByID(idFrom);
 		PrisonList prisonTo = getPrisonListByID(idTo);
 		
-		if (prisonTo.getCapacity() >= prisonTo.getQuantity()) {
+		if (prisonTo.getCapacity()  > prisonTo.getQuantity() + 1) {
 			try (
 					var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 					PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");

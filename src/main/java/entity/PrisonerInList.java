@@ -12,12 +12,13 @@ public class PrisonerInList {
 	private Date endDate;
 	private int duration;
 	private String nationality;
+	private String type;
 	
 	public PrisonerInList() {};
 	
+
 	public PrisonerInList(String name, int personID, int prisonID, Date dob, Gender gender, Date startDate,
-			Date endDate, int duration, String nationality) {
-		super();
+			Date endDate, int duration, String nationality, String type) {
 		this.name = name;
 		this.personID = personID;
 		this.prisonID = prisonID;
@@ -27,6 +28,15 @@ public class PrisonerInList {
 		this.endDate = endDate;
 		this.duration = duration;
 		this.nationality = nationality;
+		this.type = type;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Date getEndDate() {
