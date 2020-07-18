@@ -88,7 +88,6 @@ public class PrisonListDetailFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public PrisonListDetailFrame() {
-		setTitle("List of Prisoners");
 		initFrame();
 	}
 
@@ -182,6 +181,7 @@ public class PrisonListDetailFrame extends JFrame {
 	}
 	
 	private void initFrame() {
+		setTitle("List of Prisoners");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 852, 636);
 		contentPane = new JPanel();

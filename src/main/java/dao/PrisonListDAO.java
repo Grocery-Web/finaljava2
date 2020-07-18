@@ -139,7 +139,7 @@ public class PrisonListDAO {
 		PrisonList prisonFrom = getPrisonListByID(idFrom);
 		PrisonList prisonTo = getPrisonListByID(idTo);
 		
-		if (prisonTo.getCapacity() < prisonTo.getQuantity() + 1) {
+		if (prisonTo.getCapacity()  > prisonTo.getQuantity() + 1) {
 			try (
 					var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 					PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
