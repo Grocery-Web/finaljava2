@@ -121,6 +121,11 @@ public class PrisonListDetailFrame extends JFrame {
 		loadData(prs);
 		
 	}
+	
+	public void refreshQuantity(PrisonList pr) {
+		txtCapacity.setText(Integer.toString(pr.getCapacity()));
+		txtQuantity.setText(Integer.toString(pr.getQuantity()));		
+	}
 
 	public void loadData(List<PrisonerInList> prs) {
 		var model = new DefaultTableModel();
@@ -137,19 +142,6 @@ public class PrisonListDetailFrame extends JFrame {
 		
 		
 		for (var acc : prs) {
-			
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//			
-//			Date startDate = acc.getStartDate();
-//			Calendar c = Calendar.getInstance();
-//			c.setTime(startDate);
-//			
-//			c.add(Calendar.DAY_OF_MONTH, 2);
-//			
-//			String endDate = sdf.format(c.getTime());
-//			
-//			System.out.println("start date " + acc.getStartDate());
-//			System.out.println("end date" + endDate);
 			
 			if (acc.getEndDate() != null) {
 				model.addRow(new Object[] {		
