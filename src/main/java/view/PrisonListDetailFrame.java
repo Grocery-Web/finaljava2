@@ -134,6 +134,8 @@ public class PrisonListDetailFrame extends JFrame {
 		model.addColumn("Duration (days)");
 		model.addColumn("End");
 		model.addColumn("Nationality");
+		model.addColumn("Type");
+		
 		
 		for (var acc : prs) {
 			
@@ -150,14 +152,29 @@ public class PrisonListDetailFrame extends JFrame {
 //			System.out.println("start date " + acc.getStartDate());
 //			System.out.println("end date" + endDate);
 			
-			model.addRow(new Object[] {		
+			if (acc.getEndDate() != null) {
+				model.addRow(new Object[] {		
+						
+						acc.getPersonID(), acc.getPrisonID(), 
+						acc.getName(), acc.getDob(),
+						acc.getGender(),  acc.getStartDate(),
+						acc.getDuration(), acc.getEndDate(), 
+						acc.getNationality(), acc.getType(),
+				});
 				
-				acc.getPersonID(), acc.getPrisonID(), 
-				acc.getName(), acc.getDob(),
-				acc.getGender(),  acc.getStartDate(),
-				acc.getDuration(), 12121212, 
-				acc.getNationality()
-			});
+			}
+			else {
+				model.addRow(new Object[] {		
+						
+						acc.getPersonID(), acc.getPrisonID(), 
+						acc.getName(), acc.getDob(),
+						acc.getGender(),  acc.getStartDate(),
+						acc.getDuration(), "NULL", 
+						acc.getNationality(), acc.getType(),
+				});
+			}
+				
+			
 		}
 		
 		
@@ -397,7 +414,6 @@ public class PrisonListDetailFrame extends JFrame {
 		else {
 			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
 		}
-		
 	}
 
 
