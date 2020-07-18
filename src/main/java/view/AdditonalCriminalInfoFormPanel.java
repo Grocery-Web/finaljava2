@@ -6,27 +6,42 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.text.ParseException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 import entity.Criminal;
 
 public class AdditonalCriminalInfoFormPanel extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
+//	listener
+	private AdditionalCriminalFormListener formListener;
+	
+//	components
 	private JLabel title;
 	private JLabel hisOfViolent;
 	private JDateChooser appliedDate;
+	private JTextFieldDateEditor editor;
+	
+//	validation
+	private JLabel q1;
+	private boolean cd1 = false;
+	private String s = Character.toString("\u2713".toCharArray()[0]);
 	
 //	updated Criminal
 	private String updatedViolent;
@@ -42,7 +57,18 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		
 		appliedDate = new JDateChooser();
 		appliedDate.setDateFormatString("yyyy-MM-dd");
-		appliedDate.setPreferredSize(new Dimension(120, 20));
+		appliedDate.setPreferredSize(new Dimension(200,20));
+		editor = (JTextFieldDateEditor) appliedDate.getDateEditor();
+		editor.setEditable(false);
+		appliedDate.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				cd1Check();
+				getValidation();
+			}
+		});
+		q1 = new JLabel(); q1.setPreferredSize(new Dimension(10, 20));;
 		
 		//SET HISTORY OF VIOLENT ON RENDER AND 
 		if(cri.getHisOfViolent() == null) {
@@ -110,6 +136,10 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		gc.anchor = GridBagConstraints.FIRST_LINE_START;
 		add(appliedDate,gc);
 		
+		gc.gridx = 2;
+		gc.anchor = GridBagConstraints.FIRST_LINE_START;
+		add(q1, gc);
+		
 //		End of Edit Form
 	}
 	
@@ -128,5 +158,32 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 		criminal.setHisOfViolent(updatedViolent);
 		
 		return criminal;
+	}
+	
+//	FUNCTIONS TO CHECK INPUT CONDITIONS
+	private void cd1Check() {
+		Date date1 = appliedDate.getDate();
+		Date date2 = new Date();
+		if (date1 != null) {
+			if (date1.compareTo(date2) <= 0) {				
+				q1.setText(s); q1.setForeground(new Color(0, 153, 51));
+				q1.setToolTipText(null);
+				cd1 = true;
+			} else {
+				q1.setText("?"); q1.setForeground(Color.RED);
+				q1.setToolTipText("Select a date that is no later than today.");
+				cd1 = false;
+			}
+		}
+	}
+	
+	public void getValidation() {
+		if(formListener != null) {
+			formListener.tableEventValidation(cd1);
+		}
+	}
+	
+	public void getCondition(AdditionalCriminalFormListener formListener) {
+		this.formListener = formListener;
 	}
 }
