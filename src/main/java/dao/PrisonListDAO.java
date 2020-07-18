@@ -157,4 +157,23 @@ public class PrisonListDAO {
 		}
 		else JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison");
 	}
+	
+	public void updatePrisonInfo(String name, String address, int prisonID) {
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call updatePrisonList(?,?,?)}");
+			) 
+		{
+			ps.setString(1, name);
+			ps.setString(2, address);
+			ps.setInt(3, prisonID);
+			
+			if ( ps.executeUpdate() > 0 ) {
+				JOptionPane.showMessageDialog(null, "Update Prison successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }

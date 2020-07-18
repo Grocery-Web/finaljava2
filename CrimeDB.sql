@@ -725,6 +725,20 @@ begin
 end
 go
 
+create proc updatePrisonList
+@name nvarchar(MAX),
+@address nvarchar(MAX),
+@id int
+as
+begin
+	update PrisonList
+	set 
+		name = @name,
+		address = @address
+	where id = @id
+end
+go
+
 /* END PROCEDURE PRISONER */
 
 

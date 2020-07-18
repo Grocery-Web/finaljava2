@@ -210,7 +210,7 @@ public class PrisonListDetailFrame extends JFrame {
 		
 		lblImg = new JLabel("");
 		
-		btnUploadIMG = new JButton("Update Image");
+		btnUploadIMG = new JButton("Browse ...");
 		btnUploadIMG.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnUploadIMGactionPerformed(e);
@@ -267,8 +267,8 @@ public class PrisonListDetailFrame extends JFrame {
 								.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
 								.addComponent(txtQuantity, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
 								.addComponent(txtCapacity, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addComponent(lblImg, GroupLayout.PREFERRED_SIZE, 380, GroupLayout.PREFERRED_SIZE)
+							.addGap(40)
+							.addComponent(lblImg, GroupLayout.PREFERRED_SIZE, 358, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
 							.addComponent(btnUploadIMG))
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
@@ -286,6 +286,7 @@ public class PrisonListDetailFrame extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(25)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblImg, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
 						.addComponent(btnUploadIMG)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -302,8 +303,7 @@ public class PrisonListDetailFrame extends JFrame {
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblCapacity, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtCapacity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(lblImg, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+								.addComponent(txtCapacity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addGap(36)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE)
 					.addGap(28)
@@ -350,6 +350,10 @@ public class PrisonListDetailFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		if (psListen !=null) {
+			psListen.savePrisonInfo(txtName.getText(), txtAddress.getText(), prisonID);
+		}	
+		
 	}
 	
 	protected void btnReleaseactionPerformed(ActionEvent e) {
@@ -369,13 +373,13 @@ public class PrisonListDetailFrame extends JFrame {
 	public void setFormListener(TablePrisonerInListListener psListener) {
 		this.psListen = psListener;
 	}
+	
 	protected void btnTransferactionPerformed(ActionEvent e) {
 		
 		PrisonListDAO plDAO = new PrisonListDAO();
 		List<PrisonList> prisonList = plDAO.getAllPrisonListExceptPrisonID(prisonID);
 		int toPrison = -1;
 		
-//		System.out.println(prisonList);
 		int selectRow = table.getSelectedRow();
 		if (selectRow >=0 ) {
 			int prisonerID = (int) table.getValueAt(selectRow, 1);
