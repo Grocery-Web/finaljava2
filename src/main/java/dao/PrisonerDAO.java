@@ -98,6 +98,19 @@ public class PrisonerDAO {
 				prisoner.setDuration(rs.getInt("duration"));
 				prisoner.setReleasedStatus(rs.getBoolean("releaseStatus"));
 				prisoner.setType(rs.getString("type"));
+				prisoner.setName(rs.getString("personName"));
+				prisoner.setDob(rs.getDate("dob"));
+				prisoner.setNationality(rs.getString("nationality"));
+				prisoner.setImage(rs.getString("image"));
+				prisoner.setPrisonName(rs.getString("prisonName"));
+				prisoner.setHisOfViolent(rs.getString("hisOfViolent"));
+				Gender gender;
+				if(rs.getBoolean("gender")) {
+					gender = Gender.male;
+				} else {
+					gender = Gender.female;
+				}
+				prisoner.setGender(gender);
 			}			
 			
 		} catch (SQLException e) {
@@ -132,6 +145,25 @@ public class PrisonerDAO {
 				JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		
+	}
+	
+public void transferPrisoner(int PrisonerID, int prisonId) {
+			
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
+				)
+		{
+			ps.setInt(1, PrisonerID);
+			ps.setInt(2, prisonId);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Transfer successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			// TODO: handle exception
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
 		
 	}
 }

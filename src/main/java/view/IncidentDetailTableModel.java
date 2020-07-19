@@ -43,28 +43,25 @@ public class IncidentDetailTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Criminal criminal = db.get(rowIndex);
-		PersonDAO personDAO = new PersonDAO();
-		Person per = new Person();
-		per = personDAO.findPersonById(criminal.getPersonalId());
 		
 		switch (columnIndex) {
 		case 0: {
 			return criminal.getCriminalId();
 		}
 		case 1: {
-			return per.getName();
+			return criminal.getName();
 		}
 		case 2: {
-			return per.getGender();
+			return criminal.getGender();
 		}
 		case 3: {
-			return per.getDob();
+			return criminal.getDob();
 		}
 		case 4: {
-			return per.getAddress();
+			return criminal.getAddress();
 		}
 		case 5: {
-			return per.getNationality();
+			return criminal.getNationality();
 		}
 		case 6: {
 			return criminal.getPunishment();

@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -21,6 +23,7 @@ public class PrisonerPanel extends JPanel{
 	private JTable table;
 	private PrisonerTableModel tableModel;
 	private JPopupMenu popup;
+	private TablePrisonerListener tableListener;
 	
 	public PrisonerPanel() {
 		tableModel = new PrisonerTableModel();
@@ -42,6 +45,39 @@ public class PrisonerPanel extends JPanel{
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					// When right click on the row of table, the pop up will be showed up
 					popup.show(table, e.getX(), e.getY());
+				}
+			}
+		});
+		
+		detailItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventDetail(id);
+				}
+			}
+		});
+		
+		releaseItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventRelease(id);
+				}
+			}
+		});
+		
+		transferItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventTransfer(id);
 				}
 			}
 		});
@@ -73,5 +109,9 @@ public class PrisonerPanel extends JPanel{
 	
 	public void refresh() {
 		tableModel.fireTableDataChanged();
+	}
+	
+	public void setTableListener(TablePrisonerListener tableListener) {
+		this.tableListener = tableListener;
 	}
 }

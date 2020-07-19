@@ -498,11 +498,15 @@ end
 go
 
 -- find Criminal by id
+
 create proc findCriminalByPersonAndComplaintId
 @personId int, @complaintId int
 as
 begin
-	select * from Criminal where personId = @personId and complaintId = @complaintId
+	select cr.*, p.name as personName, p.gender, p.nationality, p.address, p.dob
+	from Criminal cr
+	inner join Person p on cr.personId = p.id
+	where cr.personId = @personId and complaintId = @complaintId
 end
 go
 
@@ -648,16 +652,19 @@ begin
 end
 go
 
+-- find prisoner by id
 create proc findPrisonerByID 
 @id int
 as 
 begin
-	select *
-	from Prisoner
-	where @id = id
+	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName, cr.hisOfViolent, p.image, p.dob
+	from Prisoner pr
+	inner join PrisonList pl on pr.prisonId = pl.id
+	inner join Criminal cr on pr.criminalID = cr.id
+	inner join Person p on cr.personId = p.id
+	where @id = pr.id
 end
 go
-
 
 
 /* END PROCEDURE PRISONER*/

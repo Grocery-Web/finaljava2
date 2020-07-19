@@ -176,4 +176,33 @@ public class PrisonListDAO {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	public List<PrisonList> getAllAvailablePrisons() {
+		List<PrisonList> prisonList = new ArrayList<PrisonList>();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getAllPrisonList}");
+				ResultSet rs = ps.executeQuery();
+			) 
+		{
+			while (rs.next()) {
+				if (rs.getInt("limit") == rs.getInt("prisonerNum")) {
+					continue;
+				} else {
+					PrisonList pl = new PrisonList();
+					pl.setId(rs.getInt("id"));
+					pl.setName(rs.getString("name"));
+					pl.setAddress(rs.getString("address"));
+					pl.setImg(rs.getString("img"));
+					pl.setCapacity(rs.getInt("limit"));
+					pl.setQuantity(rs.getInt("prisonerNum"));	
+					
+					prisonList.add(pl);
+				}
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return prisonList;
+	}
 }
