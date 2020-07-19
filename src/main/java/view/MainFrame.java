@@ -603,7 +603,11 @@ public class MainFrame extends JFrame {
 				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
 				List<PrisonList> prisonList = prisonListDAO.getAllAvailablePrisons();
 //				PrisonList currentPrison = prisonListDAO.getPrisonListByID(prisoner.getPrisonId());
-				prisonList.remove(prisoner.getPrisonId()-1);
+				for (int i = 0; i < prisonList.size(); i++) {
+					if (prisonList.get(i).getId() == prisoner.getPrisonId()) {
+						prisonList.remove(i);
+					}
+				}
 				relPrisoner = new RelevantPrisonerForm(prisoner, prisonList);
 				relPrisoner.setVisible(true);
 				relPrisoner.setFormListener(new RelevantPrisonerFormListener() {
