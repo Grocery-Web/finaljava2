@@ -665,84 +665,83 @@ public class ComplaintDetailFrame extends JFrame {
 	protected void btnSubmitActionPerformed(ActionEvent e, int cplId) {
 		System.out.println(map);
 		
-//		int action = JOptionPane.showConfirmDialog(null,
-//				"This action means the complaint will be upgraded to be a serious situation. Do you really want to verify?",
-//				"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
-//
-//		if (action == JOptionPane.OK_OPTION && tableListener != null) {
-//			// GET INFO OF COMPLAINT
-//			String getCompName = textCompName.getText();
-//			String getDeclarantName = textDeclarantName.getText();
-//			String getCompDetail = textCompDetail.getText();
-//			String getCompPlace = textCompPlace.getText();
-//
-//			Date getDateTime = null;
-//			Date getDate = complaintDate.getDate();
-//			Date getTime = (Date) timeSpinner.getValue();
-//			String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
-//			try {
-//				getDateTime = sdf2.parse(DateTime);
-//			} catch (ParseException e1) {
-//				e1.printStackTrace();
-//			}
-//
-//			Complaint complaint = new Complaint(cplId, getCompName, getDateTime, getCompPlace, getDeclarantName,
-//					getCompDetail, true);
-//
-//			// GET LIST INFO OF CRIMINALS
-//			HashMap<Person, String> map = tableModel.getListPerson();
-//			List<Criminal> list = new ArrayList<Criminal>();		
-//			
-//			for (Map.Entry<Person, String> entry : map.entrySet()) {
-//				int rating;
-//				Criminal cri = new Criminal();
-//				
-//				cri.setPersonalId(entry.getKey().getPersonalId());
-//				cri.setComplaintId(cplId);
-//				cri.setPunishment("in process");
-//				switch (entry.getValue()) {
-//				case "Assault and Battery":
-//					rating = 2;
-//					break;
-//				case "Kidnapping":
-//					rating = 5;
-//					break;
-//				case "Homicide":
-//					rating = 5;
-//					break;
-//				case "Rape":
-//					rating = 3;
-//					break;
-//				case "False Imprisonment":
-//					rating = 3;
-//					break;
-//				case "Theft":
-//					rating = 2;
-//					break;
-//				case "Arson":
-//					rating = 1;
-//					break;
-//				case "False Pretenses":
-//					rating = 4;
-//					break;
-//				case "White Collar Crimes":
-//					rating = 4;
-//					break;
-//				case "Receipt of Stolen Goods":
-//					rating = 1;
-//					break;
-//				default:
-//					rating = 5;
-//				}
-//				;
-//				cri.setRating(rating);
-//				list.add(cri);
-//			}
-//			
-//			if(tableListener != null) {
-//				tableListener.tableEventSubmited(complaint, list);
-//			}
-//		}
+		int action = JOptionPane.showConfirmDialog(null,
+				"This action means the complaint will be upgraded to be a serious situation. Do you really want to verify?",
+				"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
+
+		if (action == JOptionPane.OK_OPTION && tableListener != null) {
+			// GET INFO OF COMPLAINT AFTER UPDATING (INCIDENT)
+			String getCompName = textCompName.getText();
+			String getDeclarantName = textDeclarantName.getText();
+			String getCompDetail = textCompDetail.getText();
+			String getCompPlace = textCompPlace.getText();
+
+			Date getDateTime = null;
+			Date getDate = complaintDate.getDate();
+			Date getTime = (Date) timeSpinner.getValue();
+			String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
+			try {
+				getDateTime = sdf2.parse(DateTime);
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+
+			Complaint complaint = new Complaint(cplId, getCompName, getDateTime, getCompPlace, getDeclarantName,
+					getCompDetail, true);
+
+			// GET LIST INFO OF CRIMINALS
+			List<Criminal> list = new ArrayList<Criminal>();		
+			
+			for (Map.Entry<Person, String> entry : map.entrySet()) {
+				int rating;
+				Criminal cri = new Criminal();
+				
+				cri.setPersonalId(entry.getKey().getPersonalId());
+				cri.setComplaintId(cplId);
+				cri.setPunishment("in process");
+				switch (entry.getValue()) {
+				case "Assault and Battery":
+					rating = 2;
+					break;
+				case "Kidnapping":
+					rating = 5;
+					break;
+				case "Homicide":
+					rating = 5;
+					break;
+				case "Rape":
+					rating = 3;
+					break;
+				case "False Imprisonment":
+					rating = 3;
+					break;
+				case "Theft":
+					rating = 2;
+					break;
+				case "Arson":
+					rating = 1;
+					break;
+				case "False Pretenses":
+					rating = 4;
+					break;
+				case "White Collar Crimes":
+					rating = 4;
+					break;
+				case "Receipt of Stolen Goods":
+					rating = 1;
+					break;
+				default:
+					rating = 5;
+				}
+				;
+				cri.setRating(rating);
+				list.add(cri);
+			}
+			
+			if(tableListener != null) {
+				tableListener.tableEventSubmited(complaint, list);
+			}
+		}
 	}
 
 	protected void btnUpdateActionPerformed(ActionEvent e, int cplId) {	
