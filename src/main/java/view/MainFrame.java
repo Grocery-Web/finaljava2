@@ -245,24 +245,21 @@ public class MainFrame extends JFrame {
 			
 			//COMPLAINT DETALS TABLE LISTENER
 			@Override
-			public void tableEventDetail(int id) {
-				Complaint complaint = complaintDAO.findComplaintById(id);
+			public void tableEventDetail(int cplId) {
+				Complaint complaint = complaintDAO.findComplaintById(cplId);
 				cplDetailFrame = new ComplaintDetailFrame(complaint);
 				cplDetailFrame.setLocationRelativeTo(null);
 				cplDetailFrame.setVisible(true);
-				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
+				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(cplId));
 				
 				cplDetailFrame.setTableListener(new TableComplaintDetailListener() {
-					@Override
-					public void tableEventDeleted(int personId) {
-						comDetailDAO.removePerson(personId,id);
-						cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(id));
-						cplDetailFrame.refresh();
-					}
 
 					@Override
-					public void tableEventUpdated(Complaint cpl) {
-						complaintDAO.updateComplaintById(id, cpl);
+					public void tableEventUpdated(Complaint cpl,List<Integer> lstID) {
+						complaintDAO.updateComplaintById(cplId, cpl);
+						if(lstID.size()>0) {
+							comDetailDAO.removePerson(lstID,cplId);
+						}
 						JOptionPane.showMessageDialog(null, "Update complaint successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 						refresh();
 						cplDetailFrame.dispose();
@@ -270,7 +267,7 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
-						complaintDAO.updateComplaintById(id, cpl);
+						complaintDAO.updateComplaintById(cplId, cpl);
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
 							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
@@ -468,7 +465,6 @@ public class MainFrame extends JFrame {
 				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
 					@Override
 					public void releasePrisoner(int idPrison) {
-						// TODO Auto-generated method stub
 						PrisonerDAO psDAO = new PrisonerDAO();
 						psDAO.releasePrisoner(idPrison);
 						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
@@ -478,7 +474,6 @@ public class MainFrame extends JFrame {
 
 					@Override
 					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
-						// TODO Auto-generated method stub
 						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
 						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
 						prisonListDetailFrame.loadData(refreshList);

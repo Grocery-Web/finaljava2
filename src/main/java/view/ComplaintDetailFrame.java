@@ -85,6 +85,9 @@ public class ComplaintDetailFrame extends JFrame {
 	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public JLabel q7;
 	
+	private HashMap<Person, String> map;
+	private List<Integer> listRemovedPerson  = new ArrayList<Integer>();
+	
 	public ComplaintDetailFrame(Complaint cpl) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 913, 500);
@@ -366,9 +369,16 @@ public class ComplaintDetailFrame extends JFrame {
 
 				int action = JOptionPane.showConfirmDialog(null, "Do you really want to remove this person",
 						"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
-				if (action == JOptionPane.OK_OPTION && tableListener != null) {
-					tableListener.tableEventDeleted(id);
+			
+				for (Person perInMap : map.keySet()) {
+					if(perInMap.getPersonalId() == id) {
+						map.remove(perInMap);
+						listRemovedPerson.add(id);
+						break;
+					}
 				}
+				
+				setData(map);	//refresh table
 			}
 		});
 
@@ -640,6 +650,7 @@ public class ComplaintDetailFrame extends JFrame {
 	
 	public void setData(HashMap<Person, String> db) {
 		tableModel.setData(db);
+		this.map = db;
 		cd7Check(); checkUnlock();
 	}
 
@@ -652,85 +663,89 @@ public class ComplaintDetailFrame extends JFrame {
 	}
 
 	protected void btnSubmitActionPerformed(ActionEvent e, int cplId) {
-		int action = JOptionPane.showConfirmDialog(null,
-				"This action means the complaint will be upgraded to be a serious situation. Do you really want to verify?",
-				"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
-
-		if (action == JOptionPane.OK_OPTION && tableListener != null) {
-
-			// GET INFO OF COMPLAINT
-			String getCompName = textCompName.getText();
-			String getDeclarantName = textDeclarantName.getText();
-			String getCompDetail = textCompDetail.getText();
-			String getCompPlace = textCompPlace.getText();
-
-			Date getDateTime = null;
-			Date getDate = complaintDate.getDate();
-			Date getTime = (Date) timeSpinner.getValue();
-			String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
-			try {
-				getDateTime = sdf2.parse(DateTime);
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-			}
-
-			Complaint complaint = new Complaint(cplId, getCompName, getDateTime, getCompPlace, getDeclarantName,
-					getCompDetail, true);
-
-			// GET LIST INFO OF CRIMINALS
-			HashMap<Person, String> map = tableModel.getListPerson();
-			List<Criminal> list = new ArrayList<Criminal>();		
-			
-			for (Map.Entry<Person, String> entry : map.entrySet()) {
-				int rating;
-				Criminal cri = new Criminal();
-				
-				cri.setPersonalId(entry.getKey().getPersonalId());
-				cri.setComplaintId(cplId);
-				cri.setPunishment("in process");
-				switch (entry.getValue()) {
-				case "Assault and Battery":
-					rating = 2;
-					break;
-				case "Kidnapping":
-					rating = 5;
-					break;
-				case "Homicide":
-					rating = 5;
-					break;
-				case "Rape":
-					rating = 3;
-					break;
-				case "False Imprisonment":
-					rating = 3;
-					break;
-				case "Theft":
-					rating = 2;
-					break;
-				case "Arson":
-					rating = 1;
-					break;
-				case "False Pretenses":
-					rating = 4;
-					break;
-				case "White Collar Crimes":
-					rating = 4;
-					break;
-				case "Receipt of Stolen Goods":
-					rating = 1;
-					break;
-				default:
-					rating = 5;
-				}
-				;
-				cri.setRating(rating);
-				list.add(cri);
-			}
-			tableListener.tableEventSubmited(complaint, list);
-		}
+		System.out.println(map);
+		
+//		int action = JOptionPane.showConfirmDialog(null,
+//				"This action means the complaint will be upgraded to be a serious situation. Do you really want to verify?",
+//				"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
+//
+//		if (action == JOptionPane.OK_OPTION && tableListener != null) {
+//			// GET INFO OF COMPLAINT
+//			String getCompName = textCompName.getText();
+//			String getDeclarantName = textDeclarantName.getText();
+//			String getCompDetail = textCompDetail.getText();
+//			String getCompPlace = textCompPlace.getText();
+//
+//			Date getDateTime = null;
+//			Date getDate = complaintDate.getDate();
+//			Date getTime = (Date) timeSpinner.getValue();
+//			String DateTime = sdf0.format(getDate) + " " + sdf1.format(getTime);
+//			try {
+//				getDateTime = sdf2.parse(DateTime);
+//			} catch (ParseException e1) {
+//				e1.printStackTrace();
+//			}
+//
+//			Complaint complaint = new Complaint(cplId, getCompName, getDateTime, getCompPlace, getDeclarantName,
+//					getCompDetail, true);
+//
+//			// GET LIST INFO OF CRIMINALS
+//			HashMap<Person, String> map = tableModel.getListPerson();
+//			List<Criminal> list = new ArrayList<Criminal>();		
+//			
+//			for (Map.Entry<Person, String> entry : map.entrySet()) {
+//				int rating;
+//				Criminal cri = new Criminal();
+//				
+//				cri.setPersonalId(entry.getKey().getPersonalId());
+//				cri.setComplaintId(cplId);
+//				cri.setPunishment("in process");
+//				switch (entry.getValue()) {
+//				case "Assault and Battery":
+//					rating = 2;
+//					break;
+//				case "Kidnapping":
+//					rating = 5;
+//					break;
+//				case "Homicide":
+//					rating = 5;
+//					break;
+//				case "Rape":
+//					rating = 3;
+//					break;
+//				case "False Imprisonment":
+//					rating = 3;
+//					break;
+//				case "Theft":
+//					rating = 2;
+//					break;
+//				case "Arson":
+//					rating = 1;
+//					break;
+//				case "False Pretenses":
+//					rating = 4;
+//					break;
+//				case "White Collar Crimes":
+//					rating = 4;
+//					break;
+//				case "Receipt of Stolen Goods":
+//					rating = 1;
+//					break;
+//				default:
+//					rating = 5;
+//				}
+//				;
+//				cri.setRating(rating);
+//				list.add(cri);
+//			}
+//			
+//			if(tableListener != null) {
+//				tableListener.tableEventSubmited(complaint, list);
+//			}
+//		}
 	}
 
-	protected void btnUpdateActionPerformed(ActionEvent e, int cplId) {
+	protected void btnUpdateActionPerformed(ActionEvent e, int cplId) {	
 		// GET INFO OF COMPLAINT
 		String getCompName = textCompName.getText();
 		String getDeclarantName = textDeclarantName.getText();
@@ -749,7 +764,9 @@ public class ComplaintDetailFrame extends JFrame {
 
 		Complaint complaint = new Complaint(cplId, getCompName, getDateTime, getCompPlace, getDeclarantName,
 				getCompDetail, false);
-
-		tableListener.tableEventUpdated(complaint);
+		
+		if(tableListener != null) {
+			tableListener.tableEventUpdated(complaint,listRemovedPerson);
+		}
 	}
 }

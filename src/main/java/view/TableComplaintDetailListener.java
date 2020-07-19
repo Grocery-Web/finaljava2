@@ -7,7 +7,6 @@ import entity.Complaint;
 import entity.Criminal;
 
 public interface TableComplaintDetailListener extends EventListener{
-	public void tableEventDeleted(int id);
-	public void tableEventUpdated(Complaint cpl);
+	public void tableEventUpdated(Complaint cpl,List<Integer> lstID);
 	public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri);
 }
