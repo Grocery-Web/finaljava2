@@ -498,11 +498,15 @@ end
 go
 
 -- find Criminal by id
+
 create proc findCriminalByPersonAndComplaintId
 @personId int, @complaintId int
 as
 begin
-	select * from Criminal where personId = @personId and complaintId = @complaintId
+	select cr.*, p.name as personName, p.gender, p.nationality, p.address, p.dob
+	from Criminal cr
+	inner join Person p on cr.personId = p.id
+	where cr.personId = @personId and complaintId = @complaintId
 end
 go
 
