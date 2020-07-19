@@ -60,6 +60,28 @@ public class PrisonerPanel extends JPanel{
 			}
 		});
 		
+		releaseItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventRelease(id);
+				}
+			}
+		});
+		
+		transferItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow(); // Start from 0
+				int id = (int) table.getModel().getValueAt(row, 0);
+
+				if (tableListener != null) {
+					tableListener.tableEventTransfer(id);
+				}
+			}
+		});
+		
 //		table.setAutoCreateRowSorter(true);  // Search data
 
 		setLayout(new BorderLayout());

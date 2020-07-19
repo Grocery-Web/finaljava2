@@ -81,6 +81,7 @@ public class MainFrame extends JFrame {
 	private RelevantCriminalForm relCriminal;
 	private IncidentDetailFrame incDetailFrame;
 	private PrisonerDetailFrame prisonerDetailFrame;
+	private RelevantPrisonerForm relPrisoner;
 
 	/**
 	 * Launch the application.
@@ -586,19 +587,31 @@ public class MainFrame extends JFrame {
 				prisonerDetailFrame = new PrisonerDetailFrame(prisoner);
 				prisonerDetailFrame.setLocationRelativeTo(null);
 				prisonerDetailFrame.setVisible(true);
-				
-//				prisonerDetailFrame.setTableListener(new TableIncidentDetailListener() {
-//
-//					@Override
-//					public void tableEventUpdated(Complaint inc) {
-//						complaintDAO.updateComplaintById(id, inc);
-//						JOptionPane.showMessageDialog(null, "Update incident successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-//						refresh();
-//						incDetailFrame.dispose();
-//					}
-//					
-//				});
 				prisonerDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			}
+			
+			@Override
+			public void tableEventRelease(int id) {
+				prisonerDAO.releasePrisoner(id);
+				refresh();
+			}
+			
+			@Override
+			public void tableEventTransfer(int id) {
+				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
+				List<PrisonList> prisonList = prisonListDAO.getAllAvailablePrisons();
+//				PrisonList currentPrison = prisonListDAO.getPrisonListByID(prisoner.getPrisonId());
+				prisonList.remove(prisoner.getPrisonId()-1);
+				relPrisoner = new RelevantPrisonerForm(prisoner, prisonList);
+				relPrisoner.setVisible(true);
+				relPrisoner.setFormListener(new RelevantPrisonerFormListener() {
+					@Override
+					public void prisonerFormEventListener(Prisoner prisoner, PrisonList prison) {
+						prisonerDAO.transferPrisoner(id, prison.getId());
+						relPrisoner.dispose();
+						refresh();
+					}
+				});
 			}
 		});
 		

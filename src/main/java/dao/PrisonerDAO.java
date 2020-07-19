@@ -147,4 +147,23 @@ public class PrisonerDAO {
 		}
 		
 	}
+	
+public void transferPrisoner(int PrisonerID, int prisonId) {
+			
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
+				)
+		{
+			ps.setInt(1, PrisonerID);
+			ps.setInt(2, prisonId);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Transfer successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			// TODO: handle exception
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		
+	}
 }

@@ -74,6 +74,7 @@ public class PrisonerDetailFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setTitle("Prisoner Detail");
 		
 		// Prisoner name
 		JLabel lblName = new JLabel("Name: ");	
