@@ -95,7 +95,6 @@ create table Prisoner (
 )
 go
 
-
 /* victim table */
 create table Victim (
 	id int identity(1,1) primary key,
@@ -422,7 +421,7 @@ BEGIN
 END
 GO
 
--- remove person from complaint table
+-- get CrimeType of Person
 create proc getCrimeTypeOfPerson
 @personId int, @compId int
 as 
@@ -430,15 +429,6 @@ begin
 	select crimeType from ComplaintDetail where personId = @personId AND compId = @compId ;  
 end 
 go
-
--- get victim list by incident id
-CREATE PROC getVictimListByIncidentId
-@incidentId int
-AS
-BEGIN
-	SELECT * FROM Victim WHERE complaintID = @incidentId
-END 
-GO
 
 /* END PROCEDURE COMPLAINT DETAIL */
 
@@ -575,6 +565,15 @@ BEGIN
 	SET alive = 1
 	WHERE Person.id = @personId
 END
+GO
+
+-- get victim list by incident id
+CREATE PROC getVictimListByIncidentId
+@incidentId int
+AS
+BEGIN
+	SELECT * FROM Victim WHERE complaintID = @incidentId
+END 
 GO
 
 /* END PROCEDURE VICTIM */

@@ -85,8 +85,4 @@ public class ComplaintDetailTableModel extends AbstractTableModel{
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
 		}
 	}
-	
-	public HashMap<Person, String> getListPerson() {
-		return db;
-	}
 }

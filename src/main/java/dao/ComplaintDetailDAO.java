@@ -39,7 +39,6 @@ public class ComplaintDetailDAO {
 
 		HashMap<Person, String> map = new HashMap<Person, String>();
 		
-
 		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call getComplaintDetailByComplaintId(?)}");) {
 			ps.setInt(1, id);
@@ -89,15 +88,21 @@ public class ComplaintDetailDAO {
 		}
 	}
 	
-	public void removePerson(int personId, int compId) {
+	public void removePerson(List<Integer> lstID, int compId) {
 		try(
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call removePersoninComplaintDetail(?,?)}");
 		)
 		{
-			ps.setInt(1, personId);
-			ps.setInt(2, compId);
-			ps.executeUpdate();
+			for (Integer personId : lstID) {
+				ps.setInt(1, personId);
+				ps.setInt(2, compId);
+				ps.addBatch();
+			}
+			ps.executeBatch();
+			connect.commit();
+			ps.clearBatch();
+			connect.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
