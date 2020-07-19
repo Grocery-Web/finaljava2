@@ -656,9 +656,12 @@ create proc findPrisonerByID
 @id int
 as 
 begin
-	select *
-	from Prisoner
-	where @id = id
+	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName, cr.hisOfViolent, p.image
+	from Prisoner pr
+	inner join PrisonList pl on pr.prisonId = pl.id
+	inner join Criminal cr on pr.criminalID = cr.id
+	inner join Person p on cr.personId = p.id
+	where @id = pr.id
 end
 go
 

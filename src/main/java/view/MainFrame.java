@@ -80,6 +80,7 @@ public class MainFrame extends JFrame {
 	private CriminalDetailsFrame criDetailFrame;
 	private RelevantCriminalForm relCriminal;
 	private IncidentDetailFrame incDetailFrame;
+	private PrisonerDetailFrame prisonerDetailFrame;
 
 	/**
 	 * Launch the application.
@@ -573,6 +574,31 @@ public class MainFrame extends JFrame {
 						MainFrame.this.setVisible(true);
 					}
 				});
+			}
+		});
+		
+//		PRISONER TABLE LISTENER
+		prisonerPanel.setTableListener(new TablePrisonerListener() {
+
+			@Override
+			public void tableEventDetail(int id) {
+				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
+				prisonerDetailFrame = new PrisonerDetailFrame(prisoner);
+				prisonerDetailFrame.setLocationRelativeTo(null);
+				prisonerDetailFrame.setVisible(true);
+				
+//				prisonerDetailFrame.setTableListener(new TableIncidentDetailListener() {
+//
+//					@Override
+//					public void tableEventUpdated(Complaint inc) {
+//						complaintDAO.updateComplaintById(id, inc);
+//						JOptionPane.showMessageDialog(null, "Update incident successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+//						refresh();
+//						incDetailFrame.dispose();
+//					}
+//					
+//				});
+				prisonerDetailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
 		

@@ -98,6 +98,19 @@ public class PrisonerDAO {
 				prisoner.setDuration(rs.getInt("duration"));
 				prisoner.setReleasedStatus(rs.getBoolean("releaseStatus"));
 				prisoner.setType(rs.getString("type"));
+				prisoner.setName(rs.getString("personName"));
+				prisoner.setDob(rs.getDate("dob"));
+				prisoner.setNationality(rs.getString("nationality"));
+				prisoner.setImage(rs.getString("image"));
+				prisoner.setPrisonName(rs.getString("prisonName"));
+				prisoner.setHisOfViolent(rs.getString("hisOfViolent"));
+				Gender gender;
+				if(rs.getBoolean("gender")) {
+					gender = Gender.male;
+				} else {
+					gender = Gender.female;
+				}
+				prisoner.setGender(gender);
 			}			
 			
 		} catch (SQLException e) {
