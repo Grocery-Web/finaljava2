@@ -488,6 +488,13 @@ public class MainFrame extends JFrame {
 						
 						refresh();
 					}
+
+					@Override
+					public void savePrisonInfo(String name, String address, int prisonID) {
+						// TODO Auto-generated method stub					
+						prDAO.updatePrisonInfo(name, address, prisonID);
+						refresh();
+					}					
 				});
 			}
 		});
