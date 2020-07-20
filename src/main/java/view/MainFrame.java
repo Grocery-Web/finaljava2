@@ -458,47 +458,25 @@ public class MainFrame extends JFrame {
 			public void displayPrisonListDetail(int id) {
 //				Code in writing
 				
-				PrisonList pl = prisonListDAO.getPrisonListByID(id);
-				List<Prisoner> prs = prisonListDAO.getAllPrisonerByPrisonListID(id);
+				PrisonList prison = prisonListDAO.getPrisonListByID(id);
+				List<Prisoner> prisonInList = prisonListDAO.getAllPrisonerByPrisonListID(id);
+				List<PrisonList> prisonlist = prisonListDAO.getAllPrisonList();
 				
-				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
+				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList);
 				prisonListDetailFrame.setLocationRelativeTo(null);
 				prisonListDetailFrame.setVisible(true);	
 				
-//				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
-//					@Override
-//					public void releasePrisoner(int idPrison) {
-//						PrisonerDAO psDAO = new PrisonerDAO();
-//						psDAO.releasePrisoner(idPrison);
-//						
-//						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
-//						prisonListDetailFrame.loadData(refreshList);
-//						
-//						PrisonList refreshPL = prDAO.getPrisonListByID(id);
-//						prisonListDetailFrame.refreshQuantity(refreshPL);
-//						
+				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
+					@Override
+					public void savePrisonInfo(PrisonList prl, List<Prisoner> listReleasedPrisoners, List<Prisoner> listTransferedPrisoners) {	
+						System.out.println(prl);
+						System.out.println(listReleasedPrisoners);
+						System.out.println(listTransferedPrisoners);
+						
+//						prisonerDAO.updatePrisonInfo(name, address, prisonID);
 //						refresh();
-//					}
-//
-//					@Override
-//					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
-//						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
-//						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
-//						prisonListDetailFrame.loadData(refreshList);
-//						
-//						PrisonList refreshPL = prDAO.getPrisonListByID(id);
-//						prisonListDetailFrame.refreshQuantity(refreshPL);
-//						
-//						refresh();
-//					}
-//
-//					@Override
-//					public void savePrisonInfo(String name, String address, int prisonID) {
-//						// TODO Auto-generated method stub					
-//						prDAO.updatePrisonInfo(name, address, prisonID);
-//						refresh();
-//					}					
-//				});
+					}					
+				});
 			}
 		});
 		

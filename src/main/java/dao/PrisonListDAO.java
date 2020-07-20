@@ -122,6 +122,7 @@ public class PrisonListDAO {
 				prisoner.setNationality(rs.getString("nationality"));
 				prisoner.setEndDate(rs.getDate("endDate"));
 				prisoner.setType(rs.getString("type"));
+				prisoner.setPrisonId(rs.getInt("prisonId"));
 				
 				listPrisoners.add(prisoner);
 				
