@@ -41,7 +41,6 @@ import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
 import entity.Prisoner;
-import entity.PrisonerInList;
 import entity.Victim;
 
 public class MainFrame extends JFrame {
@@ -457,49 +456,49 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void displayPrisonListDetail(int id) {
-				PrisonListDAO prDAO = new PrisonListDAO();
+//				Code in writing
 				
-				PrisonList pl = prDAO.getPrisonListByID(id);
-				List<PrisonerInList> prs = prDAO.getAllPrisonerByPrisonListID(id);
+				PrisonList pl = prisonListDAO.getPrisonListByID(id);
+				List<Prisoner> prs = prisonListDAO.getAllPrisonerByPrisonListID(id);
 				
 				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
 				prisonListDetailFrame.setLocationRelativeTo(null);
 				prisonListDetailFrame.setVisible(true);	
 				
-				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
-					@Override
-					public void releasePrisoner(int idPrison) {
-						PrisonerDAO psDAO = new PrisonerDAO();
-						psDAO.releasePrisoner(idPrison);
-						
-						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
-						prisonListDetailFrame.loadData(refreshList);
-						
-						PrisonList refreshPL = prDAO.getPrisonListByID(id);
-						prisonListDetailFrame.refreshQuantity(refreshPL);
-						
-						refresh();
-					}
-
-					@Override
-					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
-						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
-						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
-						prisonListDetailFrame.loadData(refreshList);
-						
-						PrisonList refreshPL = prDAO.getPrisonListByID(id);
-						prisonListDetailFrame.refreshQuantity(refreshPL);
-						
-						refresh();
-					}
-
-					@Override
-					public void savePrisonInfo(String name, String address, int prisonID) {
-						// TODO Auto-generated method stub					
-						prDAO.updatePrisonInfo(name, address, prisonID);
-						refresh();
-					}					
-				});
+//				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
+//					@Override
+//					public void releasePrisoner(int idPrison) {
+//						PrisonerDAO psDAO = new PrisonerDAO();
+//						psDAO.releasePrisoner(idPrison);
+//						
+//						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
+//						prisonListDetailFrame.loadData(refreshList);
+//						
+//						PrisonList refreshPL = prDAO.getPrisonListByID(id);
+//						prisonListDetailFrame.refreshQuantity(refreshPL);
+//						
+//						refresh();
+//					}
+//
+//					@Override
+//					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
+//						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
+//						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
+//						prisonListDetailFrame.loadData(refreshList);
+//						
+//						PrisonList refreshPL = prDAO.getPrisonListByID(id);
+//						prisonListDetailFrame.refreshQuantity(refreshPL);
+//						
+//						refresh();
+//					}
+//
+//					@Override
+//					public void savePrisonInfo(String name, String address, int prisonID) {
+//						// TODO Auto-generated method stub					
+//						prDAO.updatePrisonInfo(name, address, prisonID);
+//						refresh();
+//					}					
+//				});
 			}
 		});
 		

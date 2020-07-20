@@ -1,11 +1,34 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
@@ -15,39 +38,7 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.PrisonListDAO;
 import entity.PrisonList;
-import entity.PrisonerInList;
-
-import javax.imageio.ImageIO;
-import javax.swing.GroupLayout;
-import javax.swing.ImageIcon;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import java.awt.event.MouseAdapter;
-
+import entity.Prisoner;
 
 public class PrisonListDetailFrame extends JFrame {
 
@@ -136,21 +127,19 @@ public class PrisonListDetailFrame extends JFrame {
 
 	}
 	
-	public PrisonListDetailFrame(PrisonList pr, List<PrisonerInList> prs) {
+	public PrisonListDetailFrame(PrisonList pr, List<Prisoner> prs) {
 		initFrame();
 		
 		txtName.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd1Check();
 				checkUnlock();	
 			};
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd1Check();
 				checkUnlock();
 				
@@ -158,7 +147,6 @@ public class PrisonListDetailFrame extends JFrame {
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd1Check();
 				checkUnlock();
 				
@@ -170,7 +158,6 @@ public class PrisonListDetailFrame extends JFrame {
 			
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd2Check();
 				checkUnlock();	
 				
@@ -178,7 +165,6 @@ public class PrisonListDetailFrame extends JFrame {
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd2Check();
 				checkUnlock();	
 				
@@ -186,7 +172,6 @@ public class PrisonListDetailFrame extends JFrame {
 			
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd2Check();
 				checkUnlock();	
 				
@@ -214,7 +199,6 @@ public class PrisonListDetailFrame extends JFrame {
 						).getImage().getScaledInstance(400, 130, Image.SCALE_SMOOTH);
 			lblImg.setIcon(new ImageIcon(prisonIMG));
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		
 		//TABLE: GET ALL PRISONERS IN THIS PRISON
@@ -227,7 +211,7 @@ public class PrisonListDetailFrame extends JFrame {
 		txtQuantity.setText(Integer.toString(pr.getQuantity()));		
 	}
 
-	public void loadData(List<PrisonerInList> prs) {
+	public void loadData(List<Prisoner> prs) {
 		var model = new DefaultTableModel();
 		model.addColumn("PersonID");
 		model.addColumn("PrisonerID");
@@ -246,7 +230,7 @@ public class PrisonListDetailFrame extends JFrame {
 			if (acc.getEndDate() != null) {
 				model.addRow(new Object[] {		
 						
-						acc.getPersonID(), acc.getPrisonID(), 
+						acc.getPersonalId(), acc.getPrisonerId(), 
 						acc.getName(), acc.getDob(),
 						acc.getGender(),  acc.getStartDate(),
 						acc.getDuration(), acc.getEndDate(), 
@@ -257,7 +241,7 @@ public class PrisonListDetailFrame extends JFrame {
 			else {
 				model.addRow(new Object[] {		
 						
-						acc.getPersonID(), acc.getPrisonID(), 
+						acc.getPersonalId(), acc.getPrisonerId(), 
 						acc.getName(), acc.getDob(),
 						acc.getGender(),  acc.getStartDate(),
 						acc.getDuration(), "NULL", 
