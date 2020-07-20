@@ -61,7 +61,7 @@ public class RelevantPrisonerForm extends JDialog {
 			}
 		});
 
-		setSize(500, 300);
+		setSize(400, 200);
 		setLocationRelativeTo(null);
 	}
 
