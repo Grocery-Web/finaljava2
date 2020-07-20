@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 
 import common.ConnectToProperties;
 import entity.Gender;
+import entity.PrisonList;
 import entity.Prisoner;
 
 public class PrisonerDAO {
@@ -189,6 +190,9 @@ public class PrisonerDAO {
 	}
 	
 	public void transferListPrisoner(List<Prisoner> listTransferedPrisoners) {
+		int count = 0;
+		ArrayList<String> list = new ArrayList<String>();
+		PrisonListDAO prisonDAO = new PrisonListDAO();
 		
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
@@ -196,14 +200,36 @@ public class PrisonerDAO {
 				)
 		{
 			for (Prisoner prisoner : listTransferedPrisoners) {
-				ps.setInt(1, prisoner.getPrisonerId());
-				ps.setInt(2, prisoner.getPrisonId());
-				ps.addBatch();
+				PrisonList prl = prisonDAO.getPrisonListByID(prisoner.getPrisonId());
+				if(prl.getQuantity() >= prl.getCapacity()) {
+					System.out.println(list.size() > 0);
+					if(list.size() > 0) {
+						for (String prisonName : list) {
+							if(!prisonName.equals(prl.getName())){
+								JOptionPane.showMessageDialog(null, prl.getName() + " is full capacity, prisoners transfered to this prison will be halted. "
+										+ " Choose other prisons!", "Oops!", JOptionPane.ERROR_MESSAGE);
+								list.add(prl.getName());
+							}
+						}
+					}else {
+						JOptionPane.showMessageDialog(null, prl.getName() + " is full capacity, prisoners transfered to this prison will be halted. "
+								+ " Choose other prisons!", "Oops!", JOptionPane.ERROR_MESSAGE);
+						list.add(prl.getName());
+					}
+				}else {
+					ps.setInt(1, prisoner.getPrisonerId());
+					ps.setInt(2, prisoner.getPrisonId());
+					ps.addBatch();
+					++count;
+				}
 			}
-			ps.executeBatch();
-			connect.commit();
-			ps.clearBatch();
-			connect.close();
+			
+			if(count > 0) {
+				ps.executeBatch();
+				connect.commit();
+				ps.clearBatch();
+				connect.close();
+			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}

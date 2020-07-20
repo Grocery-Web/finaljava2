@@ -536,68 +536,7 @@ public class PrisonListDetailFrame extends JFrame {
 		else {
 			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
 		}
-		
-		
-		
-		
-//		PrisonListDAO plDAO = new PrisonListDAO();
-//		List<PrisonList> prisonList = plDAO.getAllPrisonListExceptPrisonID(prisonID);
-//		int toPrison = -1;
-		
-//		int selectRow = table.getSelectedRow();
-//		if (selectRow >=0 ) {
-//			int prisonerID = (int) table.getValueAt(selectRow, 1);
-//			for (Prisoner prisoner : prs) {
-//				if(prisoner.getPrisonerId() == prisonerID) {
-//					prs.remove(prisoner);
-//					listTransferedPrisoners.add(prisoner);
-//					break;
-//				}
-//			}
-//			loadData(prs);
-			
-//			System.out.println(listTransferedPrisoners);
-			
-//			int prisonerID = (int) table.getValueAt(selectRow, 1);
-//			
-//			Object[] obj = new Object[]  {};
-//			for (PrisonList prison : prisonList) {
-//				obj = appendValue(obj, prison.getName());
-//			}
-//			
-//			String s = (String)JOptionPane.showInputDialog(
-//                    null,
-//                    "Please choose Prison Name:\n",
-//                    "Transfer Prisoner",
-//                    JOptionPane.PLAIN_MESSAGE,
-//                    null,
-//                    obj,
-//                    obj[0]);
-//			
-//			int count = 0;
-//			for (PrisonList prison : prisonList) {
-//				if (s == prison.getName()) {
-//					toPrison = prison.getId();
-//					break;
-//				}
-//				count ++;
-//			}
-//			if (toPrison >= 0) {
-//				psListen.transferPrisoner(prisonID, toPrison, prisonerID);
-//			}
-//			
-//		}
-//		else {
-//			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
-//		}
 	}
-
-
-//	private Object[] appendValue(Object[] obj, Object newObj) {
-//		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
-//		temp.add(newObj);
-//		return temp.toArray();
-//	}
 	
 	protected void scrollPanemouseClicked(MouseEvent e) {
 		table.clearSelection();
