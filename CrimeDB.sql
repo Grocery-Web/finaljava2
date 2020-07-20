@@ -607,7 +607,7 @@ create proc getAllPrisonerByPrisonListID
 @id int
 as
 begin
-	select personId, Prisoner.id, Person.name, dob, gender, startDate, duration, endDate, nationality, type
+	select personId, Prisoner.id, Prisoner.prisonId,Person.name, dob, gender, startDate, duration, endDate, nationality, type
 	from Criminal 
 		inner join Prisoner on Criminal.id = Prisoner.criminalID
 		inner join PrisonList on Prisoner.prisonId = PrisonList.id
@@ -616,14 +616,13 @@ begin
 end
 go
 
-
 create proc releasePrisonerByID 
 @id int,
 @date date
 as
 begin
 	update Prisoner
-	set releaseStatus = 1, endDate = @date
+	set releaseStatus = 1, endDate = @date, type = 'Released ahead of term'
 	where id = @id
 end
 go

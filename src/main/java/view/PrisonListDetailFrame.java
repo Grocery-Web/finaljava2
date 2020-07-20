@@ -10,10 +10,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +38,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-import dao.PrisonListDAO;
 import entity.PrisonList;
 import entity.Prisoner;
 
@@ -481,7 +480,7 @@ public class PrisonListDetailFrame extends JFrame {
 						prs.remove(prisoner);
 						prisoner.setReleasedStatus(true);
 						prisoner.setEndDate(date);
-						prisoner.setType("Released ahead of term");
+						prisoner.setType("Released ahead of term");			
 						listReleasedPrisoners.add(prisoner);
 						break;
 					}

@@ -148,7 +148,29 @@ public class PrisonerDAO {
 		
 	}
 	
-public void transferPrisoner(int PrisonerID, int prisonId) {
+	public void releaseListPrisoners(List<Prisoner> listReleasedPrisoners) {
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call releasePrisonerByID(?,?)}");
+				)
+		{
+			for (Prisoner prisoner : listReleasedPrisoners) {
+				ps.setInt(1, prisoner.getPrisonerId());
+				ps.setDate(2, new java.sql.Date(prisoner.getEndDate().getTime()));
+				ps.addBatch();
+			}
+			ps.executeBatch();
+			connect.commit();
+			ps.clearBatch();
+			connect.close();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+	}
+	
+	public void transferPrisoner(int PrisonerID, int prisonId) {
 			
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
@@ -164,6 +186,27 @@ public void transferPrisoner(int PrisonerID, int prisonId) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 		
+	}
+	
+	public void transferListPrisoner(List<Prisoner> listTransferedPrisoners) {
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
+				)
+		{
+			for (Prisoner prisoner : listTransferedPrisoners) {
+				ps.setInt(1, prisoner.getPrisonerId());
+				ps.setInt(2, prisoner.getPrisonId());
+				ps.addBatch();
+			}
+			ps.executeBatch();
+			connect.commit();
+			ps.clearBatch();
+			connect.close();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
 		
 	}
 }

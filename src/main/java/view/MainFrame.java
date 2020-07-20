@@ -469,12 +469,17 @@ public class MainFrame extends JFrame {
 				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
 					@Override
 					public void savePrisonInfo(PrisonList prl, List<Prisoner> listReleasedPrisoners, List<Prisoner> listTransferedPrisoners) {	
-						System.out.println(prl);
-						System.out.println(listReleasedPrisoners);
-						System.out.println(listTransferedPrisoners);
+						prisonListDAO.updatePrisonInfo(prl);
 						
-//						prisonerDAO.updatePrisonInfo(name, address, prisonID);
-//						refresh();
+						if(listReleasedPrisoners.size() > 0) {
+							prisonerDAO.releaseListPrisoners(listReleasedPrisoners);
+						}
+						
+						if(listTransferedPrisoners.size() > 0) {
+							prisonerDAO.transferListPrisoner(listTransferedPrisoners);
+						}
+						JOptionPane.showMessageDialog(null, "All processes have been done", "Success", JOptionPane.INFORMATION_MESSAGE);
+						refresh();
 					}					
 				});
 			}
