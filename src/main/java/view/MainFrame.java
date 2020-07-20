@@ -10,7 +10,11 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -596,6 +600,12 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventRelease(int id) {
 				prisonerDAO.releasePrisoner(id);
+				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
+				Date startDate = prisoner.getStartDate();
+				Date endDate = prisoner.getEndDate();
+				int diffInMillies = (int) Math.abs(endDate.getTime() - startDate.getTime());
+			    int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+			    prisonerDAO.updateDurationByPrisonerID(id, diff + 1);
 				refresh();
 			}
 			
