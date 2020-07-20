@@ -36,6 +36,7 @@ import javax.swing.border.TitledBorder;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.ButtonGroup;
 import javax.swing.JTextArea;
 
@@ -64,6 +65,8 @@ public class PersonDetailFrame extends JFrame {
 	private JRadioButton rdbtnMale;
 	private JRadioButton rdbtnFemale;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JTextArea textViolenceHistory;
+	private JScrollPane jpHistory;
 	
 	Person userInFrame;
 	File imgChooser = null;
@@ -92,7 +95,7 @@ public class PersonDetailFrame extends JFrame {
 	
 	
 	
-	public PersonDetailFrame( Person person ) {
+	public PersonDetailFrame( Person person, int jailStatus, String history ) {
 		//get person and save all data to userInFrame.
 		initPersonDetailFrame();
 		ID = person.getPersonalId();
@@ -111,6 +114,15 @@ public class PersonDetailFrame extends JFrame {
 		}
 		else
 			rdbtnFemale.setSelected(true);
+		
+		if (jailStatus == 0) {
+			textStatus.setText("Being free");
+		} else {
+			textStatus.setText("Being imprisoned");
+		}
+		
+		textViolenceHistory.setText(history);
+		
 		
 		var url ="avatar/" + person.getImage();
 		
@@ -263,11 +275,18 @@ public class PersonDetailFrame extends JFrame {
 		textStatus = new JTextField();
 		textStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		textStatus.setColumns(10);
+		textStatus.setEditable(false);
 		
 		JLabel lblViolenceHistory = new JLabel("Violence History");
 		lblViolenceHistory.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JTextArea textViolenceHistory = new JTextArea();
+		textViolenceHistory = new JTextArea();
+		textViolenceHistory.setLineWrap(true);
+		textViolenceHistory.setWrapStyleWord(true);
+		textViolenceHistory.setEditable(false);
+		jpHistory = new JScrollPane(textViolenceHistory);
+		jpHistory.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -287,33 +306,19 @@ public class PersonDetailFrame extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 							.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
-								.addGap(376))
-							.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(txtName, 0, 0, Short.MAX_VALUE)
-								.addGap(293))
-							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(rdbtnMale, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.UNRELATED)
+								.addComponent(rdbtnMale, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
 								.addComponent(rdbtnFemale)
 								.addGap(297))
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
 								.addComponent(datePerson, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
-								.addGap(271))
+								.addContainerGap())
+							.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 							.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(txtNation, 127, 127, 127)
-								.addGap(292))
-							.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 									.addGroup(gl_contentPane.createSequentialGroup()
 										.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -321,20 +326,29 @@ public class PersonDetailFrame extends JFrame {
 											.addComponent(lblStatus, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE))
 										.addPreferredGap(ComponentPlacement.RELATED)
 										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-											.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(textStatus, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
-												.addGap(322))
-											.addComponent(textViolenceHistory, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)))
+											.addComponent(jpHistory, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+											.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+												.addComponent(textStatus, Alignment.LEADING)
+												.addComponent(txtJob, Alignment.LEADING)
+												.addComponent(txtNation, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))))
 									.addGroup(gl_contentPane.createSequentialGroup()
 										.addComponent(lblAddress, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED)
 										.addComponent(txtAddress, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)))
-								.addGap(27)))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtJob, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(292))))
+								.addGap(27))
+							.addGroup(gl_contentPane.createSequentialGroup()
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+									.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE))
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addGroup(gl_contentPane.createSequentialGroup()
+										.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+										.addGap(399))
+									.addGroup(gl_contentPane.createSequentialGroup()
+										.addComponent(txtName, 0, 0, Short.MAX_VALUE)
+										.addGap(293)))))
+						.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -351,9 +365,9 @@ public class PersonDetailFrame extends JFrame {
 								.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(rdbtnFemale)
 								.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(rdbtnMale)
-								.addComponent(rdbtnFemale))
+								.addComponent(rdbtnMale))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
@@ -389,7 +403,7 @@ public class PersonDetailFrame extends JFrame {
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblViolenceHistory, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textViolenceHistory, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE))))
+								.addComponent(jpHistory, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE))))
 					.addGap(38))
 		);
 		contentPane.setLayout(gl_contentPane);

@@ -427,7 +427,13 @@ public class MainFrame extends JFrame {
 			public void tableEventPersonDetail(int id) {
 				Person per = personDAO.findPersonById(id);
 				
-				detailPersonFrame = new PersonDetailFrame(per);
+				int jailStatus = personDAO.checkPersonInJail(id);
+				List<Criminal> list = criminalDAO.findCriminalListByPersonId(id);
+				String history = "";
+				for (Criminal cri : list) {
+					history += cri.getHisOfViolent().replace("<br>***************<br>", "\n\n") + "\n\n";
+				}
+				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history);
 				detailPersonFrame.setLocationRelativeTo(null);
 				detailPersonFrame.setVisible(true);
 				

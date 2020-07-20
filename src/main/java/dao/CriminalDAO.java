@@ -182,4 +182,31 @@ public class CriminalDAO {
 		
 		return cri;
 	}
+	
+	public List<Criminal> findCriminalListByPersonId(int personId) {
+		List<Criminal> list = new ArrayList<Criminal>();
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call findCriminalListByPersonId(?)}");
+			)
+		{
+			ps.setInt(1, personId);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				Criminal cri = new Criminal();
+				cri.setCriminalId(rs.getInt("id"));
+				cri.setPersonalId(rs.getInt("personId"));
+				cri.setComplaintId(rs.getInt("complaintId"));
+				cri.setPunishment(rs.getString("punishment"));
+				cri.setAppliedDate(rs.getDate("appliedDate"));
+				cri.setHisOfViolent(rs.getString("hisOfViolent"));
+				cri.setRating(rs.getInt("rating"));
+				list.add(cri);
+			}		
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return list;
+	}
 }
