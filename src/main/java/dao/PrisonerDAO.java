@@ -3,6 +3,7 @@ package dao;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,22 +79,91 @@ public class PrisonerDAO {
 		}
 	}
 	
-	public void releasePrisoner(int PrisonerID) {
+	public Prisoner findPrisonerByID(int prisonerID) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
+		Prisoner prisoner = new Prisoner();
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call releasePrisonerByID(?,?)}");
-		)
+				PreparedStatement ps = connect.prepareCall("{call findPrisonerByID(?)}");
+			) 
+		{
+			ps.setInt(1, prisonerID);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				prisoner.setPrisonerId(rs.getInt("id"));
+				prisoner.setPrisonId(rs.getInt("prisonId"));
+				prisoner.setCriminalId(rs.getInt("CriminalID"));
+				prisoner.setStartDate(rs.getDate("startDate"));
+				prisoner.setEndDate(rs.getDate("endDate"));
+				prisoner.setDuration(rs.getInt("duration"));
+				prisoner.setReleasedStatus(rs.getBoolean("releaseStatus"));
+				prisoner.setType(rs.getString("type"));
+				prisoner.setName(rs.getString("personName"));
+				prisoner.setDob(rs.getDate("dob"));
+				prisoner.setNationality(rs.getString("nationality"));
+				prisoner.setImage(rs.getString("image"));
+				prisoner.setPrisonName(rs.getString("prisonName"));
+				prisoner.setHisOfViolent(rs.getString("hisOfViolent"));
+				Gender gender;
+				if(rs.getBoolean("gender")) {
+					gender = Gender.male;
+				} else {
+					gender = Gender.female;
+				}
+				prisoner.setGender(gender);
+			}			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return prisoner;	
+	}
+	
+	public void releasePrisoner(int PrisonerID) {
+		
+		Date date = new Date();
+		Prisoner prisoner = new Prisoner();
+		prisoner = findPrisonerByID(PrisonerID);
+		
+		if (prisoner.getType().equals("Death penalty")) {
+			JOptionPane.showMessageDialog(null, "Cant release death person! Please check again");
+		}
+		else {
+			
+			try (
+					var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+					PreparedStatement ps = connect.prepareCall("{call releasePrisonerByID(?,?)}");
+					)
+			{
+				ps.setInt(1, PrisonerID);
+				ps.setDate(2, new java.sql.Date(date.getTime()));
+				ps.executeUpdate();
+				JOptionPane.showMessageDialog(null, "Release Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				// TODO: handle exception
+				JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
+	}
+	
+public void transferPrisoner(int PrisonerID, int prisonId) {
+			
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
+				)
 		{
 			ps.setInt(1, PrisonerID);
-			ps.setDate(2, new java.sql.Date(date.getTime()));
+			ps.setInt(2, prisonId);
 			ps.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Release Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Transfer successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			// TODO: handle exception
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
+		
+		
 	}
 }

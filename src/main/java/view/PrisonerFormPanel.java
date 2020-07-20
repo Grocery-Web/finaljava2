@@ -320,7 +320,7 @@ public class PrisonerFormPanel extends JPanel {
 			duration.setBorder(new LineBorder(Color.RED, 1));
 			q2.setText("?");
 			q2.setForeground(Color.RED);
-			q2.setToolTipText("Please enter a number as Personal ID");
+			q2.setToolTipText("Please enter a number as Duration timespan.");
 			cd2 = false;
 		}
 	}

@@ -498,11 +498,15 @@ end
 go
 
 -- find Criminal by id
+
 create proc findCriminalByPersonAndComplaintId
 @personId int, @complaintId int
 as
 begin
-	select * from Criminal where personId = @personId and complaintId = @complaintId
+	select cr.*, p.name as personName, p.gender, p.nationality, p.address, p.dob
+	from Criminal cr
+	inner join Person p on cr.personId = p.id
+	where cr.personId = @personId and complaintId = @complaintId
 end
 go
 
@@ -603,12 +607,12 @@ create proc getAllPrisonerByPrisonListID
 @id int
 as
 begin
-	select Prisoner.* , personId, Person.name, dob, person.gender, nationality
-	from PrisonList 
-		inner join Prisoner on PrisonList.id = Prisoner.prisonId
-		inner join Criminal on Criminal.id = Prisoner.criminalID
-		inner join Person on Criminal.personId = Person.id
-	where (PrisonList.id = @id) and (Prisoner.releaseStatus = 0)
+	select personId, Prisoner.id, Person.name, dob, gender, startDate, duration, endDate, nationality, type
+	from Criminal 
+		inner join Prisoner on Criminal.id = Prisoner.criminalID
+		inner join PrisonList on Prisoner.prisonId = PrisonList.id
+		inner join Person on Person.id = Criminal.personId
+	where (Prisoner.releaseStatus = 0) and (Prisoner.prisonId = @id)
 end
 go
 
@@ -645,6 +649,20 @@ begin
 	inner join Criminal cr on pr.criminalID = cr.id
 	inner join Person p on cr.personId = p.id
 	where releaseStatus = 0
+end
+go
+
+-- find prisoner by id
+create proc findPrisonerByID 
+@id int
+as 
+begin
+	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName, cr.hisOfViolent, p.image, p.dob
+	from Prisoner pr
+	inner join PrisonList pl on pr.prisonId = pl.id
+	inner join Criminal cr on pr.criminalID = cr.id
+	inner join Person p on cr.personId = p.id
+	where @id = pr.id
 end
 go
 
@@ -710,6 +728,20 @@ begin
 	select *
 	from PrisonList
 	where @id != id
+end
+go
+
+create proc updatePrisonList
+@name nvarchar(MAX),
+@address nvarchar(MAX),
+@id int
+as
+begin
+	update PrisonList
+	set 
+		name = @name,
+		address = @address
+	where id = @id
 end
 go
 

@@ -163,7 +163,18 @@ public class CriminalDAO {
 				cri.setPersonalId(rs.getInt("personId"));
 				cri.setComplaintId(rs.getInt("complaintId"));
 				cri.setPunishment(rs.getString("punishment"));
-				cri.setRating(rs.getInt("Rating"));
+				cri.setRating(rs.getInt("rating"));
+				cri.setName(rs.getString("personName"));
+				cri.setDob(rs.getDate("dob"));
+				cri.setAddress(rs.getString("address"));
+				cri.setNationality(rs.getString("nationality"));
+				Gender gender;
+				if(rs.getBoolean("gender")) {
+					gender = Gender.male;
+				}else {
+					gender = Gender.female;
+				}
+				cri.setGender(gender);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);

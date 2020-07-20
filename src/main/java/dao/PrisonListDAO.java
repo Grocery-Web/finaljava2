@@ -97,7 +97,7 @@ public class PrisonListDAO {
 	public List<PrisonerInList> getAllPrisonerByPrisonListID(int id){
 		
 		List<PrisonerInList> prisoners = new ArrayList<PrisonerInList>();
-		PrisonerInList prisoner = new PrisonerInList();
+		
 		
 		try(
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
@@ -107,7 +107,7 @@ public class PrisonListDAO {
 			ps.setInt(1, id);
 			var rs = ps.executeQuery();
 			while (rs.next()) {
-				
+				PrisonerInList prisoner = new PrisonerInList();
 				prisoner.setPersonID(rs.getInt("personId"));
 				prisoner.setPrisonID(rs.getInt("id"));
 				prisoner.setName(rs.getString("name"));
@@ -121,6 +121,8 @@ public class PrisonListDAO {
 				prisoner.setStartDate(rs.getDate("startDate"));	
 				prisoner.setDuration(rs.getInt("duration"));
 				prisoner.setNationality(rs.getString("nationality"));
+				prisoner.setEndDate(rs.getDate("endDate"));
+				prisoner.setType(rs.getString("type"));
 				
 				prisoners.add(prisoner);
 				
@@ -137,7 +139,7 @@ public class PrisonListDAO {
 		PrisonList prisonFrom = getPrisonListByID(idFrom);
 		PrisonList prisonTo = getPrisonListByID(idTo);
 		
-		if (prisonTo.getCapacity() >= prisonTo.getQuantity()) {
+		if (prisonTo.getCapacity()  > prisonTo.getQuantity() + 1) {
 			try (
 					var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 					PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
@@ -154,5 +156,53 @@ public class PrisonListDAO {
 			}
 		}
 		else JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison");
+	}
+	
+	public void updatePrisonInfo(String name, String address, int prisonID) {
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call updatePrisonList(?,?,?)}");
+			) 
+		{
+			ps.setString(1, name);
+			ps.setString(2, address);
+			ps.setInt(3, prisonID);
+			
+			if ( ps.executeUpdate() > 0 ) {
+				JOptionPane.showMessageDialog(null, "Update Prison successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public List<PrisonList> getAllAvailablePrisons() {
+		List<PrisonList> prisonList = new ArrayList<PrisonList>();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call getAllPrisonList}");
+				ResultSet rs = ps.executeQuery();
+			) 
+		{
+			while (rs.next()) {
+				if (rs.getInt("limit") == rs.getInt("prisonerNum")) {
+					continue;
+				} else {
+					PrisonList pl = new PrisonList();
+					pl.setId(rs.getInt("id"));
+					pl.setName(rs.getString("name"));
+					pl.setAddress(rs.getString("address"));
+					pl.setImg(rs.getString("img"));
+					pl.setCapacity(rs.getInt("limit"));
+					pl.setQuantity(rs.getInt("prisonerNum"));	
+					
+					prisonList.add(pl);
+				}
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return prisonList;
 	}
 }

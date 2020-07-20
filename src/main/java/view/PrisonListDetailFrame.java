@@ -1,11 +1,15 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -44,6 +48,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.MouseAdapter;
 
+
 public class PrisonListDetailFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -68,6 +73,10 @@ public class PrisonListDetailFrame extends JFrame {
 
 	private int prisonID;
 	private String prisonName;
+	private JLabel q1;
+	private JLabel q2;
+	private boolean cd1, cd2, enabledMouseListener;
+	private String s = Character.toString("\u2713".toCharArray()[0]);
 	/**
 	 * Launch the application.
 	 */
@@ -88,12 +97,102 @@ public class PrisonListDetailFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public PrisonListDetailFrame() {
-		setTitle("List of Prisoners");
 		initFrame();
 	}
+	
+	private void cd1Check() {
+		if (!txtName.getText().equals("") && txtName.getText().matches("(\\d|[a-z,A-Z]|\\s){3,50}")) {
+			txtName.setBorder(new LineBorder(Color.GREEN, 1));
+			q1.setText(s); q1.setForeground(new Color(0, 153, 51));
+	       	q1.setToolTipText(null);
+	       	cd1 = true;
+		} else {
+			txtName.setBorder(new LineBorder(Color.RED, 1));
+			q1.setText("?"); q1.setForeground(Color.RED);
+	       	q1.setToolTipText("3 - 50 characters required (alphabetical characters, numbers and spaces).");
+	       	cd1 = false;
+		}
+	}
+	
+	private void cd2Check() {
+		if (!txtAddress.getText().equals("") && txtAddress.getText().matches("(\\d|[a-z,A-Z]|\\s){3,100}")) {
+			txtAddress.setBorder(new LineBorder(Color.GREEN, 1));
+			q2.setText(s); q2.setForeground(new Color(0, 153, 51));
+	       	q2.setToolTipText(null);
+	       	cd2 = true;
+		} else {
+			txtAddress.setBorder(new LineBorder(Color.RED, 1));
+			q2.setText("?"); q2.setForeground(Color.RED);
+	       	q2.setToolTipText("3 - 100 characters required (alphabetical characters, numbers and spaces).");
+	       	cd2 = false;
+		}
+	}
+	
+	
 
+	private void checkUnlock() {
+		boolean unlock = cd1 && cd2;
+		btnSave.setEnabled(unlock);
+
+	}
+	
 	public PrisonListDetailFrame(PrisonList pr, List<PrisonerInList> prs) {
 		initFrame();
+		
+		txtName.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				cd1Check();
+				checkUnlock();	
+			};
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				cd1Check();
+				checkUnlock();
+				
+			};
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				cd1Check();
+				checkUnlock();
+				
+			};
+			
+		});
+		
+		txtAddress.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				cd2Check();
+				checkUnlock();	
+				
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				cd2Check();
+				checkUnlock();	
+				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				cd2Check();
+				checkUnlock();	
+				
+			}
+		});
+		
 		txtName.setText(pr.getName());
 		txtAddress.setText(pr.getAddress());
 		txtCapacity.setText(Integer.toString(pr.getCapacity()));
@@ -122,6 +221,11 @@ public class PrisonListDetailFrame extends JFrame {
 		loadData(prs);
 		
 	}
+	
+	public void refreshQuantity(PrisonList pr) {
+		txtCapacity.setText(Integer.toString(pr.getCapacity()));
+		txtQuantity.setText(Integer.toString(pr.getQuantity()));		
+	}
 
 	public void loadData(List<PrisonerInList> prs) {
 		var model = new DefaultTableModel();
@@ -134,30 +238,34 @@ public class PrisonListDetailFrame extends JFrame {
 		model.addColumn("Duration (days)");
 		model.addColumn("End");
 		model.addColumn("Nationality");
+		model.addColumn("Type");
+		
 		
 		for (var acc : prs) {
 			
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//			
-//			Date startDate = acc.getStartDate();
-//			Calendar c = Calendar.getInstance();
-//			c.setTime(startDate);
-//			
-//			c.add(Calendar.DAY_OF_MONTH, 2);
-//			
-//			String endDate = sdf.format(c.getTime());
-//			
-//			System.out.println("start date " + acc.getStartDate());
-//			System.out.println("end date" + endDate);
-			
-			model.addRow(new Object[] {		
+			if (acc.getEndDate() != null) {
+				model.addRow(new Object[] {		
+						
+						acc.getPersonID(), acc.getPrisonID(), 
+						acc.getName(), acc.getDob(),
+						acc.getGender(),  acc.getStartDate(),
+						acc.getDuration(), acc.getEndDate(), 
+						acc.getNationality(), acc.getType(),
+				});
 				
-				acc.getPersonID(), acc.getPrisonID(), 
-				acc.getName(), acc.getDob(),
-				acc.getGender(),  acc.getStartDate(),
-				acc.getDuration(), 12121212, 
-				acc.getNationality()
-			});
+			}
+			else {
+				model.addRow(new Object[] {		
+						
+						acc.getPersonID(), acc.getPrisonID(), 
+						acc.getName(), acc.getDob(),
+						acc.getGender(),  acc.getStartDate(),
+						acc.getDuration(), "NULL", 
+						acc.getNationality(), acc.getType(),
+				});
+			}
+				
+			
 		}
 		
 		
@@ -165,6 +273,7 @@ public class PrisonListDetailFrame extends JFrame {
 	}
 	
 	private void initFrame() {
+		setTitle("List of Prisoners");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 852, 636);
 		contentPane = new JPanel();
@@ -190,14 +299,18 @@ public class PrisonListDetailFrame extends JFrame {
 		txtAddress.setColumns(10);
 		
 		txtQuantity = new JTextField();
+		txtQuantity.setFont(new Font("Tahoma", Font.BOLD, 10));
+		txtQuantity.setEditable(false);
 		txtQuantity.setColumns(10);
 		
 		txtCapacity = new JTextField();
+		txtCapacity.setFont(new Font("Tahoma", Font.BOLD, 10));
+		txtCapacity.setEditable(false);
 		txtCapacity.setColumns(10);
 		
 		lblImg = new JLabel("");
 		
-		btnUploadIMG = new JButton("Update Image");
+		btnUploadIMG = new JButton("Browse ...");
 		btnUploadIMG.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnUploadIMGactionPerformed(e);
@@ -236,6 +349,10 @@ public class PrisonListDetailFrame extends JFrame {
 				btnTransferactionPerformed(e);
 			}
 		});
+		
+		q1 = new JLabel();
+		
+		q2 = new JLabel();
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -254,8 +371,12 @@ public class PrisonListDetailFrame extends JFrame {
 								.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
 								.addComponent(txtQuantity, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
 								.addComponent(txtCapacity, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addComponent(lblImg, GroupLayout.PREFERRED_SIZE, 380, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(q1, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+								.addComponent(q2, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE))
+							.addGap(11)
+							.addComponent(lblImg, GroupLayout.PREFERRED_SIZE, 358, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
 							.addComponent(btnUploadIMG))
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
@@ -273,15 +394,18 @@ public class PrisonListDetailFrame extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(25)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblImg, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
 						.addComponent(btnUploadIMG)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblName))
-							.addGap(18)
+								.addComponent(lblName)
+								.addComponent(q1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+							.addGap(17)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(Address, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(q2, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblQuantity, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
@@ -289,8 +413,7 @@ public class PrisonListDetailFrame extends JFrame {
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblCapacity, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtCapacity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(lblImg, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+								.addComponent(txtCapacity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addGap(36)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE)
 					.addGap(28)
@@ -337,6 +460,10 @@ public class PrisonListDetailFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		if (psListen !=null) {
+			psListen.savePrisonInfo(txtName.getText(), txtAddress.getText(), prisonID);
+		}	
+		
 	}
 	
 	protected void btnReleaseactionPerformed(ActionEvent e) {
@@ -356,13 +483,13 @@ public class PrisonListDetailFrame extends JFrame {
 	public void setFormListener(TablePrisonerInListListener psListener) {
 		this.psListen = psListener;
 	}
+	
 	protected void btnTransferactionPerformed(ActionEvent e) {
 		
 		PrisonListDAO plDAO = new PrisonListDAO();
 		List<PrisonList> prisonList = plDAO.getAllPrisonListExceptPrisonID(prisonID);
 		int toPrison = -1;
 		
-//		System.out.println(prisonList);
 		int selectRow = table.getSelectedRow();
 		if (selectRow >=0 ) {
 			int prisonerID = (int) table.getValueAt(selectRow, 1);
@@ -397,7 +524,6 @@ public class PrisonListDetailFrame extends JFrame {
 		else {
 			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
 		}
-		
 	}
 
 
