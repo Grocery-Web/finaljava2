@@ -333,7 +333,8 @@ public class PrisonListDetailFrame extends JFrame {
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnSaveactionPerformed(e);
-			}
+			   
+			};
 		});
 		
 		btnRelease = new JButton("Release");
@@ -462,7 +463,7 @@ public class PrisonListDetailFrame extends JFrame {
 		}
 		if (psListen !=null) {
 			psListen.savePrisonInfo(txtName.getText(), txtAddress.getText(), prisonID);
-		}	
+		};
 		
 	}
 	
