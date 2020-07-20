@@ -37,7 +37,6 @@ import javax.swing.JTextArea;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -173,12 +172,12 @@ public class VictimFormPanel extends JDialog {
 					deadDay.setEnabled(true);
 					deadTime.setEnabled(true);
 					txtScene.setEditable(true);
-					txtReason.setEditable(true); txtReason.setBackground(SystemColor.WHITE);
+					txtReason.setEditable(true);
 				} else {
 					deadDay.setEnabled(false);
 					deadTime.setEnabled(false);
 					txtScene.setEditable(false);
-					txtReason.setEditable(false); txtReason.setBackground(SystemColor.menu);
+					txtReason.setEditable(false);
 				}
 			}
 		};

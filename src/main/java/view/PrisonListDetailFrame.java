@@ -115,7 +115,7 @@ public class PrisonListDetailFrame extends JFrame {
 	}
 	
 	private void cd2Check() {
-		if (!txtAddress.getText().equals("") && txtAddress.getText().matches("(\\d|[a-z,A-Z]|\\s){3,100}")) {
+		if (!txtAddress.getText().equals("") && txtAddress.getText().matches("(.|\\s){3,100}")) {
 			txtAddress.setBorder(new LineBorder(Color.GREEN, 1));
 			q2.setText(s); q2.setForeground(new Color(0, 153, 51));
 	       	q2.setToolTipText(null);
@@ -123,7 +123,7 @@ public class PrisonListDetailFrame extends JFrame {
 		} else {
 			txtAddress.setBorder(new LineBorder(Color.RED, 1));
 			q2.setText("?"); q2.setForeground(Color.RED);
-	       	q2.setToolTipText("3 - 100 characters required (alphabetical characters, numbers and spaces).");
+	       	q2.setToolTipText("3 - 100 characters required.");
 	       	cd2 = false;
 		}
 	}
