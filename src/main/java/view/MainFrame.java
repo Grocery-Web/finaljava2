@@ -397,8 +397,9 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventAddVictim(int id) {
 				Person ps = personDAO.findPersonById(id);
-				Criminal cri = criminalDAO.findLastUpdatedByPersonalId(id);
-				if (cri.getPunishment() != null && cri.getPunishment().equals("in process")) {
+				int inJail = personDAO.checkPersonInJail(id);
+				int isCriminal = personDAO.checkPersonIsCriminal(id);
+				if (inJail > 0 || isCriminal > 0) {
 					ImageIcon img = new ImageIcon(getClass().getResource("/images/handcuffs.png"));
 					JOptionPane.showMessageDialog(MainFrame.this, "This person is being supervised in custody. Cannot add to victim", "Failed", 
 							JOptionPane.WARNING_MESSAGE, img);
