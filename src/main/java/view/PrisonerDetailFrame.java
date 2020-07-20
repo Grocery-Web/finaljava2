@@ -74,6 +74,7 @@ public class PrisonerDetailFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setResizable(false);
 		setTitle("Prisoner Detail");
 		
 		// Prisoner name
@@ -192,11 +193,12 @@ public class PrisonerDetailFrame extends JFrame {
 		// History of violence
 		lblHistory = new JLabel("Violence History:");
 		textHisOfViolence = new JTextArea();
+		textHisOfViolence.setText(pri.getHisOfViolent().replace("<br>***************<br>", "\n\n"));
 		textHisOfViolence.setLineWrap(true);
 		textHisOfViolence.setWrapStyleWord(true);
 		textHisOfViolence.setEditable(false);
 		jpHistory = new JScrollPane(textHisOfViolence);
-		jpHistory.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		jpHistory.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
