@@ -558,8 +558,14 @@ public class MainFrame extends JFrame {
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
 					
 					@Override
-					public void tableInsertPrisoner(Prisoner prisoner) {
-						prisonerDAO.addPrisoner(prisoner);
+					public void tableInsertPrisoner(Prisoner prisoner,Criminal cri) {
+						PrisonList prison = prisonListDAO.getPrisonListByID(prisoner.getPrisonId());
+						if(prison.getCapacity() == prison.getQuantity()) {
+							JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison", "Oopss!", JOptionPane.INFORMATION_MESSAGE);
+						}else{
+							prisonerDAO.addPrisoner(prisoner);
+							tableUpdatedCriminal(cri);
+						};
 					}
 					
 					
