@@ -10,7 +10,11 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -392,8 +396,9 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventAddVictim(int id) {
 				Person ps = personDAO.findPersonById(id);
-				Criminal cri = criminalDAO.findLastUpdatedByPersonalId(id);
-				if (cri.getPunishment() != null && cri.getPunishment().equals("in process")) {
+				int inJail = personDAO.checkPersonInJail(id);
+				int isCriminal = personDAO.checkPersonIsCriminal(id);
+				if (inJail > 0 || isCriminal > 0) {
 					ImageIcon img = new ImageIcon(getClass().getResource("/images/handcuffs.png"));
 					JOptionPane.showMessageDialog(MainFrame.this, "This person is being supervised in custody. Cannot add to victim", "Failed", 
 							JOptionPane.WARNING_MESSAGE, img);
@@ -583,6 +588,12 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventRelease(int id) {
 				prisonerDAO.releasePrisoner(id);
+				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
+				Date startDate = prisoner.getStartDate();
+				Date endDate = prisoner.getEndDate();
+				int diffInMillies = (int) Math.abs(endDate.getTime() - startDate.getTime());
+			    int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+			    prisonerDAO.updateDurationByPrisonerID(id, diff + 1);
 				refresh();
 			}
 			

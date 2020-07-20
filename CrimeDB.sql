@@ -656,12 +656,23 @@ create proc findPrisonerByID
 @id int
 as 
 begin
-	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName, cr.hisOfViolent, p.image, p.dob
+	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName, cr.hisOfViolent as hisOfViolent, p.image, p.dob
 	from Prisoner pr
 	inner join PrisonList pl on pr.prisonId = pl.id
 	inner join Criminal cr on pr.criminalID = cr.id
 	inner join Person p on cr.personId = p.id
 	where @id = pr.id
+end
+go
+
+-- update duration
+create proc updateDurationByPrisonerID
+@id int, @duration int
+as 
+begin
+	update Prisoner
+	set duration = @duration
+	where @id = id
 end
 go
 

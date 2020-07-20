@@ -235,4 +235,19 @@ public class PrisonerDAO {
 		}
 		
 	}
+	
+	public void updateDurationByPrisonerID(int prisonerID, int duration) {
+		 try (
+				 var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				 PreparedStatement ps = connect.prepareCall("{call updateDurationByPrisonerID(?,?)}");
+				 )
+		 {
+			 ps.setInt(1, prisonerID);
+			 ps.setInt(2, duration);
+			 ps.executeUpdate();
+		 } catch (Exception e) {
+				// TODO: handle exception
+				JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		 }
+	}
 }
