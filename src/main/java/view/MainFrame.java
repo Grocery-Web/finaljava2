@@ -90,7 +90,7 @@ public class MainFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
+					UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
 					MainFrame frame = new MainFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
