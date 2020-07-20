@@ -666,6 +666,17 @@ begin
 end
 go
 
+-- update duration
+create proc updateDurationByPrisonerID
+@id int, @duration int
+as 
+begin
+	update Prisoner
+	set duration = @duration
+	where @id = id
+end
+go
+
 
 /* END PROCEDURE PRISONER*/
 
