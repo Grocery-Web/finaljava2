@@ -121,8 +121,12 @@ public class PersonDetailFrame extends JFrame {
 			textStatus.setText("Being imprisoned");
 		}
 		
-		textViolenceHistory.setText(history);
-		
+		if (history != "") {
+			textViolenceHistory.setText(history);
+		} else {
+			textViolenceHistory.setText("No Criminal Record");
+		}
+			
 		
 		var url ="avatar/" + person.getImage();
 		
