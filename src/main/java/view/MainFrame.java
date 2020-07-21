@@ -183,14 +183,33 @@ public class MainFrame extends JFrame {
 			@Override
 			public void searchText(String txt) {
 				int selectedIndex = tabPane.getSelectedIndex();
-				if (selectedIndex == 0) {
+				if (selectedIndex == 0) { //PERSON PANEL
 					personPanel.search(txt);
 				}
 
-				if (selectedIndex == 1) {
+				if (selectedIndex == 1) { //COMPLAINTS PANEL
 					complaintPanel.search(txt);
 				}
-
+				
+				if (selectedIndex == 2) { //INCIDENTS PANEL
+					incidentPanel.search(txt);
+				}
+				
+				if (selectedIndex == 3) { //CRIMINALS PANEL
+					criminalPanel.search(txt);
+				}
+				
+				if (selectedIndex == 4) { //PRISONERS PANEL
+					prisonerPanel.search(txt);
+				}
+				
+				if (selectedIndex == 5) { //VICTIMS PANEL
+					victimPanel.search(txt);
+				}
+				
+				if (selectedIndex == 6) { //PRISON PANEL
+					prisonListPanel.search(txt);
+				}
 			}
 		});
 

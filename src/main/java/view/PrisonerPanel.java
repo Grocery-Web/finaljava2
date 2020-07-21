@@ -82,8 +82,6 @@ public class PrisonerPanel extends JPanel{
 			}
 		});
 		
-//		table.setAutoCreateRowSorter(true);  // Search data
-
 		setLayout(new BorderLayout());
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -102,6 +100,7 @@ public class PrisonerPanel extends JPanel{
 	}
 	
 	public void search(String txt) {
+		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);
