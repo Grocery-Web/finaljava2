@@ -1,11 +1,36 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
@@ -13,44 +38,13 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-import dao.PrisonListDAO;
 import entity.PrisonList;
-import entity.PrisonerInList;
-
-import javax.imageio.ImageIO;
-import javax.swing.GroupLayout;
-import javax.swing.ImageIcon;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import java.awt.event.MouseAdapter;
-
+import entity.Prisoner;
 
 public class PrisonListDetailFrame extends JFrame {
 
+	protected static final int Prisoner = 0;
+	protected static final PrisonList PrisonList = null;
 	private JPanel contentPane;
 	private JLabel lblName;
 	private JLabel Address;
@@ -77,28 +71,36 @@ public class PrisonListDetailFrame extends JFrame {
 	private JLabel q2;
 	private boolean cd1, cd2, enabledMouseListener;
 	private String s = Character.toString("\u2713".toCharArray()[0]);
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private List<Prisoner> listReleasedPrisoners  = new ArrayList<Prisoner>();
+	private List<Prisoner> listTransferedPrisoners  = new ArrayList<Prisoner>();
+	
+//	External form
+	private RelevantPrisonerForm relPrisoner;
+	
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PrisonListDetailFrame frame = new PrisonListDetailFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					PrisonListDetailFrame frame = new PrisonListDetailFrame(PrisonList pr, List<Prisoner> prs);
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public PrisonListDetailFrame() {
-		initFrame();
-	}
+//	public PrisonListDetailFrame() {
+//		initFrame();
+//	}
 	
 	private void cd1Check() {
 		if (!txtName.getText().equals("") && txtName.getText().matches("(\\d|[a-z,A-Z]|\\s){3,50}")) {
@@ -133,24 +135,21 @@ public class PrisonListDetailFrame extends JFrame {
 	private void checkUnlock() {
 		boolean unlock = cd1 && cd2;
 		btnSave.setEnabled(unlock);
-
 	}
 	
-	public PrisonListDetailFrame(PrisonList pr, List<PrisonerInList> prs) {
-		initFrame();
+	public PrisonListDetailFrame(PrisonList prison, List<PrisonList> prisonlist, List<Prisoner> prisonInList) {
+		initFrame(prison, prisonlist, prisonInList);
 		
 		txtName.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd1Check();
 				checkUnlock();	
 			};
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd1Check();
 				checkUnlock();
 				
@@ -158,7 +157,6 @@ public class PrisonListDetailFrame extends JFrame {
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd1Check();
 				checkUnlock();
 				
@@ -170,7 +168,6 @@ public class PrisonListDetailFrame extends JFrame {
 			
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd2Check();
 				checkUnlock();	
 				
@@ -178,7 +175,6 @@ public class PrisonListDetailFrame extends JFrame {
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd2Check();
 				checkUnlock();	
 				
@@ -186,27 +182,26 @@ public class PrisonListDetailFrame extends JFrame {
 			
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				cd2Check();
 				checkUnlock();	
 				
 			}
 		});
 		
-		txtName.setText(pr.getName());
-		txtAddress.setText(pr.getAddress());
-		txtCapacity.setText(Integer.toString(pr.getCapacity()));
-		txtQuantity.setText(Integer.toString(pr.getQuantity()));
-		imgName = pr.getImg();
+		txtName.setText(prison.getName());
+		txtAddress.setText(prison.getAddress());
+		txtCapacity.setText(Integer.toString(prison.getCapacity()));
+		txtQuantity.setText(Integer.toString(prison.getQuantity()));
+		imgName = prison.getImg();
 		
-		prisonID = pr.getId();
-		prisonName = pr.getName();
+		prisonID = prison.getId();
+		prisonName = prison.getName();
 	    
 		
 		//Display Prison's img
 		
 		try {
-			String url = "images/" + pr.getImg();
+			String url = "images/" + prison.getImg();
 			Image prisonIMG = 
 					new ImageIcon(
 						getClass().getClassLoader()
@@ -214,22 +209,15 @@ public class PrisonListDetailFrame extends JFrame {
 						).getImage().getScaledInstance(400, 130, Image.SCALE_SMOOTH);
 			lblImg.setIcon(new ImageIcon(prisonIMG));
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		
 		//TABLE: GET ALL PRISONERS IN THIS PRISON
-		loadData(prs);
+		loadData(prisonInList);
 		
 	}
-	
-	public void refreshQuantity(PrisonList pr) {
-		txtCapacity.setText(Integer.toString(pr.getCapacity()));
-		txtQuantity.setText(Integer.toString(pr.getQuantity()));		
-	}
 
-	public void loadData(List<PrisonerInList> prs) {
+	public void loadData(List<Prisoner> prs) {
 		var model = new DefaultTableModel();
-		model.addColumn("PersonID");
 		model.addColumn("PrisonerID");
 		model.addColumn("name");
 		model.addColumn("DOB");
@@ -246,7 +234,7 @@ public class PrisonListDetailFrame extends JFrame {
 			if (acc.getEndDate() != null) {
 				model.addRow(new Object[] {		
 						
-						acc.getPersonID(), acc.getPrisonID(), 
+						acc.getPrisonerId(), 
 						acc.getName(), acc.getDob(),
 						acc.getGender(),  acc.getStartDate(),
 						acc.getDuration(), acc.getEndDate(), 
@@ -257,7 +245,7 @@ public class PrisonListDetailFrame extends JFrame {
 			else {
 				model.addRow(new Object[] {		
 						
-						acc.getPersonID(), acc.getPrisonID(), 
+						acc.getPrisonerId(), 
 						acc.getName(), acc.getDob(),
 						acc.getGender(),  acc.getStartDate(),
 						acc.getDuration(), "NULL", 
@@ -268,11 +256,10 @@ public class PrisonListDetailFrame extends JFrame {
 			
 		}
 		
-		
 		table.setModel(model);
 	}
 	
-	private void initFrame() {
+	private void initFrame(PrisonList pr, List<PrisonList> prisonlist, List<Prisoner> prs) {
 		setTitle("List of Prisoners");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 852, 636);
@@ -332,22 +319,21 @@ public class PrisonListDetailFrame extends JFrame {
 		btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnSaveactionPerformed(e);
-			   
-			};
+				btnSaveactionPerformed(e,pr);
+			}
 		});
 		
 		btnRelease = new JButton("Release");
 		btnRelease.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnReleaseactionPerformed(e);
+				btnReleaseactionPerformed(e,prs);
 			}
 		});
 		
 		btnTransfer = new JButton("Transfer");
 		btnTransfer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnTransferactionPerformed(e);
+				btnTransferactionPerformed(e,prs,prisonlist);
 			}
 		});
 		
@@ -449,7 +435,9 @@ public class PrisonListDetailFrame extends JFrame {
 			}
 		}
 	}
-	protected void btnSaveactionPerformed(ActionEvent e) {
+	protected void btnSaveactionPerformed(ActionEvent e,PrisonList pr) {
+
+		//GET UPDATED IMAGE
 		if (imgChooser != null) {
 			try {
 				BufferedImage img = ImageIO.read(imgChooser);
@@ -461,19 +449,42 @@ public class PrisonListDetailFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, e1.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		
+		// GET UPDATED PRISON INFO
+		PrisonList prl = new PrisonList(pr.getId(), txtName.getText(), txtAddress.getText(), pr.getQuantity(), pr.getCapacity(), pr.getImg());
+		
 		if (psListen !=null) {
-			psListen.savePrisonInfo(txtName.getText(), txtAddress.getText(), prisonID);
-		};
+			psListen.savePrisonInfo(prl, listReleasedPrisoners, listTransferedPrisoners);
+		}	
 		
 	}
 	
-	protected void btnReleaseactionPerformed(ActionEvent e) {
+	protected void btnReleaseactionPerformed(ActionEvent e,List<Prisoner> prs) {
 		int selectRow = table.getSelectedRow();
 		if (selectRow >=0 ) {
-			int prisonerID = (int) table.getValueAt(selectRow, 1);
-			if (psListen !=null) {
-				psListen.releasePrisoner(prisonerID);
-			}	
+			int prisonerID = (int) table.getValueAt(selectRow, 0);
+			String type = (String) table.getValueAt(selectRow, 8);
+			
+//			CURRENT DATE
+			long millis=System.currentTimeMillis();  
+			java.sql.Date date=new java.sql.Date(millis);  
+
+			if(type.equals("Termed imprisonment")) {
+				for (Prisoner prisoner : prs) {
+					if(prisoner.getPrisonerId() == prisonerID) {
+						prs.remove(prisoner);
+						prisoner.setReleasedStatus(true);
+						prisoner.setEndDate(date);
+						prisoner.setType("Released ahead of term");			
+						listReleasedPrisoners.add(prisoner);
+						break;
+					}
+				}
+			}else {
+				JOptionPane.showMessageDialog(null, "Prisoner is not acquitted of one'crime", "Oops!!", JOptionPane.WARNING_MESSAGE);
+			}
+			
+			loadData(prs);
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
@@ -485,54 +496,43 @@ public class PrisonListDetailFrame extends JFrame {
 		this.psListen = psListener;
 	}
 	
-	protected void btnTransferactionPerformed(ActionEvent e) {
-		
-		PrisonListDAO plDAO = new PrisonListDAO();
-		List<PrisonList> prisonList = plDAO.getAllPrisonListExceptPrisonID(prisonID);
-		int toPrison = -1;
-		
+	protected void btnTransferactionPerformed(ActionEvent e, List<Prisoner> prs, List<PrisonList> prisonlist) {
+		List<PrisonList> newList = prisonlist;
 		int selectRow = table.getSelectedRow();
+		
 		if (selectRow >=0 ) {
-			int prisonerID = (int) table.getValueAt(selectRow, 1);
-			
-			Object[] obj = new Object[]  {};
-			for (PrisonList prison : prisonList) {
-				obj = appendValue(obj, prison.getName());
-			}
-			
-			String s = (String)JOptionPane.showInputDialog(
-                    null,
-                    "Please choose Prison Name:\n",
-                    "Transfer Prisoner",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    obj,
-                    obj[0]);
-			
-			int count = 0;
-			for (PrisonList prison : prisonList) {
-				if (s == prison.getName()) {
-					toPrison = prison.getId();
+			int prisonerID = (int) table.getValueAt(selectRow, 0);
+
+			for (Prisoner prisoner : prs) {
+				if(prisoner.getPrisonerId() == prisonerID) {
+					
+					for (int i = 0; i < newList.size(); i++) {
+						if (newList.get(i).getId() == prisoner.getPrisonId()) {
+							newList.remove(i);
+						}
+					}
+					
+					relPrisoner = new RelevantPrisonerForm(prisoner, newList);
+					relPrisoner.setVisible(true);
+					relPrisoner.setFormListener(new RelevantPrisonerFormListener() {
+						@Override
+						public void prisonerFormEventListener(Prisoner prisoner, PrisonList prison) {
+							prisoner.setPrisonId(prison.getId());
+							listTransferedPrisoners.add(prisoner);
+							prs.remove(prisoner);
+							relPrisoner.dispose();
+							loadData(prs);
+						}
+					});		
 					break;
 				}
-				count ++;
 			}
-			if (toPrison >= 0) {
-				psListen.transferPrisoner(prisonID, toPrison, prisonerID);
-			}
-			
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Please choose prisoner!");
 		}
 	}
-
-
-	private Object[] appendValue(Object[] obj, Object newObj) {
-		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
-		temp.add(newObj);
-		return temp.toArray();
-	}
+	
 	protected void scrollPanemouseClicked(MouseEvent e) {
 		table.clearSelection();
 		table.setFocusable(false);

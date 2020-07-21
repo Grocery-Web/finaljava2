@@ -663,8 +663,6 @@ public class ComplaintDetailFrame extends JFrame {
 	}
 
 	protected void btnSubmitActionPerformed(ActionEvent e, int cplId) {
-		System.out.println(map);
-		
 		int action = JOptionPane.showConfirmDialog(null,
 				"This action means the complaint will be upgraded to be a serious situation. Do you really want to verify?",
 				"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);

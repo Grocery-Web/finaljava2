@@ -12,7 +12,6 @@ import common.ConnectToProperties;
 import entity.Gender;
 import entity.PrisonList;
 import entity.Prisoner;
-import entity.PrisonerInList;
 
 public class PrisonListDAO {
 	public List<PrisonList> getAllPrisonList() {
@@ -94,9 +93,9 @@ public class PrisonListDAO {
 		
 	}
 	
-	public List<PrisonerInList> getAllPrisonerByPrisonListID(int id){
+	public List<Prisoner> getAllPrisonerByPrisonListID(int id){
 		
-		List<PrisonerInList> prisoners = new ArrayList<PrisonerInList>();
+		List<Prisoner> listPrisoners = new ArrayList<Prisoner>();
 		
 		
 		try(
@@ -107,9 +106,9 @@ public class PrisonListDAO {
 			ps.setInt(1, id);
 			var rs = ps.executeQuery();
 			while (rs.next()) {
-				PrisonerInList prisoner = new PrisonerInList();
-				prisoner.setPersonID(rs.getInt("personId"));
-				prisoner.setPrisonID(rs.getInt("id"));
+				Prisoner prisoner = new Prisoner();
+				prisoner.setPersonalId(rs.getInt("personId"));
+				prisoner.setPrisonerId(rs.getInt("id"));
 				prisoner.setName(rs.getString("name"));
 				prisoner.setDob(rs.getDate("dob"));
 				if (rs.getBoolean("gender" ) == true) {
@@ -123,15 +122,16 @@ public class PrisonListDAO {
 				prisoner.setNationality(rs.getString("nationality"));
 				prisoner.setEndDate(rs.getDate("endDate"));
 				prisoner.setType(rs.getString("type"));
+				prisoner.setPrisonId(rs.getInt("prisonId"));
 				
-				prisoners.add(prisoner);
+				listPrisoners.add(prisoner);
 				
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 		
-		return prisoners;
+		return listPrisoners;
 	}
 	
 	public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
@@ -158,20 +158,16 @@ public class PrisonListDAO {
 		else JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison");
 	}
 	
-	public void updatePrisonInfo(String name, String address, int prisonID) {
-		
+	public void updatePrisonInfo(PrisonList prison) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call updatePrisonList(?,?,?)}");
 			) 
 		{
-			ps.setString(1, name);
-			ps.setString(2, address);
-			ps.setInt(3, prisonID);
-			
-			if ( ps.executeUpdate() > 0 ) {
-				JOptionPane.showMessageDialog(null, "Update Prison successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-			}
+			ps.setString(1, prison.getName());
+			ps.setString(2, prison.getAddress());
+			ps.setInt(3, prison.getId());
+			ps.executeUpdate();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}

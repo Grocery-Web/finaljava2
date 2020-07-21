@@ -45,7 +45,6 @@ import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
 import entity.Prisoner;
-import entity.PrisonerInList;
 import entity.Victim;
 
 public class MainFrame extends JFrame {
@@ -468,48 +467,33 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void displayPrisonListDetail(int id) {
-				PrisonListDAO prDAO = new PrisonListDAO();
+//				Code in writing
 				
-				PrisonList pl = prDAO.getPrisonListByID(id);
-				List<PrisonerInList> prs = prDAO.getAllPrisonerByPrisonListID(id);
+				PrisonList prison = prisonListDAO.getPrisonListByID(id);
+				List<Prisoner> prisonInList = prisonListDAO.getAllPrisonerByPrisonListID(id);
+				List<PrisonList> prisonlist = prisonListDAO.getAllPrisonList();
 				
-				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
+				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList);
 				prisonListDetailFrame.setLocationRelativeTo(null);
 				prisonListDetailFrame.setVisible(true);	
 				
 				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
 					@Override
-					public void releasePrisoner(int idPrison) {
-						PrisonerDAO psDAO = new PrisonerDAO();
-						psDAO.releasePrisoner(idPrison);
+					public void savePrisonInfo(PrisonList prl, List<Prisoner> listReleasedPrisoners, List<Prisoner> listTransferedPrisoners) {	
 						
-						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
-						prisonListDetailFrame.loadData(refreshList);
+						prisonListDAO.updatePrisonInfo(prl);
 						
-						PrisonList refreshPL = prDAO.getPrisonListByID(id);
-						prisonListDetailFrame.refreshQuantity(refreshPL);
+						if(listReleasedPrisoners.size() > 0) {
+							prisonerDAO.releaseListPrisoners(listReleasedPrisoners);
+						}
 						
+						if(listTransferedPrisoners.size() > 0) {
+							prisonerDAO.transferListPrisoner(listTransferedPrisoners);
+						}
+						
+						JOptionPane.showMessageDialog(null, "All processes have been done", "Success", JOptionPane.INFORMATION_MESSAGE);
+						prisonListDetailFrame.setVisible(false);	
 						refresh();
-					}
-
-					@Override
-					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
-						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
-						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
-						prisonListDetailFrame.loadData(refreshList);
-						
-						PrisonList refreshPL = prDAO.getPrisonListByID(id);
-						prisonListDetailFrame.refreshQuantity(refreshPL);
-						refresh();
-					}
-
-					@Override
-					public void savePrisonInfo(String name, String address, int prisonID) {
-						// TODO Auto-generated method stub					
-						prDAO.updatePrisonInfo(name, address, prisonID);
-						prisonListDetailFrame.dispose();
-						refresh();
-						
 					}					
 				});
 			}
@@ -570,8 +554,14 @@ public class MainFrame extends JFrame {
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
 					
 					@Override
-					public void tableInsertPrisoner(Prisoner prisoner) {
-						prisonerDAO.addPrisoner(prisoner);
+					public void tableInsertPrisoner(Prisoner prisoner,Criminal cri) {
+						PrisonList prison = prisonListDAO.getPrisonListByID(prisoner.getPrisonId());
+						if(prison.getCapacity() == prison.getQuantity()) {
+							JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison", "Oopss!", JOptionPane.INFORMATION_MESSAGE);
+						}else{
+							prisonerDAO.addPrisoner(prisoner);
+							tableUpdatedCriminal(cri);
+						};
 					}
 					
 					

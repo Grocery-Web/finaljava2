@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 
 import common.ConnectToProperties;
 import entity.Gender;
+import entity.PrisonList;
 import entity.Prisoner;
 
 public class PrisonerDAO {
@@ -114,7 +115,6 @@ public class PrisonerDAO {
 			}			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 		return prisoner;	
@@ -141,9 +141,30 @@ public class PrisonerDAO {
 				ps.executeUpdate();
 				JOptionPane.showMessageDialog(null, "Release Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
-				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
+		}
+		
+	}
+	
+	public void releaseListPrisoners(List<Prisoner> listReleasedPrisoners) {
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call releasePrisonerByID(?,?)}");
+				)
+		{
+			for (Prisoner prisoner : listReleasedPrisoners) {
+				ps.setInt(1, prisoner.getPrisonerId());
+				ps.setDate(2, new java.sql.Date(prisoner.getEndDate().getTime()));
+				ps.addBatch();
+			}
+			ps.executeBatch();
+			connect.commit();
+			ps.clearBatch();
+			connect.close();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}
@@ -160,10 +181,46 @@ public class PrisonerDAO {
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Transfer successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
-			// TODO: handle exception
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 		
+	}
+	
+	public void transferListPrisoner(List<Prisoner> listTransferedPrisoners) {
+		int count = 0;
+		ArrayList<String> list = new ArrayList<String>();
+		PrisonListDAO prisonDAO = new PrisonListDAO();
+		
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
+				)
+		{
+			for (Prisoner prisoner : listTransferedPrisoners) {
+				PrisonList prl = prisonDAO.getPrisonListByID(prisoner.getPrisonId());
+				if(prl.getQuantity() >= prl.getCapacity()) {
+					if(list.contains(prl.getName()) == false) {
+						JOptionPane.showMessageDialog(null, prl.getName() + " is full capacity, prisoners transfered to this prison will be halted. "
+								+ " Choose other prisons!", "Oops!", JOptionPane.ERROR_MESSAGE);
+						list.add(prl.getName());
+					}
+				}else {
+					ps.setInt(1, prisoner.getPrisonerId());
+					ps.setInt(2, prisoner.getPrisonId());
+					ps.addBatch();
+					++count;
+				}
+			}
+			
+			if(count > 0) {
+				ps.executeBatch();
+				connect.commit();
+				ps.clearBatch();
+				connect.close();
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
 		
 	}
 	
