@@ -151,12 +151,13 @@ public class PrisonerDAO {
 		
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call releasePrisonerByID(?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call releaseListPrisonerByID(?,?,?)}");
 				)
 		{
 			for (Prisoner prisoner : listReleasedPrisoners) {
 				ps.setInt(1, prisoner.getPrisonerId());
 				ps.setDate(2, new java.sql.Date(prisoner.getEndDate().getTime()));
+				ps.setInt(3, prisoner.getDuration());
 				ps.addBatch();
 			}
 			ps.executeBatch();

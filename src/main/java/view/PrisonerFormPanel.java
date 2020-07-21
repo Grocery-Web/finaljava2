@@ -12,6 +12,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -361,34 +362,38 @@ public class PrisonerFormPanel extends JPanel {
 	}
 	
 	public Criminal getCriminal() {
-		Date getApplidated = null;
-		getApplidated = startDate.getDate();
-		criminal.setAppliedDate(getApplidated);
+		String getApplidated = null;
+		getApplidated = dateFormat.format(startDate.getDate());
+		try {
+			criminal.setAppliedDate(dateFormat.parse(getApplidated));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		
 		// RECORD CRIME TYPE INTO HISTORY OF VIOLENT
 		if(type.equals("Death penalty")) {
 			if(hisOfViolent.getText().equals("No Records Recognition")) {
-				updatedViolent = "Death penalty from:" + startDate.getDate() + " | Guilt:" + crimeTypes;
+				updatedViolent = "Death penalty from:" + getApplidated + " | Guilt:" + crimeTypes;
 			}else {
-				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Death penalty:" + startDate.getDate() + 
+				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Death penalty:" + getApplidated + 
 						" | Guilt:" + crimeTypes;
 			}
 			criminal.setHisOfViolent(updatedViolent);
 			criminal.setPunishment("imprisoner");
 		}else if(type.equals("Life-sentence")) {
 			if(hisOfViolent.getText().equals("No Records Recognition")) {
-				updatedViolent = "Life-sentence from:" + startDate.getDate() + " | Guilt:" + crimeTypes;
+				updatedViolent = "Life-sentence from:" + getApplidated + " | Guilt:" + crimeTypes;
 			}else {
-				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Life-sentence:" + startDate.getDate() + 
+				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Life-sentence:" + getApplidated + 
 						" | Guilt:" + crimeTypes;
 			}
 			criminal.setHisOfViolent(updatedViolent);
 			criminal.setPunishment("imprisoner");
 		}else {
 			if(hisOfViolent.getText().equals("No Records Recognition")) {
-				updatedViolent = "Termed imprisonment from:" + startDate.getDate() + ",Period:" + duration.getText() + " days | Guilt:" + crimeTypes;
+				updatedViolent = "Termed imprisonment from:" + getApplidated + ",Period:" + duration.getText() + " days | Guilt:" + crimeTypes;
 			}else {
-				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Termed imprisonment:" + startDate.getDate() + 
+				updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Termed imprisonment:" + getApplidated + 
 						" | Guilt:" + crimeTypes;
 			}
 			criminal.setHisOfViolent(updatedViolent);

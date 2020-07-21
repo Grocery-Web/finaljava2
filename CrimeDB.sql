@@ -638,6 +638,18 @@ begin
 end
 go
 
+create proc releaseListPrisonerByID 
+@id int,
+@date date,
+@duration int
+as
+begin
+	update Prisoner
+	set releaseStatus = 1, endDate = @date, duration = @duration, type = 'Released ahead of term'
+	where id = @id
+end
+go
+
 create proc transferPrisonerByID
 @prisonerID int,
 @toPrison int
