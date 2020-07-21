@@ -184,6 +184,16 @@ BEGIN
 	WHERE UserID = @UserID
 END
 GO
+
+-- Create proc to check if UserID already exist
+CREATE PROC checkDuplicateUserID
+@userID varchar(20)
+AS
+BEGIN
+	SELECT UserID From Account
+	WHERE UserID = @userID
+END
+GO
 /* END PROCEDURE ACCOUNT */
 
 /* PROCEDURE PERSON */
@@ -589,6 +599,17 @@ AS
 BEGIN
 	SELECT * FROM Victim WHERE complaintID = @incidentId
 END 
+GO
+
+-- Check if Person exists in an Incident' victim list
+CREATE PROC checkIfPersonExistAsVictim
+@personID int,
+@incidentID int
+AS
+BEGIN
+	SELECT * FROM Victim
+	WHERE personalID = @personID AND complaintID = @incidentID
+END
 GO
 
 /* END PROCEDURE VICTIM */

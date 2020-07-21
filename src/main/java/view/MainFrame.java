@@ -10,9 +10,6 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -415,6 +412,11 @@ public class MainFrame extends JFrame {
 				victimForm.setFormListener(new VictimFormListener() {
 					@Override
 					public void linkNewVictim(Victim victim) {
+						if (victimDAO.checkIfPersonExistAsVictim(victim)) {
+							JOptionPane.showMessageDialog(null, "This person is already a victim of this incident.", "Failed", 
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						victimDAO.linkNewVictim(victim);
 						victimForm.dispose();
 						refresh();
