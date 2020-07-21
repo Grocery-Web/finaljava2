@@ -480,6 +480,7 @@ public class MainFrame extends JFrame {
 				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
 					@Override
 					public void savePrisonInfo(PrisonList prl, List<Prisoner> listReleasedPrisoners, List<Prisoner> listTransferedPrisoners) {	
+						
 						prisonListDAO.updatePrisonInfo(prl);
 						
 						if(listReleasedPrisoners.size() > 0) {
@@ -489,7 +490,9 @@ public class MainFrame extends JFrame {
 						if(listTransferedPrisoners.size() > 0) {
 							prisonerDAO.transferListPrisoner(listTransferedPrisoners);
 						}
+						
 						JOptionPane.showMessageDialog(null, "All processes have been done", "Success", JOptionPane.INFORMATION_MESSAGE);
+						prisonListDetailFrame.setVisible(false);	
 						refresh();
 					}					
 				});

@@ -115,7 +115,6 @@ public class PrisonerDAO {
 			}			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 		return prisoner;	
@@ -142,7 +141,6 @@ public class PrisonerDAO {
 				ps.executeUpdate();
 				JOptionPane.showMessageDialog(null, "Release Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
-				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -183,7 +181,6 @@ public class PrisonerDAO {
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Transfer successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
-			// TODO: handle exception
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
 		
@@ -202,16 +199,7 @@ public class PrisonerDAO {
 			for (Prisoner prisoner : listTransferedPrisoners) {
 				PrisonList prl = prisonDAO.getPrisonListByID(prisoner.getPrisonId());
 				if(prl.getQuantity() >= prl.getCapacity()) {
-					System.out.println(list.size() > 0);
-					if(list.size() > 0) {
-						for (String prisonName : list) {
-							if(!prisonName.equals(prl.getName())){
-								JOptionPane.showMessageDialog(null, prl.getName() + " is full capacity, prisoners transfered to this prison will be halted. "
-										+ " Choose other prisons!", "Oops!", JOptionPane.ERROR_MESSAGE);
-								list.add(prl.getName());
-							}
-						}
-					}else {
+					if(list.contains(prl.getName()) == false) {
 						JOptionPane.showMessageDialog(null, prl.getName() + " is full capacity, prisoners transfered to this prison will be halted. "
 								+ " Choose other prisons!", "Oops!", JOptionPane.ERROR_MESSAGE);
 						list.add(prl.getName());

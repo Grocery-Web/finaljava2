@@ -215,11 +215,6 @@ public class PrisonListDetailFrame extends JFrame {
 		loadData(prisonInList);
 		
 	}
-	
-//	public void refreshQuantity(PrisonList pr) {
-//		txtCapacity.setText(Integer.toString(pr.getCapacity()));
-//		txtQuantity.setText(Integer.toString(pr.getQuantity()));		
-//	}
 
 	public void loadData(List<Prisoner> prs) {
 		var model = new DefaultTableModel();

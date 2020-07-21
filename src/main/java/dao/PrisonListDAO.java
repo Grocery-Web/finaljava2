@@ -159,7 +159,6 @@ public class PrisonListDAO {
 	}
 	
 	public void updatePrisonInfo(PrisonList prison) {
-		
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call updatePrisonList(?,?,?)}");
@@ -168,6 +167,7 @@ public class PrisonListDAO {
 			ps.setString(1, prison.getName());
 			ps.setString(2, prison.getAddress());
 			ps.setInt(3, prison.getId());
+			ps.executeUpdate();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
