@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class Toolbar extends JToolBar implements ActionListener{
 	private JButton addPersonButton;
@@ -45,9 +47,23 @@ public class Toolbar extends JToolBar implements ActionListener{
 		addComplaintButton.setToolTipText("Add Complaint");
 		
 //		SEARCH BOX LISTENER
-		txtSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		txtSearch.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
 				toolbarListener.searchText(txtSearch.getText());
+				
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				toolbarListener.searchText(txtSearch.getText());
+				
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				toolbarListener.searchText(txtSearch.getText());
+	
 			}
 		});
 		
