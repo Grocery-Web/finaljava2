@@ -20,7 +20,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Vector;
 import java.awt.Cursor;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,9 +34,7 @@ import javax.swing.DefaultRowSorter;
 import java.awt.Checkbox;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
-import java.awt.TextField;
 import javax.swing.border.TitledBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
 public class Admin extends JFrame {
@@ -73,7 +70,7 @@ public class Admin extends JFrame {
 	public JLabel lblAdmin;
 	public JLabel lblAsterisk;
 	public Button btnClear;
-	
+	AccountDAO accDao = new AccountDAO();
 	/**
 	 * Launch the application.
 	 */
@@ -322,7 +319,6 @@ public class Admin extends JFrame {
 	}
 	
 	protected void loadData() {
-		AccountDAO accDao = new AccountDAO();
 		DefaultTableModel model = new DefaultTableModel();
 		model.addColumn("UserID");
 		model.addColumn("FullName");
@@ -361,6 +357,10 @@ public class Admin extends JFrame {
 			JOptionPane.showMessageDialog(null, "Please enter legit userID: 4 - 20 alphanumeric characters", "Invalid input", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+		if (accDao.checkDuplicateUserID(txtUserID.getText())) {
+			JOptionPane.showMessageDialog(null, "Username already existed. Please choose another username.", "Invalid input", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		acc.setUserID(txtUserID.getText());
 		if (!txtFullName.getText().matches("[\\D ]{4,50}")) {
 			JOptionPane.showMessageDialog(null, "Please enter a legit name: 4 - 50 alphabet characters", "Invalid input", JOptionPane.ERROR_MESSAGE);
@@ -379,7 +379,6 @@ public class Admin extends JFrame {
 		acc.setPassword(new String(passwordField.getPassword()));
 		acc.setPrivilege(comboBox.getSelectedItem() == "Admin" ? 1 : comboBox.getSelectedItem() == "Master" ? 2 : 3);
 		
-		AccountDAO accDao = new AccountDAO();
 		accDao.addAccount(acc);
 		loadData();
 	}
@@ -394,7 +393,6 @@ public class Admin extends JFrame {
 		
 		int choice = JOptionPane.showConfirmDialog(null, "Are you sure want to delete this account ?", "Delete", JOptionPane.YES_NO_OPTION);
 		if (choice == 0) {
-			AccountDAO accDao = new AccountDAO();
 			accDao.deleteAccount(acc);
 			loadData();
 		}
@@ -439,7 +437,6 @@ public class Admin extends JFrame {
 		}
 		acc.setPrivilege(comboBox.getSelectedItem() == "Admin" ? 1 : comboBox.getSelectedItem() == "Master" ? 2 : 3);
 		
-		AccountDAO accDao = new AccountDAO();
 		accDao.updateAccount(acc);
 		loadData();
 	}

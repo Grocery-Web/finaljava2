@@ -32,6 +32,23 @@ public class AccountDAO {
 		return -1;
 	}
 	
+	public boolean checkDuplicateUserID(String userID) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call checkDuplicateUserID(?)}");
+			)
+		{
+			ps.setString(1, userID);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.isBeforeFirst()) {
+				return false;
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.INFORMATION_MESSAGE);
+		}
+		return true;
+	}
+	
 	public List<Account> getAllAccount() {
 		List<Account> list = new ArrayList<Account>();
 		try (
