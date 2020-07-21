@@ -520,6 +520,17 @@ BEGIN
 END
 GO
 
+-- find criminal list by person id
+create proc findCriminalListByPersonId
+@personId int
+as
+begin
+	select *
+	from Criminal 
+	where personId = @personId
+end
+go
+
 /* END PROCEDURE CRIMINAL */
 
 /* PROCEDURE VICTIM */
