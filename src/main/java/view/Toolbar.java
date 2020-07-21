@@ -74,7 +74,7 @@ public class Toolbar extends JToolBar implements ActionListener{
 		addSeparator();
 		add(addComplaintButton);
 		add(Box.createHorizontalGlue());
-		add(Box.createRigidArea(new Dimension(1400,0)));
+		add(Box.createRigidArea(new Dimension(1000,0)));
 		add(searchLabel);
 		addSeparator();
 		add(txtSearch);
