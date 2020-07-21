@@ -11,11 +11,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
@@ -36,6 +35,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import entity.PrisonList;
@@ -228,6 +228,9 @@ public class PrisonListDetailFrame extends JFrame {
 		model.addColumn("Nationality");
 		model.addColumn("Type");
 		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		table.setDefaultRenderer(Object.class, centerRenderer); 
 		
 		for (var acc : prs) {
 			
@@ -255,7 +258,7 @@ public class PrisonListDetailFrame extends JFrame {
 				
 			
 		}
-		
+
 		table.setModel(model);
 	}
 	
@@ -475,7 +478,15 @@ public class PrisonListDetailFrame extends JFrame {
 						prs.remove(prisoner);
 						prisoner.setReleasedStatus(true);
 						prisoner.setEndDate(date);
-						prisoner.setType("Released ahead of term");			
+						prisoner.setType("Released ahead of term");
+
+						//Recalculate duration
+						Date startDate = prisoner.getStartDate();
+						Date endDate = prisoner.getEndDate();
+						int diffInMillies = (int) Math.abs(endDate.getTime() - startDate.getTime());
+					    int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+					    prisoner.setDuration(diff + 1);
+						
 						listReleasedPrisoners.add(prisoner);
 						break;
 					}
