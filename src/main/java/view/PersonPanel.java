@@ -27,7 +27,7 @@ public class PersonPanel extends JPanel {
 	private JPopupMenu popup;
 	private TablePersonListener tableListener;
 	
-	public PersonPanel() {
+	public PersonPanel(int privilege) {
 		tableModel = new PersonTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
@@ -37,11 +37,19 @@ public class PersonPanel extends JPanel {
 		JMenuItem victimItem = new JMenuItem("Add into Victim List");
 		JMenuItem complaintItem = new JMenuItem("Attach Complaint");
 		JMenuItem detailItem = new JMenuItem("Person Details");
-		popup.add(removeItem);
-		popup.add(criminalItem);
-		popup.add(victimItem);
-		popup.add(complaintItem);
-		popup.add(detailItem);
+		if(privilege == 2) {
+			popup.add(removeItem);
+			popup.add(criminalItem);
+			popup.add(victimItem);
+			popup.add(complaintItem);
+			popup.add(detailItem);
+		}else {
+			popup.add(criminalItem);
+			popup.add(victimItem);
+			popup.add(complaintItem);
+			popup.add(detailItem);
+		}
+		
 		
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -60,7 +68,7 @@ public class PersonPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
 				int id = (int) table.getModel().getValueAt(row, 0);
-
+				
 				if (tableListener != null) {
 					tableListener.tableEventAttached(id);
 				}
@@ -92,8 +100,8 @@ public class PersonPanel extends JPanel {
 		detailItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
-
+				int id = (int) table.getValueAt(row, 0);
+			
 				if (tableListener != null) {
 					tableListener.tableEventPersonDetail(id);
 				}
@@ -110,8 +118,6 @@ public class PersonPanel extends JPanel {
 				}
 			}
 		});
-		
-		table.setAutoCreateRowSorter(true);  // Search data
 		
 		setLayout(new BorderLayout());
 		
@@ -135,6 +141,7 @@ public class PersonPanel extends JPanel {
 	}
 	
 	public void search(String txt) {
+		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);

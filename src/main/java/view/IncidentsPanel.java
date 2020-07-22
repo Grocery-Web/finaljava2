@@ -28,14 +28,15 @@ public class IncidentsPanel extends JPanel{
 	private JPopupMenu popup;
 	private TableIncidentListener tableListener;
 	
-	public IncidentsPanel() {
+	public IncidentsPanel(int privilege) {
 		tableModel = new ComplaintTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
 		JMenuItem detailItem = new JMenuItem("Incident Details");
-		popup.add(detailItem);
-
+		if(privilege == 2) {
+			popup.add(detailItem);
+		}
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				int row = table.rowAtPoint(e.getPoint());
@@ -51,7 +52,7 @@ public class IncidentsPanel extends JPanel{
 		detailItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				if (tableListener != null) {
 					tableListener.tableEventDetail(id);
@@ -59,8 +60,6 @@ public class IncidentsPanel extends JPanel{
 			}
 		});
 		
-//		table.setAutoCreateRowSorter(true);  // Search data
-
 		setLayout(new BorderLayout());
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -83,6 +82,7 @@ public class IncidentsPanel extends JPanel{
 	}
 	
 	public void search(String txt) {
+		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);

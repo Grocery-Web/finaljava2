@@ -11,7 +11,6 @@ import java.util.List;
 import javax.swing.DefaultRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -21,19 +20,24 @@ import javax.swing.table.DefaultTableCellRenderer;
 import entity.PrisonList;
 
 public class PrisonListPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private PrisonListTableModel tableModel;
 	private JPopupMenu popup;
 	private TablePrisonListListener tableListener;
-	private TablePrisonerInListListener psListen;
 	
-	public PrisonListPanel() {
+	public PrisonListPanel(int privilege) {
 		tableModel = new PrisonListTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
 		JMenuItem viewAllPrisoners = new JMenuItem("View all prisoners ");
-		popup.add(viewAllPrisoners);
+		if(privilege == 2) {
+			popup.add(viewAllPrisoners);
+		}
 		
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -51,9 +55,8 @@ public class PrisonListPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				if (tableListener != null) {
 					tableListener.displayPrisonListDetail(id);
@@ -81,6 +84,7 @@ public class PrisonListPanel extends JPanel {
 	}
 	
 	public void search(String txt) {
+		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);
@@ -92,9 +96,5 @@ public class PrisonListPanel extends JPanel {
 	
 	public void refresh() {
 		tableModel.fireTableDataChanged();
-	}
-	
-	public void setFormListener(TablePrisonerInListListener psListen) {
-		this.psListen = psListen;
 	}
 }

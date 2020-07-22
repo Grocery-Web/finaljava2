@@ -29,7 +29,7 @@ public class ComplaintsPanel extends JPanel {
 	private JPopupMenu popup;
 	private TableComplaintsListener tableListener;
 
-	public ComplaintsPanel() {
+	public ComplaintsPanel(int privilege) {
 		tableModel = new ComplaintTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
@@ -38,7 +38,7 @@ public class ComplaintsPanel extends JPanel {
 		JMenuItem detailItem = new JMenuItem("Complaint Details");
 		popup.add(removeItem);
 		popup.add(detailItem);
-
+		
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				int row = table.rowAtPoint(e.getPoint());
@@ -54,7 +54,7 @@ public class ComplaintsPanel extends JPanel {
 		removeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				int action = JOptionPane.showConfirmDialog(null, "Do you really want to delete this complaint",
 						"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
@@ -75,8 +75,6 @@ public class ComplaintsPanel extends JPanel {
 				}
 			}
 		});
-
-		table.setAutoCreateRowSorter(true);  // Search data
 
 		setLayout(new BorderLayout());
 
@@ -104,6 +102,7 @@ public class ComplaintsPanel extends JPanel {
 	}
 
 	public void search(String txt) {
+		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);

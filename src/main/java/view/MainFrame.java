@@ -4,15 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -30,6 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import dao.ComplaintDAO;
@@ -45,7 +44,6 @@ import entity.Criminal;
 import entity.Person;
 import entity.PrisonList;
 import entity.Prisoner;
-import entity.PrisonerInList;
 import entity.Victim;
 
 public class MainFrame extends JFrame {
@@ -66,7 +64,7 @@ public class MainFrame extends JFrame {
 	private PrisonListPanel prisonListPanel;
 	private PrisonerPanel prisonerPanel;
 	private VictimPanel victimPanel;
-
+	
 //	DAO
 	private PersonDAO personDAO;
 	private ComplaintDAO complaintDAO;
@@ -91,45 +89,50 @@ public class MainFrame extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
-					MainFrame frame = new MainFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
+//					MainFrame frame = new MainFrame();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public MainFrame() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
+	public MainFrame(int privilege) {
+		try {
+			UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		setJMenuBar(createMenuBar());
-
+		
 //		CREATE INTERNAL COMPONENTS 
 		toolbar = new Toolbar();
 		panelCont = new JPanel();
 		personForm = new PersonFormPanel();
-		personPanel = new PersonPanel();
-		complaintPanel = new ComplaintsPanel();
+		personPanel = new PersonPanel(privilege);
+		complaintPanel = new ComplaintsPanel(privilege);
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
-		incidentPanel =  new IncidentsPanel();
-		criminalPanel = new CriminalPanel();
-		prisonListPanel = new PrisonListPanel();
-		prisonerPanel = new PrisonerPanel();
-		victimPanel = new VictimPanel();
+		incidentPanel =  new IncidentsPanel(privilege);
+		criminalPanel = new CriminalPanel(privilege);
+		prisonListPanel = new PrisonListPanel(privilege);
+		prisonerPanel = new PrisonerPanel(privilege);
+		victimPanel = new VictimPanel(privilege);
 
 //		CREATE DAO
 		personDAO = new PersonDAO();
@@ -184,14 +187,33 @@ public class MainFrame extends JFrame {
 			@Override
 			public void searchText(String txt) {
 				int selectedIndex = tabPane.getSelectedIndex();
-				if (selectedIndex == 0) {
+				if (selectedIndex == 0) { //PERSON PANEL
 					personPanel.search(txt);
 				}
 
-				if (selectedIndex == 1) {
+				if (selectedIndex == 1) { //COMPLAINTS PANEL
 					complaintPanel.search(txt);
 				}
-
+				
+				if (selectedIndex == 2) { //INCIDENTS PANEL
+					incidentPanel.search(txt);
+				}
+				
+				if (selectedIndex == 3) { //CRIMINALS PANEL
+					criminalPanel.search(txt);
+				}
+				
+				if (selectedIndex == 4) { //PRISONERS PANEL
+					prisonerPanel.search(txt);
+				}
+				
+				if (selectedIndex == 5) { //VICTIMS PANEL
+					victimPanel.search(txt);
+				}
+				
+				if (selectedIndex == 6) { //PRISON PANEL
+					prisonListPanel.search(txt);
+				}
 			}
 		});
 
@@ -255,7 +277,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDetail(int cplId) {
 				Complaint complaint = complaintDAO.findComplaintById(cplId);
-				cplDetailFrame = new ComplaintDetailFrame(complaint);
+				cplDetailFrame = new ComplaintDetailFrame(complaint,privilege);
 				cplDetailFrame.setLocationRelativeTo(null);
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(cplId));
@@ -416,6 +438,11 @@ public class MainFrame extends JFrame {
 				victimForm.setFormListener(new VictimFormListener() {
 					@Override
 					public void linkNewVictim(Victim victim) {
+						if (victimDAO.checkIfPersonExistAsVictim(victim)) {
+							JOptionPane.showMessageDialog(null, "This person is already a victim of this incident.", "Failed", 
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						victimDAO.linkNewVictim(victim);
 						victimForm.dispose();
 						refresh();
@@ -433,7 +460,7 @@ public class MainFrame extends JFrame {
 				for (Criminal cri : list) {
 					history += cri.getHisOfViolent().replace("<br>***************<br>", "\n\n") + "\n\n";
 				}
-				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history);
+				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history, privilege);
 				detailPersonFrame.setLocationRelativeTo(null);
 				detailPersonFrame.setVisible(true);
 				
@@ -462,52 +489,39 @@ public class MainFrame extends JFrame {
 				});
 			}
 		});
+		
 //		PRISONLIST TABLE LISTENER
 		
 		prisonListPanel.setTableListener(new TablePrisonListListener() {
 			
 			@Override
 			public void displayPrisonListDetail(int id) {
-				PrisonListDAO prDAO = new PrisonListDAO();
+//				Code in writing
 				
-				PrisonList pl = prDAO.getPrisonListByID(id);
-				List<PrisonerInList> prs = prDAO.getAllPrisonerByPrisonListID(id);
+				PrisonList prison = prisonListDAO.getPrisonListByID(id);
+				List<Prisoner> prisonInList = prisonListDAO.getAllPrisonerByPrisonListID(id);
+				List<PrisonList> prisonlist = prisonListDAO.getAllPrisonList();
 				
-				prisonListDetailFrame = new PrisonListDetailFrame(pl, prs);
+				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList);
 				prisonListDetailFrame.setLocationRelativeTo(null);
 				prisonListDetailFrame.setVisible(true);	
 				
 				prisonListDetailFrame.setFormListener(new TablePrisonerInListListener() {
 					@Override
-					public void releasePrisoner(int idPrison) {
-						PrisonerDAO psDAO = new PrisonerDAO();
-						psDAO.releasePrisoner(idPrison);
+					public void savePrisonInfo(PrisonList prl, List<Prisoner> listReleasedPrisoners, List<Prisoner> listTransferedPrisoners) {	
 						
-						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(id);
-						prisonListDetailFrame.loadData(refreshList);
+						prisonListDAO.updatePrisonInfo(prl);
 						
-						PrisonList refreshPL = prDAO.getPrisonListByID(id);
-						prisonListDetailFrame.refreshQuantity(refreshPL);
+						if(listReleasedPrisoners.size() > 0) {
+							prisonerDAO.releaseListPrisoners(listReleasedPrisoners);
+						}
 						
-						refresh();
-					}
-
-					@Override
-					public void transferPrisoner(int idFrom, int idTo, int prisonerID) {
-						prDAO.transferPrisoner(idFrom, idTo, prisonerID);
-						List<PrisonerInList> refreshList = prDAO.getAllPrisonerByPrisonListID(idFrom);
-						prisonListDetailFrame.loadData(refreshList);
+						if(listTransferedPrisoners.size() > 0) {
+							prisonerDAO.transferListPrisoner(listTransferedPrisoners);
+						}
 						
-						PrisonList refreshPL = prDAO.getPrisonListByID(id);
-						prisonListDetailFrame.refreshQuantity(refreshPL);
-						
-						refresh();
-					}
-
-					@Override
-					public void savePrisonInfo(String name, String address, int prisonID) {
-						// TODO Auto-generated method stub					
-						prDAO.updatePrisonInfo(name, address, prisonID);
+						JOptionPane.showMessageDialog(null, "All processes have been done", "Success", JOptionPane.INFORMATION_MESSAGE);
+						prisonListDetailFrame.setVisible(false);	
 						refresh();
 					}					
 				});
@@ -569,8 +583,14 @@ public class MainFrame extends JFrame {
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
 					
 					@Override
-					public void tableInsertPrisoner(Prisoner prisoner) {
-						prisonerDAO.addPrisoner(prisoner);
+					public void tableInsertPrisoner(Prisoner prisoner,Criminal cri) {
+						PrisonList prison = prisonListDAO.getPrisonListByID(prisoner.getPrisonId());
+						if(prison.getCapacity() == prison.getQuantity()) {
+							JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison", "Oopss!", JOptionPane.INFORMATION_MESSAGE);
+						}else{
+							prisonerDAO.addPrisoner(prisoner);
+							tableUpdatedCriminal(cri);
+						};
 					}
 					
 					
@@ -653,10 +673,9 @@ public class MainFrame extends JFrame {
 		add(splitPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.PAGE_START);
 
-		setMinimumSize(new Dimension(700, 600));
+		setMinimumSize(new Dimension(900, 800));
 		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
 	}
 
 	private JMenuBar createMenuBar() {
@@ -694,7 +713,8 @@ public class MainFrame extends JFrame {
 						"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
 
 				if (action == JOptionPane.OK_OPTION) {
-					System.exit(0);
+					Login.main(null);
+					MainFrame.this.setVisible(false);
 				}
 			}
 		});

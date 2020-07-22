@@ -25,7 +25,7 @@ public class VictimPanel extends JPanel{
 	private JPopupMenu popup;
 	private TableVictimListener tableListener;
 	
-	public VictimPanel() {
+	public VictimPanel(int privilege) {
 		tableModel = new VictimTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();

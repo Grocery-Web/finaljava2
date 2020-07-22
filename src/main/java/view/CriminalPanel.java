@@ -26,13 +26,15 @@ public class CriminalPanel extends JPanel{
 	private JPopupMenu popup;
 	private TableCriminalListener tableListener;
 	
-	public CriminalPanel() {
+	public CriminalPanel(int privilege) {
 		tableModel = new CriminalTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
 		JMenuItem detailItem = new JMenuItem("Criminal Details");
-		popup.add(detailItem);
+		if(privilege == 2) {
+			popup.add(detailItem);
+		}
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -49,7 +51,7 @@ public class CriminalPanel extends JPanel{
 		detailItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				if (tableListener != null) {
 					tableListener.tableEventDetail(id);
@@ -57,8 +59,6 @@ public class CriminalPanel extends JPanel{
 			}
 		});
 		
-//		table.setAutoCreateRowSorter(true);  // Search data
-
 		setLayout(new BorderLayout());
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -77,6 +77,7 @@ public class CriminalPanel extends JPanel{
 	}
 	
 	public void search(String txt) {
+		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);

@@ -25,7 +25,7 @@ public class PrisonerPanel extends JPanel{
 	private JPopupMenu popup;
 	private TablePrisonerListener tableListener;
 	
-	public PrisonerPanel() {
+	public PrisonerPanel(int privilege) {
 		tableModel = new PrisonerTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
@@ -33,9 +33,12 @@ public class PrisonerPanel extends JPanel{
 		JMenuItem detailItem = new JMenuItem("Prisoner Details");
 		JMenuItem releaseItem = new JMenuItem("Release");
 		JMenuItem transferItem = new JMenuItem("Transfer");
-		popup.add(detailItem);
-		popup.add(releaseItem);
-		popup.add(transferItem);
+		if(privilege == 2) {
+			popup.add(detailItem);
+			popup.add(releaseItem);
+			popup.add(transferItem);
+		}
+		
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -52,7 +55,7 @@ public class PrisonerPanel extends JPanel{
 		detailItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				if (tableListener != null) {
 					tableListener.tableEventDetail(id);
@@ -82,8 +85,6 @@ public class PrisonerPanel extends JPanel{
 			}
 		});
 		
-//		table.setAutoCreateRowSorter(true);  // Search data
-
 		setLayout(new BorderLayout());
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -102,6 +103,7 @@ public class PrisonerPanel extends JPanel{
 	}
 	
 	public void search(String txt) {
+		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);

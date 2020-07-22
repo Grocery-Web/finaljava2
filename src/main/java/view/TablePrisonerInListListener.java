@@ -1,11 +1,11 @@
 package view;
 
 import java.util.EventListener;
+import java.util.List;
 
 import entity.PrisonList;
+import entity.Prisoner;
 
 public interface TablePrisonerInListListener extends EventListener{
-	public void releasePrisoner(int id);
-	public void transferPrisoner(int idFrom, int idTo, int prisonerID );
-	public void savePrisonInfo(String name, String address, int prisonID);
+	public void savePrisonInfo(PrisonList prl, List<Prisoner> listReleasedPrisoners, List<Prisoner> listTransferedPrisoners);
 }

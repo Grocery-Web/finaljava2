@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -144,17 +145,22 @@ public class AdditonalCriminalInfoFormPanel extends JPanel{
 	}
 	
 	public Criminal getCriminal() {
-		Date getApplidated = null;
-		getApplidated = appliedDate.getDate();
+		String getApplidated = null;
+		getApplidated = dateFormat.format(appliedDate.getDate());
 		
 		if(hisOfViolent.getText().equals("No Records Recognition")) {
-			updatedViolent = "Pecuniary penalty:" + appliedDate.getDate() + " | Guilt:" + crimeTypes;
+			updatedViolent = "Pecuniary penalty:" + getApplidated + " | Guilt:" + crimeTypes;
 		}else {
-			updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Pecuniary penalty:" + appliedDate.getDate() + 
+			updatedViolent = criminal.getHisOfViolent() + "<br>***************<br>" + "Pecuniary penalty:" + getApplidated + 
 					" | Guilt:" + crimeTypes;
 		}
 		
-		criminal.setAppliedDate(getApplidated);
+		try {
+			criminal.setAppliedDate(dateFormat.parse(getApplidated));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		criminal.setHisOfViolent(updatedViolent);
 		
 		return criminal;

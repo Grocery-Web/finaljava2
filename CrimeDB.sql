@@ -184,6 +184,16 @@ BEGIN
 	WHERE UserID = @UserID
 END
 GO
+
+-- Create proc to check if UserID already exist
+CREATE PROC checkDuplicateUserID
+@userID varchar(20)
+AS
+BEGIN
+	SELECT UserID From Account
+	WHERE UserID = @userID
+END
+GO
 /* END PROCEDURE ACCOUNT */
 
 /* PROCEDURE PERSON */
@@ -591,6 +601,17 @@ BEGIN
 END 
 GO
 
+-- Check if Person exists in an Incident' victim list
+CREATE PROC checkIfPersonExistAsVictim
+@personID int,
+@incidentID int
+AS
+BEGIN
+	SELECT * FROM Victim
+	WHERE personalID = @personID AND complaintID = @incidentID
+END
+GO
+
 /* END PROCEDURE VICTIM */
 
 /* PROCEDURE PRISONER */
@@ -618,7 +639,7 @@ create proc getAllPrisonerByPrisonListID
 @id int
 as
 begin
-	select personId, Prisoner.id, Person.name, dob, gender, startDate, duration, endDate, nationality, type
+	select personId, Prisoner.id, Prisoner.prisonId,Person.name, dob, gender, startDate, duration, endDate, nationality, type
 	from Criminal 
 		inner join Prisoner on Criminal.id = Prisoner.criminalID
 		inner join PrisonList on Prisoner.prisonId = PrisonList.id
@@ -627,14 +648,25 @@ begin
 end
 go
 
-
 create proc releasePrisonerByID 
 @id int,
 @date date
 as
 begin
 	update Prisoner
-	set releaseStatus = 1, endDate = @date
+	set releaseStatus = 1, endDate = @date, type = 'Released ahead of term'
+	where id = @id
+end
+go
+
+create proc releaseListPrisonerByID 
+@id int,
+@date date,
+@duration int
+as
+begin
+	update Prisoner
+	set releaseStatus = 1, endDate = @date, duration = @duration, type = 'Released ahead of term'
 	where id = @id
 end
 go
@@ -817,5 +849,12 @@ go
 insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State Penitentiary, Joliet, Illinois', 'fox.png', 4, 0)
 insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 'sona.png', 1, 0)
 insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 0)
+
+--table account
+INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
+	VALUES('master', 'MASTER', 'master@gmail.com', HASHBYTES('SHA2_512', 'master'), 2)
+
+INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
+	VALUES('user', 'USER', 'user@gmail.com', HASHBYTES('SHA2_512', 'user'), 3)
 
 /* END INSERT DATA IN TABLE*/ 
