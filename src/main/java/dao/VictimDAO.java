@@ -46,6 +46,24 @@ public class VictimDAO {
 		return list;
 	}
 	
+	public boolean checkIfPersonExistAsVictim(Victim victim) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call checkIfPersonExistAsVictim(?,?)}");
+			)
+		{
+			ps.setInt(1, victim.getPersonalId());
+			ps.setInt(2, victim.getComplaintID());
+			ResultSet rs = ps.executeQuery();
+			if (!rs.isBeforeFirst()) {
+				return false;
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return true;
+	}
+	
 	public void linkNewVictim(Victim victim) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
