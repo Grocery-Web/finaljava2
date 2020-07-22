@@ -69,7 +69,7 @@ public class PrisonListDetailFrame extends JFrame {
 	private String prisonName;
 	private JLabel q1;
 	private JLabel q2;
-	private boolean cd1, cd2, enabledMouseListener;
+	private boolean cd1, cd2;
 	private String s = Character.toString("\u2713".toCharArray()[0]);
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 

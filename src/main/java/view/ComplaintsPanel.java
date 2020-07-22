@@ -54,7 +54,7 @@ public class ComplaintsPanel extends JPanel {
 		removeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				int action = JOptionPane.showConfirmDialog(null, "Do you really want to delete this complaint",
 						"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
