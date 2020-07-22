@@ -11,7 +11,6 @@ import java.util.List;
 import javax.swing.DefaultRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -21,11 +20,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import entity.PrisonList;
 
 public class PrisonListPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private PrisonListTableModel tableModel;
 	private JPopupMenu popup;
 	private TablePrisonListListener tableListener;
-	private TablePrisonerInListListener psListen;
 	
 	public PrisonListPanel() {
 		tableModel = new PrisonListTableModel();
@@ -51,9 +53,8 @@ public class PrisonListPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				if (tableListener != null) {
 					tableListener.displayPrisonListDetail(id);
@@ -93,9 +94,5 @@ public class PrisonListPanel extends JPanel {
 	
 	public void refresh() {
 		tableModel.fireTableDataChanged();
-	}
-	
-	public void setFormListener(TablePrisonerInListListener psListen) {
-		this.psListen = psListen;
 	}
 }

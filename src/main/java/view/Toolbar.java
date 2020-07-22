@@ -59,7 +59,7 @@ public class Toolbar extends JToolBar implements ActionListener {
 				if(!txtSearch.getText().equals("Search....")) {
 					toolbarListener.searchText(txtSearch.getText());
 				}else {
-					txtSearch.setText("");
+					toolbarListener.searchText("");
 				}
 			}
 
