@@ -665,7 +665,7 @@ public class MainFrame extends JFrame {
 		add(splitPane, BorderLayout.CENTER);
 		add(toolbar, BorderLayout.PAGE_START);
 
-		setMinimumSize(new Dimension(700, 600));
+		setMinimumSize(new Dimension(900, 800));
 		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
