@@ -277,7 +277,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDetail(int cplId) {
 				Complaint complaint = complaintDAO.findComplaintById(cplId);
-				cplDetailFrame = new ComplaintDetailFrame(complaint);
+				cplDetailFrame = new ComplaintDetailFrame(complaint,privilege);
 				cplDetailFrame.setLocationRelativeTo(null);
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(cplId));
@@ -460,7 +460,7 @@ public class MainFrame extends JFrame {
 				for (Criminal cri : list) {
 					history += cri.getHisOfViolent().replace("<br>***************<br>", "\n\n") + "\n\n";
 				}
-				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history);
+				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history, privilege);
 				detailPersonFrame.setLocationRelativeTo(null);
 				detailPersonFrame.setVisible(true);
 				
@@ -489,6 +489,7 @@ public class MainFrame extends JFrame {
 				});
 			}
 		});
+		
 //		PRISONLIST TABLE LISTENER
 		
 		prisonListPanel.setTableListener(new TablePrisonListListener() {
