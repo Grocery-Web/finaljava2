@@ -455,11 +455,9 @@ public class MainFrame extends JFrame {
 				Person per = personDAO.findPersonById(id);
 				
 				int jailStatus = personDAO.checkPersonInJail(id);
-				List<Criminal> list = criminalDAO.findCriminalListByPersonId(id);
-				String history = "";
-				for (Criminal cri : list) {
-					history += cri.getHisOfViolent().replace("<br>***************<br>", "\n\n") + "\n\n";
-				}
+
+				Criminal cri = criminalDAO.findLastUpdatedByPersonalId(id);
+				String history = cri.getHisOfViolent();
 				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history, privilege);
 				detailPersonFrame.setLocationRelativeTo(null);
 				detailPersonFrame.setVisible(true);
