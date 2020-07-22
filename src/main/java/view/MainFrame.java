@@ -108,11 +108,7 @@ public class MainFrame extends JFrame {
 	 */
 	
 	public MainFrame(int privilege) {
-		try {
-			UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		setTitle("Crime Management Dashboard");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
