@@ -1,9 +1,10 @@
 package view;
-import java.awt.FlowLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -11,12 +12,15 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class Toolbar extends JToolBar implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton addPersonButton;
 	private JButton addComplaintButton;
 	private CustomTextField txtSearch;
@@ -46,24 +50,36 @@ public class Toolbar extends JToolBar implements ActionListener{
 		addComplaintButton.setIcon(new ImageIcon(imgComplaint));
 		addComplaintButton.setToolTipText("Add Complaint");
 		
-//		SEARCH BOX LISTENER
-		txtSearch.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				toolbarListener.searchText(txtSearch.getText());
-				
-			}
 
+		
+//		SET FOCUS LISTENER IN SEARCH BOX
+		txtSearch.addFocusListener(new FocusListener() {
+			
 			@Override
-			public void removeUpdate(DocumentEvent e) {
-				toolbarListener.searchText(txtSearch.getText());
-				
+			public void focusLost(FocusEvent e) {
+				txtSearch.setPlaceholder("Search....");
+				toolbarListener.searchText("");
 			}
-
+			
 			@Override
-			public void changedUpdate(DocumentEvent e) {
-				toolbarListener.searchText(txtSearch.getText());
-	
+			public void focusGained(FocusEvent e) {
+//				SEARCH BOX LISTENER
+				txtSearch.getDocument().addDocumentListener(new DocumentListener() {
+					@Override
+					public void insertUpdate(DocumentEvent e) {
+						toolbarListener.searchText(txtSearch.getText());
+					}
+
+					@Override
+					public void removeUpdate(DocumentEvent e) {
+						toolbarListener.searchText(txtSearch.getText());
+					}
+
+					@Override
+					public void changedUpdate(DocumentEvent e) {
+						toolbarListener.searchText(txtSearch.getText());
+					}
+				});
 			}
 		});
 		
@@ -95,7 +111,17 @@ public class Toolbar extends JToolBar implements ActionListener{
 		}
 	}
 	
+//	TOOLBAR LISTENER
 	public void setToolbarListener (ToolbarListener toolbarListener){
 		this.toolbarListener = toolbarListener;
 	}
+	
+//	FOCUS LISTENER ACTION
+	public void focusGained(FocusEvent e) {
+        System.out.println("focus");
+    }
+
+    public void focusLost(FocusEvent e) {
+        System.out.println("Focus lost");
+    }
 }
