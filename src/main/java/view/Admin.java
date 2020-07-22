@@ -10,7 +10,6 @@ import entity.Account;
 
 import java.awt.Color;
 import java.awt.CardLayout;
-import java.awt.Button;
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -44,7 +43,7 @@ public class Admin extends JFrame {
 	public JPanel panelL;
 	public JPanel panelR;
 	public JScrollPane scrollPane;
-	public Button btnLogOut;
+	public JButton btnLogOut;
 	public JTable table;
 	public JLabel lblNewLabel;
 	public JTextField txtUserID;
@@ -69,7 +68,7 @@ public class Admin extends JFrame {
 	public JTextField txtSearch;
 	public JLabel lblAdmin;
 	public JLabel lblAsterisk;
-	public Button btnClear;
+	public JButton btnClear;
 	AccountDAO accDao = new AccountDAO();
 	/**
 	 * Launch the application.
@@ -223,7 +222,8 @@ public class Admin extends JFrame {
 		lblAsterisk.setBounds(62, 59, 53, 14);
 		panelL.add(lblAsterisk);
 		
-		btnClear = new Button("CLEAR");
+		btnClear = new JButton("CLEAR");
+		btnClear.setBorder(null);
 		btnClear.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnClear.addMouseListener(new MouseAdapter() {
 			@Override
@@ -270,7 +270,8 @@ public class Admin extends JFrame {
 		table.setAutoCreateRowSorter(true);
 		scrollPane.setViewportView(table);
 		
-		btnLogOut = new Button("LOG OUT");
+		btnLogOut = new JButton("LOG OUT");
+		btnLogOut.setBorder(null);
 		btnLogOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLogOut.addMouseListener(new MouseAdapter() {
 			@Override
@@ -288,7 +289,7 @@ public class Admin extends JFrame {
 			}
 		});
 		btnLogOut.setFocusable(false);
-		btnLogOut.setFont(new Font("Verdana", Font.BOLD, 12));
+		btnLogOut.setFont(new Font("Dialog", Font.BOLD, 12));
 		btnLogOut.setForeground(new Color(255, 255, 255));
 		btnLogOut.setBackground(new Color(240, 128, 128));
 		btnLogOut.setBounds(391, 10, 84, 33);
