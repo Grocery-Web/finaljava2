@@ -29,13 +29,15 @@ public class PrisonListPanel extends JPanel {
 	private JPopupMenu popup;
 	private TablePrisonListListener tableListener;
 	
-	public PrisonListPanel() {
+	public PrisonListPanel(int privilege) {
 		tableModel = new PrisonListTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
 		JMenuItem viewAllPrisoners = new JMenuItem("View all prisoners ");
-		popup.add(viewAllPrisoners);
+		if(privilege == 2) {
+			popup.add(viewAllPrisoners);
+		}
 		
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

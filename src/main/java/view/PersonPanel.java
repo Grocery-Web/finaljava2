@@ -27,7 +27,7 @@ public class PersonPanel extends JPanel {
 	private JPopupMenu popup;
 	private TablePersonListener tableListener;
 	
-	public PersonPanel() {
+	public PersonPanel(int privilege) {
 		tableModel = new PersonTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
@@ -37,11 +37,19 @@ public class PersonPanel extends JPanel {
 		JMenuItem victimItem = new JMenuItem("Add into Victim List");
 		JMenuItem complaintItem = new JMenuItem("Attach Complaint");
 		JMenuItem detailItem = new JMenuItem("Person Details");
-		popup.add(removeItem);
-		popup.add(criminalItem);
-		popup.add(victimItem);
-		popup.add(complaintItem);
-		popup.add(detailItem);
+		if(privilege == 2) {
+			popup.add(removeItem);
+			popup.add(criminalItem);
+			popup.add(victimItem);
+			popup.add(complaintItem);
+			popup.add(detailItem);
+		}else {
+			popup.add(criminalItem);
+			popup.add(victimItem);
+			popup.add(complaintItem);
+			popup.add(detailItem);
+		}
+		
 		
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

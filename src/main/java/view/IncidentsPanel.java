@@ -28,14 +28,15 @@ public class IncidentsPanel extends JPanel{
 	private JPopupMenu popup;
 	private TableIncidentListener tableListener;
 	
-	public IncidentsPanel() {
+	public IncidentsPanel(int privilege) {
 		tableModel = new ComplaintTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
 		JMenuItem detailItem = new JMenuItem("Incident Details");
-		popup.add(detailItem);
-
+		if(privilege == 2) {
+			popup.add(detailItem);
+		}
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				int row = table.rowAtPoint(e.getPoint());
