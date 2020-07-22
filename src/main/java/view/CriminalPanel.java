@@ -49,7 +49,7 @@ public class CriminalPanel extends JPanel{
 		detailItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				if (tableListener != null) {
 					tableListener.tableEventDetail(id);
