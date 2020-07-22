@@ -850,4 +850,11 @@ insert into PrisonList values ('Fox River State Penitentiary', 'Fox River State 
 insert into PrisonList values ('Sona Federal Penitentiary', ' Panama. Colonel Escamilla', 'sona.png', 1, 0)
 insert into PrisonList values ('Ogygia Prison', 'Sana, Yemen', 'ogyia.png', 3, 0)
 
+--table account
+INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
+	VALUES('master', 'MASTER', 'master@gmail.com', HASHBYTES('SHA2_512', 'master'), 2)
+
+INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
+	VALUES('user', 'USER', 'user@gmail.com', HASHBYTES('SHA2_512', 'user'), 3)
+
 /* END INSERT DATA IN TABLE*/ 

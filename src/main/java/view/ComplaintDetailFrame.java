@@ -88,7 +88,7 @@ public class ComplaintDetailFrame extends JFrame {
 	private HashMap<Person, String> map;
 	private List<Integer> listRemovedPerson  = new ArrayList<Integer>();
 	
-	public ComplaintDetailFrame(Complaint cpl) {
+	public ComplaintDetailFrame(Complaint cpl, int privilege) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 913, 500);
 		contentPane = new JPanel();
@@ -287,13 +287,22 @@ public class ComplaintDetailFrame extends JFrame {
 		rdbtnUnverified = new JRadioButton("Unverified");
 		rdbtnApproved = new JRadioButton("Approved");
 		
+		if(privilege != 2) {
+			rdbtnApproved.setVisible(false);
+		}
+	
 		if (cpl.isStatus() == false) {
 			rdbtnUnverified.setSelected(true);
 		}
 		
 	    group = new ButtonGroup();
-	    group.add(rdbtnUnverified);
-	    group.add(rdbtnApproved);
+	    if(privilege == 2) {
+	    	group.add(rdbtnUnverified);
+		    group.add(rdbtnApproved);
+	    }else {
+	    	group.add(rdbtnUnverified);
+	    }
+	    
 	    
 	    ItemListener choice = new ItemListener() {
 			@Override
@@ -321,8 +330,10 @@ public class ComplaintDetailFrame extends JFrame {
 			}
 		};
 		rdbtnUnverified.addItemListener(choice);
-		rdbtnApproved.addItemListener(choice);
-	
+		if(privilege == 2) {
+			rdbtnApproved.addItemListener(choice);
+		}
+		
 		// TABLE LIST OF SUSPECT
 		JLabel lblSuspectList = new JLabel("List of Suspect:");
 

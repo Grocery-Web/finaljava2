@@ -25,7 +25,7 @@ public class PrisonerPanel extends JPanel{
 	private JPopupMenu popup;
 	private TablePrisonerListener tableListener;
 	
-	public PrisonerPanel() {
+	public PrisonerPanel(int privilege) {
 		tableModel = new PrisonerTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
@@ -33,9 +33,12 @@ public class PrisonerPanel extends JPanel{
 		JMenuItem detailItem = new JMenuItem("Prisoner Details");
 		JMenuItem releaseItem = new JMenuItem("Release");
 		JMenuItem transferItem = new JMenuItem("Transfer");
-		popup.add(detailItem);
-		popup.add(releaseItem);
-		popup.add(transferItem);
+		if(privilege == 2) {
+			popup.add(detailItem);
+			popup.add(releaseItem);
+			popup.add(transferItem);
+		}
+		
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

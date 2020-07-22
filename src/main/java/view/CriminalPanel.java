@@ -26,13 +26,15 @@ public class CriminalPanel extends JPanel{
 	private JPopupMenu popup;
 	private TableCriminalListener tableListener;
 	
-	public CriminalPanel() {
+	public CriminalPanel(int privilege) {
 		tableModel = new CriminalTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
 		
 		JMenuItem detailItem = new JMenuItem("Criminal Details");
-		popup.add(detailItem);
+		if(privilege == 2) {
+			popup.add(detailItem);
+		}
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

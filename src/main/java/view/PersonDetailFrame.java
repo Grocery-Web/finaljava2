@@ -95,7 +95,7 @@ public class PersonDetailFrame extends JFrame {
 	
 	
 	
-	public PersonDetailFrame( Person person, int jailStatus, String history ) {
+	public PersonDetailFrame( Person person, int jailStatus, String history, int privilege) {
 		//get person and save all data to userInFrame.
 		initPersonDetailFrame();
 		ID = person.getPersonalId();
@@ -162,7 +162,10 @@ public class PersonDetailFrame extends JFrame {
 		userInFrame.setDob(person.getDob());
 		userInFrame.setGender(person.getGender());
 
-		
+//		IF USER PRIVILEGE
+		if(privilege == 3) {
+			btnDelete.setEnabled(false);
+		}
 	}
 	
 	public PersonDetailFrame() {

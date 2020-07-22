@@ -184,17 +184,22 @@ public class Login extends JFrame {
 			}
 			
 			case 2: {
-				lblLogin.setText("Welcome Master");
-				lblLogin.setForeground(new Color(0, 128, 0));
+				MainFrame mf = new MainFrame(2);
+				mf.setVisible(true);
+				this.setVisible(false);
 				break;
 			}
 			
 			case 3: {
-				lblLogin.setText(String.format("Welcome %s", acc.getUserID()));
-				lblLogin.setForeground(new Color(0, 128, 0));
+				MainFrame mf = new MainFrame(3);
+				mf.setVisible(true);
+				this.setVisible(false);
 				break;
 			}
 		}
 	}
-		
+	
+	public int getPrivilege(int privilege) {
+		return privilege;
+	}	
 }

@@ -29,7 +29,7 @@ public class ComplaintsPanel extends JPanel {
 	private JPopupMenu popup;
 	private TableComplaintsListener tableListener;
 
-	public ComplaintsPanel() {
+	public ComplaintsPanel(int privilege) {
 		tableModel = new ComplaintTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();
@@ -38,7 +38,7 @@ public class ComplaintsPanel extends JPanel {
 		JMenuItem detailItem = new JMenuItem("Complaint Details");
 		popup.add(removeItem);
 		popup.add(detailItem);
-
+		
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				int row = table.rowAtPoint(e.getPoint());
