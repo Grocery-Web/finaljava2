@@ -368,7 +368,7 @@ public class Admin extends JFrame {
 			return;
 		}
 		acc.setFullName(txtFullName.getText());
-		if (!txtEmail.getText().matches("^[a-z][a-z0-9_\\.]{4,32}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$")) {
+		if (!txtEmail.getText().matches("^[a-z][a-z0-9_\\.]{3,32}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$")) {
 			JOptionPane.showMessageDialog(null, "Please enter a valid email address", "Invalid input", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -426,7 +426,7 @@ public class Admin extends JFrame {
 			return;
 		}
 		acc.setFullName(txtFullName.getText());
-		if (!txtEmail.getText().matches("^[a-z][a-z0-9_\\.]{4,32}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$")) {
+		if (!txtEmail.getText().matches("^[a-z][a-z0-9_\\.]{3,32}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$")) {
 			JOptionPane.showMessageDialog(null, "Please enter a valid email address", "Invalid input", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
