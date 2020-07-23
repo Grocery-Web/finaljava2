@@ -1,8 +1,6 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +26,6 @@ import com.toedter.calendar.JTextFieldDateEditor;
 
 import entity.Complaint;
 import entity.Criminal;
-import entity.Person;
 import entity.Victim;
 
 import javax.swing.BorderFactory;
@@ -65,8 +62,8 @@ public class IncidentDetailFrame extends JFrame {
 	private TableIncidentDetailListener tableListener;
 	private JScrollPane jpTable, jpDetail, jpVictimTable;
 	private String s = Character.toString("\u2713".toCharArray()[0]);
-	private JLabel q1, q2, q4, q5, q3, q6, q7;
-	private boolean cd1, cd2, cd3, cd4, cd5, cd6, cd7, enabledMouseListener;
+	private JLabel q1, q2, q4, q5, q3, q6;
+	private boolean cd1, cd2, cd3, cd4, cd5, cd6;
 	public SimpleDateFormat sdf0 = new SimpleDateFormat("yyyy-MM-dd");
 	public SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss");
 	public SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -93,6 +90,7 @@ public class IncidentDetailFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public IncidentDetailFrame(Complaint inc) {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 868, 726);
 		contentPane = new JPanel();
@@ -139,6 +137,7 @@ public class IncidentDetailFrame extends JFrame {
 		JLabel lblIDate = new JLabel("Date:");	
 		textDate = new JDateChooser();
 		editor = (JTextFieldDateEditor) textDate.getDateEditor();
+		editor.setEditable(false);
 		textDate.setDateFormatString("yyyy-MM-dd");
 		textDate.setDate(inc.getDatetime());
 		textDate.addPropertyChangeListener(new PropertyChangeListener() {
