@@ -181,7 +181,7 @@ public class MainFrame extends JFrame {
 			}
 
 			@Override
-			public void searchText(String txt) {
+			public void searchTextEventOccured(String txt) {
 				int selectedIndex = tabPane.getSelectedIndex();
 				if (selectedIndex == 0) { //PERSON PANEL
 					personPanel.search(txt);
@@ -210,6 +210,13 @@ public class MainFrame extends JFrame {
 				if (selectedIndex == 6) { //PRISON PANEL
 					prisonListPanel.search(txt);
 				}
+			}
+
+			@Override
+			public void refreshEventOccured() {
+				refresh();
+				complaintForm.clearInput();
+				personForm.clearForm();
 			}
 		});
 
