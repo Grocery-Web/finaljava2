@@ -37,7 +37,7 @@ public class CriminalDetailsFrame extends JFrame {
 //	LISTENER
 	private TableCriminalDetailsListener criDetailListener;
 	
-	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypesLst,List<PrisonList> prisonLst) {
+	public CriminalDetailsFrame(Criminal cri, List<String> crimeTypesLst,List<PrisonList> prisonLst,int privilege) {
 		super("Criminal Details");
 		
 		//CRIME TYPES
@@ -53,7 +53,7 @@ public class CriminalDetailsFrame extends JFrame {
 		cancelBtn = new JButton("Cancel");
 		buttonsPanel =  new JPanel();
 		prisonerFormPanel = new PrisonerFormPanel(cri,prisonLst, crimeTypes);
-		criFormPanel = new CriminalFormPanel(cri,crimeTypes);
+		criFormPanel = new CriminalFormPanel(cri,crimeTypes,privilege);
 		additionalPanel =  new AdditonalCriminalInfoFormPanel(cri,crimeTypes);
 		panelCont = new JPanel();
 		

@@ -32,9 +32,7 @@ public class CriminalPanel extends JPanel{
 		popup = new JPopupMenu();
 		
 		JMenuItem detailItem = new JMenuItem("Criminal Details");
-		if(privilege == 2) {
-			popup.add(detailItem);
-		}
+		popup.add(detailItem);
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

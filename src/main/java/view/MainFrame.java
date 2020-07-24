@@ -505,7 +505,7 @@ public class MainFrame extends JFrame {
 				List<Prisoner> prisonInList = prisonListDAO.getAllPrisonerByPrisonListID(id);
 				List<PrisonList> prisonlist = prisonListDAO.getAllPrisonList();
 				
-				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList);
+				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList, privilege);
 				prisonListDetailFrame.setLocationRelativeTo(null);
 				prisonListDetailFrame.setVisible(true);	
 				
@@ -580,7 +580,7 @@ public class MainFrame extends JFrame {
 				
 				List<PrisonList> prisonlst = prisonListDAO.getAllPrisonList();
 
-				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst);
+				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst,privilege);
 				MainFrame.this.setVisible(false);
 				criDetailFrame.setVisible(true);
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {

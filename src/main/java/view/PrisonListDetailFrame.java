@@ -139,9 +139,35 @@ public class PrisonListDetailFrame extends JFrame {
 		btnSave.setEnabled(unlock);
 	}
 
-	public PrisonListDetailFrame(PrisonList prison, List<PrisonList> prisonlist, List<Prisoner> prisonInList) {
+	public PrisonListDetailFrame(PrisonList prison, List<PrisonList> prisonlist, List<Prisoner> prisonInList, int privilege) {
 		initFrame(prison, prisonlist, prisonInList);
+		
+		if(privilege == 3) {
+			txtName.setEditable(false);
+			txtAddress.setEditable(false);
+			btnRelease.setVisible(false);
+			btnTransfer.setVisible(false);
+		}
+		
+		txtName.setText(prison.getName());
+		txtAddress.setText(prison.getAddress());
+		txtCapacity.setText(Integer.toString(prison.getCapacity()));
+		txtQuantity.setText(Integer.toString(prison.getQuantity()));
+		imgName = prison.getImg();
 
+		prisonID = prison.getId();
+		prisonName = prison.getName();
+
+		// Display Prison's img
+
+		try {
+			String url = "images/" + prison.getImg();
+			Image prisonIMG = new ImageIcon(getClass().getClassLoader().getResource(url)).getImage()
+					.getScaledInstance(400, 130, Image.SCALE_SMOOTH);
+			lblImg.setIcon(new ImageIcon(prisonIMG));
+		} catch (Exception e) {
+		}
+		
 		txtName.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
@@ -190,24 +216,7 @@ public class PrisonListDetailFrame extends JFrame {
 			}
 		});
 
-		txtName.setText(prison.getName());
-		txtAddress.setText(prison.getAddress());
-		txtCapacity.setText(Integer.toString(prison.getCapacity()));
-		txtQuantity.setText(Integer.toString(prison.getQuantity()));
-		imgName = prison.getImg();
 
-		prisonID = prison.getId();
-		prisonName = prison.getName();
-
-		// Display Prison's img
-
-		try {
-			String url = "images/" + prison.getImg();
-			Image prisonIMG = new ImageIcon(getClass().getClassLoader().getResource(url)).getImage()
-					.getScaledInstance(400, 130, Image.SCALE_SMOOTH);
-			lblImg.setIcon(new ImageIcon(prisonIMG));
-		} catch (Exception e) {
-		}
 
 		// TABLE: GET ALL PRISONERS IN THIS PRISON
 		loadData(prisonInList);
@@ -315,7 +324,7 @@ public class PrisonListDetailFrame extends JFrame {
 				btnSaveactionPerformed(e, pr);
 			}
 		});
-
+		
 		btnRelease = new JButton("Release");
 		btnRelease.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -329,6 +338,7 @@ public class PrisonListDetailFrame extends JFrame {
 				btnTransferactionPerformed(e, prs, prisonlist);
 			}
 		});
+		
 
 		q1 = new JLabel();
 
