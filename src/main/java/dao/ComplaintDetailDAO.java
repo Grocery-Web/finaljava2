@@ -82,7 +82,6 @@ public class ComplaintDetailDAO {
 			ps.setInt(2, comDetail.getCompId());
 			ps.setString(3, comDetail.getCrimeType());
 			ps.executeUpdate();
-			JOptionPane.showMessageDialog(null, "Set Details Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}

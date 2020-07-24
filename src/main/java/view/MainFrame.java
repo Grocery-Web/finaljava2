@@ -367,7 +367,7 @@ public class MainFrame extends JFrame {
 								JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "This person is already in prison", "Error", 
+					JOptionPane.showMessageDialog(null, "Person is serving in Jail. Could not choose!", "Error", 
 							JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
 				}
 			}

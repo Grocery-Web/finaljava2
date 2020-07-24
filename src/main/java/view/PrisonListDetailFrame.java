@@ -479,9 +479,8 @@ public class PrisonListDetailFrame extends JFrame {
 							// Recalculate duration
 							Date startDate = prisoner.getStartDate();
 							Date endDate = prisoner.getEndDate();
-							int diffInMillies = (int) Math.abs(endDate.getTime() - startDate.getTime());
-							int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-							prisoner.setDuration(diff + 1);
+							int getDuration = (int) getDateDiff(startDate, endDate, TimeUnit.DAYS);
+							prisoner.setDuration(getDuration);
 
 							listReleasedPrisoners.add(prisoner);
 							break;
@@ -546,5 +545,10 @@ public class PrisonListDetailFrame extends JFrame {
 	protected void scrollPanemouseReleased(MouseEvent e) {
 		table.clearSelection();
 		table.setFocusable(false);
+	}
+	
+	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+	    long diffInMillies = date2.getTime() - date1.getTime();
+	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 }
