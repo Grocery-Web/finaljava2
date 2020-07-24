@@ -121,8 +121,12 @@ public class PersonDetailFrame extends JFrame {
 			textStatus.setText("Being imprisoned");
 		}
 		
-		textViolenceHistory.setText(history);
-		
+		if (history != "") {
+			textViolenceHistory.setText(history);
+		} else {
+			textViolenceHistory.setText("No Criminal Record");
+		}
+			
 		
 		var url ="avatar/" + person.getImage();
 		
@@ -311,10 +315,10 @@ public class PersonDetailFrame extends JFrame {
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.UNRELATED)
-								.addComponent(rdbtnMale, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-								.addComponent(rdbtnFemale)
-								.addGap(297))
+								.addComponent(rdbtnMale, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+								.addGap(18)
+								.addComponent(rdbtnFemale, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap())
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
@@ -367,10 +371,11 @@ public class PersonDetailFrame extends JFrame {
 								.addComponent(lblNewLabel)
 								.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(rdbtnFemale)
-								.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(rdbtnMale))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+									.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+									.addComponent(rdbtnMale))
+								.addComponent(rdbtnFemale))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)

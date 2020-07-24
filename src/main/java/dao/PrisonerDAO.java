@@ -127,7 +127,9 @@ public class PrisonerDAO {
 		prisoner = findPrisonerByID(PrisonerID);
 		
 		if (prisoner.getType().equals("Death penalty")) {
-			JOptionPane.showMessageDialog(null, "Cant release death person! Please check again");
+			JOptionPane.showMessageDialog(null, "Cant release dead person! Please check again");
+		} else if (prisoner.getType().equals("Life-sentence")) {
+			JOptionPane.showMessageDialog(null, "Cant release life-sentenced prisoner! Please check again");
 		}
 		else {
 			

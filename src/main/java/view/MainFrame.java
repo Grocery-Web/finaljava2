@@ -458,10 +458,12 @@ public class MainFrame extends JFrame {
 				Person per = personDAO.findPersonById(id);
 				
 				int jailStatus = personDAO.checkPersonInJail(id);
-				List<Criminal> list = criminalDAO.findCriminalListByPersonId(id);
-				String history = "";
-				for (Criminal cri : list) {
-					history += cri.getHisOfViolent().replace("<br>***************<br>", "\n\n") + "\n\n";
+
+				Criminal cri = criminalDAO.findLastUpdatedByPersonalId(id);
+//				String history = cri.getHisOfViolent().replace("<br>***************<br>", "\n\n");
+				String history = cri.getHisOfViolent();
+				if (history != null) {
+					history = history.replace("<br>***************<br>", "\n\n");
 				}
 				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history, privilege);
 				detailPersonFrame.setLocationRelativeTo(null);
@@ -632,10 +634,15 @@ public class MainFrame extends JFrame {
 				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
 				Date startDate = prisoner.getStartDate();
 				Date endDate = prisoner.getEndDate();
-				int diffInMillies = (int) Math.abs(endDate.getTime() - startDate.getTime());
-			    int diff = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-			    prisonerDAO.updateDurationByPrisonerID(id, diff + 1);
+				
+				int getDuration = (int) getDateDiff(startDate, endDate, TimeUnit.DAYS);
+			    prisonerDAO.updateDurationByPrisonerID(id, getDuration + 1);
 				refresh();
+			}
+			
+			public long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+			    long diffInMillies = date2.getTime() - date1.getTime();
+			    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 			}
 			
 			@Override
