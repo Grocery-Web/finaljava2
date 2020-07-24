@@ -33,8 +33,8 @@ public class PrisonerPanel extends JPanel{
 		JMenuItem detailItem = new JMenuItem("Prisoner Details");
 		JMenuItem releaseItem = new JMenuItem("Release");
 		JMenuItem transferItem = new JMenuItem("Transfer");
+		popup.add(detailItem);
 		if(privilege == 2) {
-			popup.add(detailItem);
 			popup.add(releaseItem);
 			popup.add(transferItem);
 		}
