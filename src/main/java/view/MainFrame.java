@@ -634,10 +634,12 @@ public class MainFrame extends JFrame {
 				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
 				Date startDate = prisoner.getStartDate();
 				Date endDate = prisoner.getEndDate();
-				
-				int getDuration = (int) getDateDiff(startDate, endDate, TimeUnit.DAYS);
-			    prisonerDAO.updateDurationByPrisonerID(id, getDuration + 1);
-				refresh();
+				if (endDate != null) {
+					int getDuration = (int) getDateDiff(startDate, endDate, TimeUnit.DAYS);
+				    prisonerDAO.updateDurationByPrisonerID(id, getDuration + 1);
+					refresh();
+				}
+
 			}
 			
 			public long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
