@@ -41,7 +41,7 @@ public class CriminalFormPanel extends JPanel{
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private String getPunishment = "in process";
 	
-	public CriminalFormPanel(Criminal cri, String crimeTypes) {
+	public CriminalFormPanel(Criminal cri, String crimeTypes, int privilege) {
 		Dimension dim = getPreferredSize();
 		dim.width = 300;
 		setPreferredSize(dim);
@@ -54,7 +54,6 @@ public class CriminalFormPanel extends JPanel{
 		dob =  new JLabel(dateFormat.format(cri.getDob()));
 		gender =  new JLabel(cri.getGender().toString());
 		rating = new JLabel(Integer.toString(cri.getRating()));
-		
 		
 		crimeType = new JLabel(crimeTypes);
 		
@@ -92,8 +91,10 @@ public class CriminalFormPanel extends JPanel{
 		//Combobox Model
 		DefaultComboBoxModel punishModel = new DefaultComboBoxModel();
 		punishModel.addElement("in process");
-		punishModel.addElement("imprisoner");
-		punishModel.addElement("administrative sanctions");
+		if(privilege == 2) {
+			punishModel.addElement("imprisoner");
+			punishModel.addElement("administrative sanctions");
+		}
 		punishCombo.setModel(punishModel);
 		
 		//SET FORM LAYOUT
