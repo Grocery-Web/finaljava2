@@ -8,6 +8,9 @@ import java.awt.Color;
 import java.awt.Button;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 import dao.AccountDAO;
 import entity.Account;
@@ -17,7 +20,10 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JPasswordField;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
 import java.awt.Checkbox;
 import java.awt.Label;
 import java.awt.Cursor;
@@ -31,7 +37,7 @@ public class Login extends JFrame {
 
 	private JPanel contentPane;
 	public JPanel panel;
-	public Button btnLogIn;
+	public JButton btnLogIn;
 	public JTextField txtUserID;
 	public JLabel lblNewLabel;
 	public JLabel lblPassword;
@@ -49,9 +55,10 @@ public class Login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Login frame = new Login();
-					frame.setLocationRelativeTo(null);
-					frame.setVisible(true);
+					UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
+					Login login = new Login();
+					login.setLocationRelativeTo(null);
+					login.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -83,7 +90,8 @@ public class Login extends JFrame {
 		lblTopLeft.setIcon(img);
 		panel.add(lblTopLeft);
 		
-		btnLogIn = new Button("LOG IN");
+		btnLogIn = new JButton("LOG IN");
+		btnLogIn.setBorder(null);
 		btnLogIn.setFont(new Font("Dialog", Font.BOLD, 12));
 		btnLogIn.addMouseListener(new MouseAdapter() {
 			@Override
@@ -148,6 +156,7 @@ public class Login extends JFrame {
 		lblLogin = new JLabel("");
 		lblLogin.setBounds(379, 302, 230, 14);
 		contentPane.add(lblLogin);
+		SwingUtilities.getRootPane(contentPane).setDefaultButton(btnLogIn);
 	}
 	
 	// Create function to change color of btnLogIn on mouseEntered and mouseExited

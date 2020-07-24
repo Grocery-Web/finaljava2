@@ -24,6 +24,7 @@ public class Toolbar extends JToolBar implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JButton addPersonButton;
 	private JButton addComplaintButton;
+	private JButton refreshButton;
 	private CustomTextField txtSearch;
 	private ToolbarListener toolbarListener;
 	private JLabel searchLabel;
@@ -35,6 +36,7 @@ public class Toolbar extends JToolBar implements ActionListener {
 
 		addPersonButton = new JButton();
 		addComplaintButton = new JButton();
+		refreshButton = new JButton();
 		txtSearch = new CustomTextField(10);
 		searchLabel = new JLabel("Search:");
 
@@ -51,15 +53,20 @@ public class Toolbar extends JToolBar implements ActionListener {
 		Image imgComplaint = new ImageIcon(this.getClass().getResource("/images/complaint.png")).getImage();
 		addComplaintButton.setIcon(new ImageIcon(imgComplaint));
 		addComplaintButton.setToolTipText("Add Complaint");
+		
+		refreshButton.addActionListener(this);
+		Image imgRefresh = new ImageIcon(this.getClass().getResource("/images/refresh.png")).getImage();
+		refreshButton.setIcon(new ImageIcon(imgRefresh));
+		refreshButton.setToolTipText("Refresh");
 
 //		SET FOCUS LISTENER IN SEARCH BOX
 		txtSearch.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if(!txtSearch.getText().equals("Search....")) {
-					toolbarListener.searchText(txtSearch.getText());
+					toolbarListener.searchTextEventOccured(txtSearch.getText());
 				}else {
-					toolbarListener.searchText("");
+					toolbarListener.searchTextEventOccured("");
 				}
 			}
 
@@ -69,17 +76,17 @@ public class Toolbar extends JToolBar implements ActionListener {
 				txtSearch.getDocument().addDocumentListener(new DocumentListener() {
 					@Override
 					public void insertUpdate(DocumentEvent e) {
-						toolbarListener.searchText(txtSearch.getText());
+						toolbarListener.searchTextEventOccured(txtSearch.getText());
 					}
 
 					@Override
 					public void removeUpdate(DocumentEvent e) {
-						toolbarListener.searchText(txtSearch.getText());
+						toolbarListener.searchTextEventOccured(txtSearch.getText());
 					}
 
 					@Override
 					public void changedUpdate(DocumentEvent e) {
-						toolbarListener.searchText(txtSearch.getText());
+						toolbarListener.searchTextEventOccured(txtSearch.getText());
 					}
 				});
 			}
@@ -91,6 +98,8 @@ public class Toolbar extends JToolBar implements ActionListener {
 		add(addPersonButton);
 		addSeparator();
 		add(addComplaintButton);
+		addSeparator();
+		add(refreshButton);
 		add(Box.createHorizontalGlue());
 		add(Box.createRigidArea(new Dimension(1400, 0)));
 		add(searchLabel);
@@ -109,6 +118,10 @@ public class Toolbar extends JToolBar implements ActionListener {
 		} else if (clicked == addComplaintButton) {
 			if (toolbarListener != null) {
 				toolbarListener.addComplaintEventOccured();
+			}
+		} else if (clicked == refreshButton) {
+			if (toolbarListener != null) {
+				toolbarListener.refreshEventOccured();
 			}
 		}
 	}

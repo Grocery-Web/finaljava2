@@ -108,11 +108,7 @@ public class MainFrame extends JFrame {
 	 */
 	
 	public MainFrame(int privilege) {
-		try {
-			UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		setTitle("Crime Management Dashboard");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -185,7 +181,7 @@ public class MainFrame extends JFrame {
 			}
 
 			@Override
-			public void searchText(String txt) {
+			public void searchTextEventOccured(String txt) {
 				int selectedIndex = tabPane.getSelectedIndex();
 				if (selectedIndex == 0) { //PERSON PANEL
 					personPanel.search(txt);
@@ -214,6 +210,13 @@ public class MainFrame extends JFrame {
 				if (selectedIndex == 6) { //PRISON PANEL
 					prisonListPanel.search(txt);
 				}
+			}
+
+			@Override
+			public void refreshEventOccured() {
+				refresh();
+				complaintForm.clearInput();
+				personForm.clearForm();
 			}
 		});
 
@@ -364,7 +367,7 @@ public class MainFrame extends JFrame {
 								JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "This person is already in prison", "Error", 
+					JOptionPane.showMessageDialog(null, "Person is serving in Jail. Could not choose!", "Error", 
 							JOptionPane.OK_OPTION|JOptionPane.ERROR_MESSAGE);
 				}
 			}
