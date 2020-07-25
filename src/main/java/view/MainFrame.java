@@ -299,8 +299,11 @@ public class MainFrame extends JFrame {
 					}
 					
 					@Override
-					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri) {
+					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri,List<Integer> lstID) {
 						complaintDAO.updateComplaintById(cplId, cpl);
+						if(lstID.size()>0) {
+							comDetailDAO.removePerson(lstID,cplId);
+						}
 						for (Criminal criminal : lstCri) {
 							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
 							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
