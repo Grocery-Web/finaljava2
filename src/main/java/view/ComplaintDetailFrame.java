@@ -748,7 +748,7 @@ public class ComplaintDetailFrame extends JFrame {
 			}
 			
 			if(tableListener != null) {
-				tableListener.tableEventSubmited(complaint, list);
+				tableListener.tableEventSubmited(complaint, list, listRemovedPerson);
 			}
 		}
 	}

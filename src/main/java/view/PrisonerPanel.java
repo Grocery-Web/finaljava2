@@ -93,7 +93,7 @@ public class PrisonerPanel extends JPanel{
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 10; i++) {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 	}
