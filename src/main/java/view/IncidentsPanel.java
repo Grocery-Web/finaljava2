@@ -75,6 +75,7 @@ public class IncidentsPanel extends JPanel{
 	
 	public void setData(List<Complaint> db) {
 		tableModel.setData(db);
+		table.setAutoCreateRowSorter(true);  // Search data
 	}
 	
 	public void refresh() {

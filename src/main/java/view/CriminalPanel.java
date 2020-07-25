@@ -72,6 +72,7 @@ public class CriminalPanel extends JPanel{
 	
 	public void setData(List<Criminal> db) {
 		tableModel.setData(db);
+		table.setAutoCreateRowSorter(true);  // Search data
 	}
 	
 	public void search(String txt) {

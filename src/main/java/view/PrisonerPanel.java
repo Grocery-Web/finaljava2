@@ -85,6 +85,7 @@ public class PrisonerPanel extends JPanel{
 			}
 		});
 		
+		
 		setLayout(new BorderLayout());
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -93,13 +94,14 @@ public class PrisonerPanel extends JPanel{
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 10; i++) {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 	}
 	
 	public void setData(List<Prisoner> db) {
 		tableModel.setData(db);
+		table.setAutoCreateRowSorter(true);  // Search data
 	}
 	
 	public void search(String txt) {
