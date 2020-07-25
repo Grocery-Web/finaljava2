@@ -134,6 +134,7 @@ public class PersonPanel extends JPanel {
 	
 	public void setData(List<Person> db) {
 		tableModel.setData(db);
+		table.setAutoCreateRowSorter(true);  // Search data
 	}
 	
 	public void refresh() {
@@ -141,7 +142,6 @@ public class PersonPanel extends JPanel {
 	}
 	
 	public void search(String txt) {
-		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);

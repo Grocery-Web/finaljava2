@@ -121,7 +121,7 @@ public class PersonDetailFrame extends JFrame {
 			textStatus.setText("Being imprisoned");
 		}
 		
-		if (history != "") {
+		if (history != null) {
 			textViolenceHistory.setText(history);
 		} else {
 			textViolenceHistory.setText("No Criminal Record");

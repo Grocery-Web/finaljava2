@@ -74,6 +74,7 @@ public class Toolbar extends JToolBar implements ActionListener {
 			public void focusGained(FocusEvent e) {
 //				SEARCH BOX LISTENER
 				txtSearch.getDocument().addDocumentListener(new DocumentListener() {
+					
 					@Override
 					public void insertUpdate(DocumentEvent e) {
 						toolbarListener.searchTextEventOccured(txtSearch.getText());
