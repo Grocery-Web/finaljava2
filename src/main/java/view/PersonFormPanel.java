@@ -374,7 +374,7 @@ public class PersonFormPanel extends JPanel {
 	}
 
 	private void cd3Check() {
-		if (!occupationField.getText().equals("") && occupationField.getText().matches("[a-zA-Z]{4,20}")) {
+		if (!occupationField.getText().equals("") && occupationField.getText().matches("[a-zA-Z\\s]{4,20}")) {
 			occupationField.setBorder(new LineBorder(Color.GREEN, 1));
 			q3.setText(s);
 			q3.setForeground(new Color(0, 153, 51));

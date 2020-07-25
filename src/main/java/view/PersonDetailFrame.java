@@ -1,11 +1,7 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
@@ -23,17 +19,24 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.awt.event.ActionEvent;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Calendar;
 
-import dao.PersonDAO;
 import entity.Gender;
 import entity.Person;
 
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
+
 import java.awt.Color;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -60,7 +63,6 @@ public class PersonDetailFrame extends JFrame {
 	private JButton btnClose;
 	private JButton btnDelete;
 	private JLabel lblId;
-	private JTextField txtID;
 	private PersonDetailListener psListen;
 	private JRadioButton rdbtnMale;
 	private JRadioButton rdbtnFemale;
@@ -72,37 +74,21 @@ public class PersonDetailFrame extends JFrame {
 	File imgChooser = null;
 	int ID; //Person's ID
 	private JTextField textStatus;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PersonDetailFrame frame = new PersonDetailFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JLabel lblPersonalID;
+	private JTextFieldDateEditor editor;
+	private JLabel q1, q2, q3, q4, q5;
+	private boolean cd1, cd2, cd3, cd4, cd5;
+	public String s = Character.toString("\u2713".toCharArray()[0]);
 
 	/**
 	 * Create the frame.
 	 */
-	
-	
-	
 	public PersonDetailFrame( Person person, int jailStatus, String history, int privilege) {
 		//get person and save all data to userInFrame.
 		initPersonDetailFrame();
 		ID = person.getPersonalId();
 		
-		txtID.setText(Integer.toString(person.getPersonalId()));
-		txtID.setEditable(false);
-		txtID.setEnabled(false);
+		lblPersonalID.setText(Integer.toString(person.getPersonalId()));
 		
 		txtName.setText(person.getName());
 		txtAddress.setText(person.getAddress());
@@ -217,18 +203,90 @@ public class PersonDetailFrame extends JFrame {
 		txtName = new JTextField();
 		txtName.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtName.setColumns(10);
+		txtName.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd1Check();
+				checkUnlock();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd1Check();
+				checkUnlock();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd1Check();
+				checkUnlock();
+			}
+		});
 		
 		txtAddress = new JTextField();
 		txtAddress.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtAddress.setColumns(10);
+		txtAddress.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd3Check();
+				checkUnlock();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd3Check();
+				checkUnlock();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd3Check();
+				checkUnlock();
+			}
+		});
 		
 		txtNation = new JTextField();
 		txtNation.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtNation.setColumns(10);
+		txtNation.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd4Check();
+				checkUnlock();
+			}
+		});
 		
 		txtJob = new JTextField();
 		txtJob.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtJob.setColumns(10);
+		txtJob.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				cd5Check();
+				checkUnlock();
+			}
+		});
 		
 		btnSave = new JButton("Save");
 		btnSave.setForeground(Color.BLUE);
@@ -240,7 +298,16 @@ public class PersonDetailFrame extends JFrame {
 		btnSave.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		datePerson = new JDateChooser();
+		editor = (JTextFieldDateEditor) datePerson.getDateEditor();
+		editor.setEditable(false);
 		datePerson.setDateFormatString("yyyy-MM-dd");
+		datePerson.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				cd2Check();
+				checkUnlock();
+			}
+		});
 		
 		btnClose = new JButton("Close");
 		btnClose.addActionListener(new ActionListener() {
@@ -262,11 +329,6 @@ public class PersonDetailFrame extends JFrame {
 		
 		lblId = new JLabel("ID");
 		lblId.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		
-		txtID = new JTextField();
-		txtID.setBackground(Color.WHITE);
-		txtID.setFont(new Font("Tahoma", Font.BOLD, 14));
-		txtID.setColumns(10);
 		
 		rdbtnMale = new JRadioButton("Male");
 		rdbtnMale.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -293,6 +355,14 @@ public class PersonDetailFrame extends JFrame {
 		textViolenceHistory.setEditable(false);
 		jpHistory = new JScrollPane(textViolenceHistory);
 		jpHistory.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		lblPersonalID = new JLabel("");
+		
+		q1 = new JLabel("?");
+		q2 = new JLabel("?");
+		q3 = new JLabel("?");
+		q4 = new JLabel("?");
+		q5 = new JLabel("?");
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -323,7 +393,9 @@ public class PersonDetailFrame extends JFrame {
 								.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED)
 								.addComponent(datePerson, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap())
+								.addPreferredGap(ComponentPlacement.UNRELATED)
+								.addComponent(q2, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+								.addGap(252))
 							.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -334,65 +406,90 @@ public class PersonDetailFrame extends JFrame {
 										.addPreferredGap(ComponentPlacement.RELATED)
 										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 											.addComponent(jpHistory, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-											.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-												.addComponent(textStatus, Alignment.LEADING)
-												.addComponent(txtJob, Alignment.LEADING)
-												.addComponent(txtNation, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))))
-									.addGroup(gl_contentPane.createSequentialGroup()
+											.addGroup(gl_contentPane.createSequentialGroup()
+												.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+													.addComponent(textStatus, Alignment.LEADING)
+													.addComponent(txtJob, Alignment.LEADING)
+													.addComponent(txtNation, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
+												.addPreferredGap(ComponentPlacement.UNRELATED)
+												.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+													.addComponent(q5, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+													.addComponent(q4, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)))))
+									.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
 										.addComponent(lblAddress, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(txtAddress, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)))
-								.addGap(27))
+										.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 399, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addComponent(q3, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)))
+								.addContainerGap())
 							.addGroup(gl_contentPane.createSequentialGroup()
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 									.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
 									.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE))
 								.addPreferredGap(ComponentPlacement.RELATED)
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+										.addComponent(txtName, GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(q1, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+										.addGap(259))
 									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
-										.addGap(399))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(txtName, 0, 0, Short.MAX_VALUE)
-										.addGap(293)))))
+										.addComponent(lblPersonalID)
+										.addContainerGap()))))
 						.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(29)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNewLabel)
-								.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-									.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-									.addComponent(rdbtnMale))
-								.addComponent(rdbtnFemale))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(datePerson, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblAddress, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtNation, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtJob, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(lblImgUser, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE))
+							.addGap(29)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblPersonalID))
+									.addGap(18)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblNewLabel)
+										.addComponent(txtName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(q1, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+									.addGap(18)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+											.addComponent(lblGender, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+											.addComponent(rdbtnMale))
+										.addComponent(rdbtnFemale))
+									.addGap(16)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+										.addComponent(lblDob, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+										.addComponent(datePerson, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(q2, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+									.addGap(18)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblAddress, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtAddress, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(18)
+											.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+												.addComponent(lblNationality, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+												.addComponent(txtNation, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+												.addComponent(lblJob, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+												.addComponent(txtJob, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(18)
+											.addComponent(q4, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+											.addGap(20)
+											.addComponent(q5, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+											.addGap(3))))
+								.addComponent(lblImgUser, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(q3, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+							.addGap(88)))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(90)
@@ -416,6 +513,95 @@ public class PersonDetailFrame extends JFrame {
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
+	
+// FUNCTIONS TO CHECK INPUT VALIDATION
+	private void cd1Check() {
+		if (!txtName.getText().equals("") && txtName.getText().matches("[\\D ]{1,50}")) {
+			txtName.setBorder(new LineBorder(Color.GREEN, 1));
+			q1.setText(s);
+			q1.setForeground(new Color(0, 153, 51));
+			q1.setToolTipText(null);
+			cd1 = true;
+		} else {
+			txtName.setBorder(new LineBorder(Color.RED, 1));
+			q1.setText("?");
+			q1.setForeground(Color.RED);
+			q1.setToolTipText("1 - 50 alphabet and special characters");
+			cd1 = false;
+		}
+	}
+	
+	private void cd2Check() {
+		Calendar cal = Calendar.getInstance();
+		if (datePerson.getDate() != null) {
+			cal.setTime(datePerson.getDate());
+			LocalDate date1 = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DATE));
+			LocalDate date2 = LocalDate.now();
+			if (date1.compareTo(date2) <= 0) {
+				q2.setText(s); q2.setForeground(new Color(0, 153, 51));
+				q2.setToolTipText(null);
+				cd2 = true;
+			} else {
+				q2.setText("?"); q2.setForeground(Color.RED);
+				q2.setToolTipText("Select a date that is no later than today.");
+				cd2 = false;
+			}
+		}
+	}
+	
+	private void cd3Check() {
+		if (!txtAddress.getText().equals("") && txtAddress.getText().matches("(.|\\s){2,4000}")) {
+			txtAddress.setBorder(new LineBorder(Color.GREEN, 1));
+			q3.setText(s);
+			q3.setForeground(new Color(0, 153, 51));
+			q3.setToolTipText(null);
+			cd3 = true;
+		} else {
+			txtAddress.setBorder(new LineBorder(Color.RED, 1));
+			q3.setText("?");
+			q3.setForeground(Color.RED);
+			q3.setToolTipText("Minimum length required is 2 characters");
+			cd3 = false;
+		}
+	}
+
+	private void cd4Check() {
+		if (!txtNation.getText().equals("") && txtNation.getText().matches("[a-zA-Z]{4,50}")) {
+			txtNation.setBorder(new LineBorder(Color.GREEN, 1));
+			q4.setText(s);
+			q4.setForeground(new Color(0, 153, 51));
+			q4.setToolTipText(null);
+			cd4 = true;
+		} else {
+			txtNation.setBorder(new LineBorder(Color.RED, 1));
+			q4.setText("?");
+			q4.setForeground(Color.RED);
+			q4.setToolTipText("4 - 50 alphabet characters");
+			cd4 = false;
+		}
+	}
+
+	private void cd5Check() {
+		if (!txtJob.getText().equals("") && txtJob.getText().matches("[a-zA-Z\\s]{4,20}")) {
+			txtJob.setBorder(new LineBorder(Color.GREEN, 1));
+			q5.setText(s);
+			q5.setForeground(new Color(0, 153, 51));
+			q5.setToolTipText(null);
+			cd5 = true;
+		} else {
+			txtJob.setBorder(new LineBorder(Color.RED, 1));
+			q5.setText("?");
+			q5.setForeground(Color.RED);
+			q5.setToolTipText("4 - 20 alphabet characters or spaces");
+			cd5 = false;
+		}
+	}
+	
+	private void checkUnlock() {
+		boolean unlock = cd1 && cd2 && cd3 && cd4 && cd5;
+		btnSave.setEnabled(unlock);
+	}
+	
 	protected void btnUploadactionPerformed(ActionEvent e) {
 		
 		JFileChooser filechooser = new JFileChooser();
