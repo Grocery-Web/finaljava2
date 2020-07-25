@@ -678,9 +678,12 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void tableEventDeleted(int personalId) {
-				victimDAO.removeVictimbyPersonalId(personalId);
-				refresh();
-				JOptionPane.showMessageDialog(null, "Victim has been removed", "Success", JOptionPane.INFORMATION_MESSAGE);
+				int choice = JOptionPane.showConfirmDialog(null, "Are you sure to remove this person from Victim list ?", "Remove", JOptionPane.YES_NO_OPTION);
+				if (choice == 0) {
+					victimDAO.removeVictimbyPersonalId(personalId);
+					refresh();
+					JOptionPane.showMessageDialog(null, "Victim has been removed", "Success", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		});
 

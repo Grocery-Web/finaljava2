@@ -412,7 +412,13 @@ public class PrisonListDetailFrame extends JFrame {
 						.addComponent(btnRelease).addComponent(btnTransfer))
 				.addContainerGap(76, Short.MAX_VALUE)));
 
-		table = new JTable();
+		table = new JTable() {
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {                
+                return false;               
+			}
+		};
 		table.setAutoCreateRowSorter(true);
 		scrollPane.setViewportView(table);
 		contentPane.setLayout(gl_contentPane);

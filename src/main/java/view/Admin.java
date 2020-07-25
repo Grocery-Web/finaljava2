@@ -34,7 +34,10 @@ import java.awt.Checkbox;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.border.EtchedBorder;
+import java.awt.SystemColor;
 
 public class Admin extends JFrame {
 
@@ -66,10 +69,10 @@ public class Admin extends JFrame {
 	public JLabel lblNewLabel_5;
 	public JLabel lblTotalAcc;
 	public JTextField txtSearch;
-	public JLabel lblAdmin;
 	public JLabel lblAsterisk;
 	public JButton btnClear;
 	AccountDAO accDao = new AccountDAO();
+	public JLabel lblAdminPriv;
 	/**
 	 * Launch the application.
 	 */
@@ -108,6 +111,22 @@ public class Admin extends JFrame {
 		txtUserID.setBounds(10, 84, 188, 20);
 		panelL.add(txtUserID);
 		txtUserID.setColumns(10);
+		txtUserID.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				userIDCheck();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				userIDCheck();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				userIDCheck();
+			}
+		});
 		
 		lblNewLabel_1 = new JLabel("Password");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -166,8 +185,15 @@ public class Admin extends JFrame {
 		lblNewLabel_4.setBounds(10, 314, 86, 14);
 		panelL.add(lblNewLabel_4);
 		
+		lblAdminPriv = new JLabel("ADMIN");
+		lblAdminPriv.setForeground(SystemColor.desktop);
+		lblAdminPriv.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblAdminPriv.setBounds(10, 343, 46, 14);
+		lblAdminPriv.setVisible(false);
+		panelL.add(lblAdminPriv);
+		
 		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Master", "User", "Admin"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Master", "User"}));
 		comboBox.setFocusable(false);
 		comboBox.setBounds(10, 339, 188, 22);
 		panelL.add(comboBox);
@@ -257,7 +283,13 @@ public class Admin extends JFrame {
 		scrollPane.setBounds(0, 105, 485, 369);
 		panelR.add(scrollPane);
 		
-		table = new JTable();
+		table = new JTable() {
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {                
+                return false;               
+			}
+		};
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -319,6 +351,18 @@ public class Admin extends JFrame {
 		txtSearch.setColumns(10);
 	}
 	
+	private void userIDCheck() {
+		if (txtUserID.getText().equals("admin")) {
+			lblAdminPriv.setVisible(true);
+			comboBox.setVisible(false);
+			btnDelete.setEnabled(false); btnAdd.setEnabled(false);
+		} else {
+			lblAdminPriv.setVisible(false);
+			comboBox.setVisible(true);
+			btnDelete.setEnabled(true); btnAdd.setEnabled(true);
+		}
+	}
+	
 	protected void loadData() {
 		DefaultTableModel model = new DefaultTableModel();
 		model.addColumn("UserID");
@@ -378,7 +422,7 @@ public class Admin extends JFrame {
 			return;
 		}
 		acc.setPassword(new String(passwordField.getPassword()));
-		acc.setPrivilege(comboBox.getSelectedItem() == "Admin" ? 1 : comboBox.getSelectedItem() == "Master" ? 2 : 3);
+		acc.setPrivilege(comboBox.getSelectedItem() == "Master" ? 2 : 3);
 		
 		accDao.addAccount(acc);
 		loadData();
@@ -436,7 +480,7 @@ public class Admin extends JFrame {
 		} else {
 			acc.setPassword(new String(passwordField.getPassword()));
 		}
-		acc.setPrivilege(comboBox.getSelectedItem() == "Admin" ? 1 : comboBox.getSelectedItem() == "Master" ? 2 : 3);
+		acc.setPrivilege(comboBox.getSelectedItem() == "Master" ? 2 : 3);
 		
 		accDao.updateAccount(acc);
 		loadData();
