@@ -1,6 +1,8 @@
 package view;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -14,8 +16,13 @@ import entity.Prisoner;
 
 public class PrisonerTableModel extends AbstractTableModel{
 	private List<Prisoner> db;
+	private int remaindays;
+	
+	// CURRENT DATE
+	long millis = System.currentTimeMillis();
+	java.sql.Date today = new java.sql.Date(millis);
 
-	private String[] colNames = {"PrisonerId", "Name" , "Gender", "Nationality", "Type", "Date in Jail", "End Date", "Term (days)", "Prison Name"};
+	private String[] colNames = {"PrisonerId", "Name" , "Gender", "Nationality", "Type", "Date in Jail", "End Date", "Term (days)", "Prison Name", "Remain Days"};
 	
 	public PrisonerTableModel() {}
 	
@@ -38,13 +45,16 @@ public class PrisonerTableModel extends AbstractTableModel{
 
 	@Override
 	public int getColumnCount() {
-		return 9;
+		return 10;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Prisoner prisoner = db.get(rowIndex);
-			
+		if(prisoner.getEndDate() != null) {
+			remaindays = (int) getDateDiff(today, prisoner.getEndDate(), TimeUnit.DAYS);
+		}
+		
 		switch (columnIndex) {
 		case 0: {
 			return prisoner.getPrisonerId();
@@ -73,8 +83,16 @@ public class PrisonerTableModel extends AbstractTableModel{
 		case 8: {
 			return prisoner.getPrisonName();
 		}
+		case 9: {
+			return remaindays;
+		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);
 		}
+	}
+	
+	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+	    long diffInMillies = date2.getTime() - date1.getTime();
+	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 }

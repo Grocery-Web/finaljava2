@@ -267,7 +267,7 @@ public class PrisonerFormPanel extends JPanel {
 		gc.gridx = 0;
 		gc.anchor = GridBagConstraints.LINE_END;
 		gc.insets = new Insets(0, 0, 0, 5);
-		add(new JLabel("Duration: "),gc);
+		add(new JLabel("Duration (days): "),gc);
 		
 		gc.gridx = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
