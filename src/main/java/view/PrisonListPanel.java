@@ -80,6 +80,7 @@ public class PrisonListPanel extends JPanel {
 	
 	public void setData(List<PrisonList> db) {
 		tableModel.setData(db);
+		table.setAutoCreateRowSorter(true);  // Search data
 	}
 	
 	public void search(String txt) {

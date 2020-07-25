@@ -85,6 +85,7 @@ public class PrisonerPanel extends JPanel{
 			}
 		});
 		
+		
 		setLayout(new BorderLayout());
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -100,6 +101,7 @@ public class PrisonerPanel extends JPanel{
 	
 	public void setData(List<Prisoner> db) {
 		tableModel.setData(db);
+		table.setAutoCreateRowSorter(true);  // Search data
 	}
 	
 	public void search(String txt) {

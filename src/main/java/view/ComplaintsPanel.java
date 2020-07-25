@@ -68,14 +68,13 @@ public class ComplaintsPanel extends JPanel {
 		detailItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow(); // Start from 0
-				int id = (int) table.getModel().getValueAt(row, 0);
+				int id = (int) table.getValueAt(row, 0);
 
 				if (tableListener != null) {
 					tableListener.tableEventDetail(id);
 				}
 			}
 		});
-
 		setLayout(new BorderLayout());
 
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -91,6 +90,7 @@ public class ComplaintsPanel extends JPanel {
 
 	public void setData(List<Complaint> db) {
 		tableModel.setData(db);
+		table.setAutoCreateRowSorter(true);  // Search data
 	}
 
 	public void refresh() {
