@@ -101,11 +101,10 @@ public class PrisonerPanel extends JPanel{
 	
 	public void setData(List<Prisoner> db) {
 		tableModel.setData(db);
-		table.setAutoCreateRowSorter(true);  // Search data
+		table.setAutoCreateRowSorter(true);
 	}
 	
 	public void search(String txt) {
-		table.setAutoCreateRowSorter(true);  // Search data
 		DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) table.getRowSorter();
 		sorter.setRowFilter(RowFilter.regexFilter(txt));
 		sorter.setSortKeys(null);
