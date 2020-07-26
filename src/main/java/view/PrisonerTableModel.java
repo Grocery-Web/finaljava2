@@ -91,6 +91,14 @@ public class PrisonerTableModel extends AbstractTableModel{
 		}
 	}
 	
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+	    if (db.isEmpty()) {
+	        return Object.class;
+	    }
+	    return getValueAt(0, columnIndex).getClass();
+	}
+	
 	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
 	    long diffInMillies = date2.getTime() - date1.getTime();
 	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
