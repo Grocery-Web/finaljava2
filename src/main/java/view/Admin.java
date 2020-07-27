@@ -480,7 +480,11 @@ public class Admin extends JFrame {
 		} else {
 			acc.setPassword(new String(passwordField.getPassword()));
 		}
-		acc.setPrivilege(comboBox.getSelectedItem() == "Master" ? 2 : 3);
+		if (txtUserID.getText().equals("admin")) {
+			acc.setPrivilege(1);
+		} else {
+			acc.setPrivilege(comboBox.getSelectedItem() == "Master" ? 2 : 3);			
+		}
 		
 		accDao.updateAccount(acc);
 		loadData();
