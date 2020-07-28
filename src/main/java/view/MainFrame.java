@@ -490,9 +490,8 @@ public class MainFrame extends JFrame {
 					@Override
 					public void updateEventListener(Person acc) {
 						personDAO.updatePersonByID(acc);
+						detailPersonFrame.dispose();
 						refresh();
-						detailPersonFrame.setVisible(false);
-						MainFrame.this.setVisible(true);
 					}
 				});
 			}
