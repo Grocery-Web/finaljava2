@@ -13,6 +13,7 @@ CREATE TABLE Account (
 	Email varchar(50) NOT NULL,
 	PasswordHash BINARY(64) NOT NULL,
 	Privilege INT NOT NULL CHECK (Privilege IN (1, 2, 3)),
+	CheckLogin BIT NOT NULL DEFAULT 0
 )
 GO
 
@@ -145,6 +146,30 @@ BEGIN
 	SELECT * FROM Account
 	WHERE UserID = @UserID COLLATE Latin1_General_CS_AS
 	and PasswordHash = HASHBYTES('SHA2_512', @Password) 
+END
+GO
+
+-- Procedure to update Login status
+CREATE PROC updateAccLoginStatus
+	@UserID varchar(20)
+AS
+BEGIN
+	DECLARE @CheckLogin bit
+	SELECT @CheckLogin = CheckLogin FROM Account
+	WHERE UserID = @UserID
+
+	IF (@CheckLogin = 0)
+		BEGIN
+			UPDATE Account
+			SET CheckLogin = 1
+			WHERE UserID = @UserID
+		END
+	ELSE
+		BEGIN
+			UPDATE Account
+			SET CheckLogin = 0
+			WHERE UserID = @UserID
+		END
 END
 GO
 

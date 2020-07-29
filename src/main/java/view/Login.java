@@ -5,13 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
-import java.awt.Button;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-
 import dao.AccountDAO;
 import entity.Account;
 
@@ -20,7 +17,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JPasswordField;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -184,6 +180,7 @@ public class Login extends JFrame {
 			}
 
 			case 1: {
+				accDao.updateAccLoginStatus(acc);
 				Admin admin = new Admin();
 				admin.setLocationRelativeTo(null);
 				admin.setVisible(true);
@@ -193,6 +190,7 @@ public class Login extends JFrame {
 			}
 			
 			case 2: {
+				accDao.updateAccLoginStatus(acc);
 				MainFrame mf = new MainFrame(2);
 				mf.setVisible(true);
 				this.setVisible(false);
@@ -200,6 +198,7 @@ public class Login extends JFrame {
 			}
 			
 			case 3: {
+				accDao.updateAccLoginStatus(acc);
 				MainFrame mf = new MainFrame(3);
 				mf.setVisible(true);
 				this.setVisible(false);
