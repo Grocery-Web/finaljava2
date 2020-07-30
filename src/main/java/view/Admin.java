@@ -19,6 +19,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.Cursor;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -72,22 +74,23 @@ public class Admin extends JFrame {
 	public JLabel lblAsterisk;
 	public JButton btnClear;
 	AccountDAO accDao = new AccountDAO();
+	public String userID;
 	public JLabel lblAdminPriv;
-	/**
-	 * Launch the application.
-	 */
-	public Admin() {
-		setResizable(false);
-		initComponents();
-	}
 	
 	/**
 	 * Create the frame.
 	 */
 	
-	private void initComponents() {
+	public Admin(String userID) {
+		this.userID = userID;
+		setResizable(false);
 		setTitle("Welcome - Admin Portal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Admin.this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				accDao.updateAccLoginStatus(userID);
+			}
+		});
 		setBounds(100, 100, 757, 502);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -385,6 +388,7 @@ public class Admin extends JFrame {
 		if (choice == 0) {
 			Login.main(null);
 			this.setVisible(false);
+			accDao.updateAccLoginStatus(userID);
 		}
 	}
 	

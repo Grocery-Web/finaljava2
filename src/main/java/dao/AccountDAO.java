@@ -22,6 +22,11 @@ public class AccountDAO {
 			} else {
 				while (rs.next()) {
 					acc.setPrivilege(rs.getInt(5));
+					acc.setCheckLogin(rs.getBoolean(6));
+				}
+				
+				if (acc.isCheckLogin()) {
+					return -2;
 				}
 				return acc.getPrivilege();
 			}
@@ -32,13 +37,13 @@ public class AccountDAO {
 		return -1;
 	}
 	
-	public void updateAccLoginStatus(Account acc) {
+	public void updateAccLoginStatus(String userID) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call updateAccLoginStatus(?)}");
 			) 
 		{
-			ps.setString(1, acc.getUserID());
+			ps.setString(1, userID);
 			ps.executeUpdate();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);

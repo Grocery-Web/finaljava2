@@ -66,5 +66,11 @@ public class Account {
 	public void setCheckLogin(boolean checkLogin) {
 		this.checkLogin = checkLogin;
 	}
+
+	@Override
+	public String toString() {
+		return "Account [userID=" + userID + ", fullName=" + fullName + ", email=" + email + ", password=" + password
+				+ ", privilege=" + privilege + ", checkLogin=" + checkLogin + "]";
+	}
 	
 }

@@ -171,8 +171,15 @@ public class Login extends JFrame {
 		
 		AccountDAO accDao = new AccountDAO();
 		int checked = accDao.checkAcc(acc);
+		String userID = acc.getUserID();
 		
 		switch (checked) {
+			case -2: {
+				lblLogin.setText("This account is currently logged in!");
+				lblLogin.setForeground(Color.RED);
+				break;
+			}
+		
 			case -1: {
 				lblLogin.setText("User not found or incorrect password!");
 				lblLogin.setForeground(Color.RED);
@@ -180,8 +187,8 @@ public class Login extends JFrame {
 			}
 
 			case 1: {
-				accDao.updateAccLoginStatus(acc);
-				Admin admin = new Admin();
+				accDao.updateAccLoginStatus(userID);
+				Admin admin = new Admin(userID);
 				admin.setLocationRelativeTo(null);
 				admin.setVisible(true);
 				this.setVisible(false);
@@ -190,16 +197,16 @@ public class Login extends JFrame {
 			}
 			
 			case 2: {
-				accDao.updateAccLoginStatus(acc);
-				MainFrame mf = new MainFrame(2);
+				accDao.updateAccLoginStatus(userID);
+				MainFrame mf = new MainFrame(2, userID);
 				mf.setVisible(true);
 				this.setVisible(false);
 				break;
 			}
 			
 			case 3: {
-				accDao.updateAccLoginStatus(acc);
-				MainFrame mf = new MainFrame(3);
+				accDao.updateAccLoginStatus(userID);
+				MainFrame mf = new MainFrame(3, userID);
 				mf.setVisible(true);
 				this.setVisible(false);
 				break;
@@ -209,5 +216,9 @@ public class Login extends JFrame {
 	
 	public int getPrivilege(int privilege) {
 		return privilege;
-	}	
+	}
+	
+	public String getUserID(String userID) {
+		return userID;
+	}
 }
