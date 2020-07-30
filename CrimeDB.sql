@@ -51,6 +51,7 @@ create table ComplaintDetail (
 	compId int,
 	constraint cpc foreign key (compId) references Complaint(id),
 	crimeType nvarchar(50),
+	userId varchar(20) NULL
 )
 go
 
@@ -277,6 +278,7 @@ CREATE PROC updatePerson
 	@nationality varchar(50),
 	@job varchar(20),
 	@alive bit,
+	@userId varchar(20),
 	@id int
 AS
 BEGIN
@@ -288,7 +290,8 @@ BEGIN
 		image = @image,
 		nationality = @nationality,
 		job = @job,
-		alive = @alive
+		alive = @alive,
+		userId = @userId
 		WHERE id = @id
 END
 GO
@@ -392,11 +395,11 @@ go
 /* PROCEDURE COMPLAINT DETAIL*/
 -- insert detail
 create proc setComplaintDetail
-@personId int, @compId int,  @crimeType nvarchar(50)
+@personId int, @compId int,  @crimeType nvarchar(50),@userId varchar(20)
 as
 begin
-	insert into ComplaintDetail (personId, compId,crimeType)
-	values(@personId, @compId, @crimeType)
+	insert into ComplaintDetail (personId, compId,crimeType,userId)
+	values(@personId, @compId, @crimeType, @userId)
 end
 go
 
@@ -462,11 +465,12 @@ go
 
 -- insert a new Criminal
 create proc addCriminal
-@personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX)
+@personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX),
+@userId varchar(20)
 as
 begin
-	insert into Criminal (personId, complaintID, punishment, rating, appliedDate, hisOfViolent)
-	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent)
+	insert into Criminal (personId, complaintID, punishment, rating, appliedDate, hisOfViolent, userId)
+	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent, @userId)
 end
 go
 

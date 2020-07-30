@@ -53,10 +53,10 @@ public class CriminalDAO {
 		return list;
 	}
 	
-	public void addCriminal(Criminal cri) {
+	public void addCriminal(Criminal cri,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, cri.getPersonalId());
@@ -65,6 +65,7 @@ public class CriminalDAO {
 			ps.setInt(4, cri.getRating());
 			ps.setDate(5, (Date) cri.getAppliedDate());
 			ps.setString(6, cri.getHisOfViolent());
+			ps.setString(7, userId);
 			ps.executeUpdate();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);

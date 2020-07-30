@@ -310,7 +310,7 @@ public class MainFrame extends JFrame {
 							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
 								criminal.setHisOfViolent(lastCriminal.getHisOfViolent());
 							}
-							criminalDAO.addCriminal(criminal);
+							criminalDAO.addCriminal(criminal,acc.getUserID());
 						}
 						cplDetailFrame.dispose();
 						refresh();
@@ -357,8 +357,8 @@ public class MainFrame extends JFrame {
 									}
 								}
 								if(countCrimeType < 1) {
-									comDetailDAO.setComplaintDetail(comDetail);
-									criminalDAO.addCriminal(newCriminal);
+									comDetailDAO.setComplaintDetail(comDetail,acc.getUserID());
+									criminalDAO.addCriminal(newCriminal,acc.getUserID());
 									relCriminal.dispose();
 								}else {
 									JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
@@ -411,7 +411,7 @@ public class MainFrame extends JFrame {
 									}
 								}
 								if(count < 1) {
-									comDetailDAO.setComplaintDetail(comDetail);
+									comDetailDAO.setComplaintDetail(comDetail,acc.getUserID());
 									relComplain.dispose();
 								}else {
 									JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
@@ -489,8 +489,8 @@ public class MainFrame extends JFrame {
 					}
 
 					@Override
-					public void updateEventListener(Person acc) {
-						personDAO.updatePersonByID(acc);
+					public void updateEventListener(Person per) {
+						personDAO.updatePersonByID(per, acc.getUserID());
 						detailPersonFrame.dispose();
 						refresh();
 					}
