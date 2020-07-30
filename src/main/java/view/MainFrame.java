@@ -225,7 +225,7 @@ public class MainFrame extends JFrame {
 		complaintForm.setFormListener(new FormComplaintListener() {
 			@Override
 			public void insertEventListener(Complaint cpt) {
-				complaintDAO.addComplaint(cpt);
+				complaintDAO.addComplaint(cpt,acc.getUserID());
 				refresh();
 			}
 		});
@@ -290,7 +290,7 @@ public class MainFrame extends JFrame {
 
 					@Override
 					public void tableEventUpdated(Complaint cpl,List<Integer> lstID) {
-						complaintDAO.updateComplaintById(cplId, cpl);
+						complaintDAO.updateComplaintById(cplId, cpl, acc.getUserID());
 						if(lstID.size()>0) {
 							comDetailDAO.removePerson(lstID,cplId);
 						}
@@ -301,7 +301,7 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri,List<Integer> lstID) {
-						complaintDAO.updateComplaintById(cplId, cpl);
+						complaintDAO.updateComplaintById(cplId, cpl, acc.getUserID());
 						if(lstID.size()>0) {
 							comDetailDAO.removePerson(lstID,cplId);
 						}
@@ -551,8 +551,8 @@ public class MainFrame extends JFrame {
 				incDetailFrame.setTableListener(new TableIncidentDetailListener() {
 
 					@Override
-					public void tableEventUpdated(Complaint inc) {
-						complaintDAO.updateComplaintById(id, inc);
+					public void tableEventUpdated(Complaint com) {
+						complaintDAO.updateComplaintById(id, com, acc.getUserID());
 						JOptionPane.showMessageDialog(null, "Update incident successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 						refresh();
 						incDetailFrame.dispose();

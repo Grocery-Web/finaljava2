@@ -353,11 +353,12 @@ go
 
 -- insert a new Complaint
 create proc addComplaint
-@name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX),@verifyStatus bit
+@name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), 
+@detail nvarchar(MAX),@verifyStatus bit,@userId varchar(20)
 as
 begin
-	insert into Complaint (complaintName, datetime,place,declarantName,detail,verifyStatus)
-	values(@name, @datetime, @place, @declarantName, @detail, @verifyStatus)
+	insert into Complaint (complaintName, datetime,place,declarantName,detail,verifyStatus,userId)
+	values(@name, @datetime, @place, @declarantName, @detail, @verifyStatus, @userId)
 end
 go
 
@@ -381,11 +382,13 @@ go
 
 -- update Complaint by ID
 create proc updateComplaintById
-@id int, @name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX), @verifyStatus bit
+@id int, @name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), 
+@detail nvarchar(MAX), @verifyStatus bit, @userId varchar(20)
 as
 begin
 	update Complaint 
-	set complaintName = @name, datetime = @datetime, place = @place, declarantName = @declarantName, detail = @detail, verifyStatus = @verifyStatus
+	set complaintName = @name, datetime = @datetime, place = @place, declarantName = @declarantName, 
+	detail = @detail, verifyStatus = @verifyStatus, userId = @userId
 	where id = @id
 end
 go
@@ -880,3 +883,4 @@ INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
 	VALUES('user', 'USER', 'user@gmail.com', HASHBYTES('SHA2_512', 'user'), 3)
 
 /* END INSERT DATA IN TABLE*/ 
+
