@@ -246,4 +246,44 @@ public class PrisonerDAO {
 				JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		 }
 	}
+	
+public Prisoner findLastestPrisonerByCriminalID(int criminalID) {
+		
+		Prisoner prisoner = new Prisoner();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call findLastestPrisonerByCriminalID(?)}");
+			) 
+		{
+			ps.setInt(1, criminalID);
+			var rs = ps.executeQuery();
+			
+			prisoner.setPrisonerId(rs.getInt("id"));
+			prisoner.setPrisonId(rs.getInt("prisonId"));
+			prisoner.setCriminalId(rs.getInt("CriminalID"));
+			prisoner.setStartDate(rs.getDate("startDate"));
+			prisoner.setEndDate(rs.getDate("endDate"));
+			prisoner.setDuration(rs.getInt("duration"));
+			prisoner.setReleasedStatus(rs.getBoolean("releaseStatus"));
+			prisoner.setType(rs.getString("type"));
+			prisoner.setName(rs.getString("personName"));
+			prisoner.setDob(rs.getDate("dob"));
+			prisoner.setNationality(rs.getString("nationality"));
+			prisoner.setImage(rs.getString("image"));
+			prisoner.setPrisonName(rs.getString("prisonName"));
+			prisoner.setHisOfViolent(rs.getString("hisOfViolent"));
+			Gender gender;
+			if(rs.getBoolean("gender")) {
+				gender = Gender.male;
+			} else {
+				gender = Gender.female;
+			}
+			prisoner.setGender(gender);
+					
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return prisoner;	
+	}
 }

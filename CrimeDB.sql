@@ -745,6 +745,20 @@ begin
 end
 go
 
+-- find lastest prisoner row by criminal id
+create proc findLastestPrisonerByCriminalID 
+@id int
+as 
+begin
+	select pr.*, p.name as personName, p.gender, p.nationality, pl.name as prisonName, cr.hisOfViolent as hisOfViolent, p.image, p.dob
+	from Prisoner pr
+	inner join PrisonList pl on pr.prisonId = pl.id
+	inner join Criminal cr on pr.criminalID = cr.id
+	inner join Person p on cr.personId = p.id
+	where pr.criminalID = @id
+end
+go
+
 
 /* END PROCEDURE PRISONER*/
 

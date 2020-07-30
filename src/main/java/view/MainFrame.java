@@ -306,11 +306,15 @@ public class MainFrame extends JFrame {
 							comDetailDAO.removePerson(lstID,cplId);
 						}
 						for (Criminal criminal : lstCri) {
-							Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
-							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
-								criminal.setHisOfViolent(lastCriminal.getHisOfViolent());
-							}
-							criminalDAO.addCriminal(criminal,acc.getUserID());
+							// check if criminal is dead or not
+							Person per = personDAO.findPersonById(criminal.getPersonalId());
+							if (per.getAlive() == true) {
+								Criminal lastCriminal = criminalDAO.findLastUpdatedByPersonalId(criminal.getPersonalId());
+								if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
+									criminal.setHisOfViolent(lastCriminal.getHisOfViolent());
+								}
+								criminalDAO.addCriminal(criminal,acc.getUserID());
+							} 
 						}
 						cplDetailFrame.dispose();
 						refresh();
@@ -329,7 +333,23 @@ public class MainFrame extends JFrame {
 						"Do you really want to delete this account", "Confirm Exit", 
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
+					
 					personDAO.deletePerson(id,acc.getUserID());	
+					int count = personDAO.checkPersonInJail(id);
+					if (count > 0) {
+						Criminal criminal = criminalDAO.findLastUpdatedByPersonalId(id);
+						Prisoner prisoner = prisonerDAO.findLastestPrisonerByCriminalID(criminal.getCriminalId());
+//						System.out.println(lastestPrisoner.toString());
+						prisonerDAO.releasePrisoner(prisoner.getPrisonerId(),acc.getUserID());
+						Date startDate = prisoner.getStartDate();
+						Date endDate = prisoner.getEndDate();
+						if (endDate != null) {
+							int getDuration = (int) getDateDiff(startDate, endDate, TimeUnit.DAYS);
+						    prisonerDAO.updateDurationByPrisonerID(id, getDuration + 1);
+							refresh();
+						}
+						
+					}
 					refresh();
 				}
 			}

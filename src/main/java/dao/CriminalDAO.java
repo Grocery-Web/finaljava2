@@ -36,6 +36,7 @@ public class CriminalDAO {
 				cri.setComplaintName(rs.getString("complaintName"));
 				cri.setPunishment(rs.getString("punishment"));
 				cri.setRating(rs.getInt("rating"));
+				cri.setAlive(rs.getBoolean("alive"));
 				
 				Gender gender;
 				if(rs.getBoolean("gender")) {
@@ -44,8 +45,10 @@ public class CriminalDAO {
 					gender = Gender.female;
 				}
 				cri.setGender(gender);
+				if (cri.getAlive() == true) {
+					list.add(cri);
+				}
 				
-				list.add(cri);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
