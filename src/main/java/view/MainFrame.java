@@ -126,7 +126,7 @@ public class MainFrame extends JFrame {
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
 		incidentPanel =  new IncidentsPanel(acc.getPrivilege());
-		criminalPanel = new CriminalPanel(acc.getPrivilege());
+		criminalPanel = new CriminalPanel();
 		prisonListPanel = new PrisonListPanel(acc.getPrivilege());
 		prisonerPanel = new PrisonerPanel(acc.getPrivilege());
 		victimPanel = new VictimPanel(acc.getPrivilege());
@@ -596,7 +596,7 @@ public class MainFrame extends JFrame {
 						if(prison.getCapacity() == prison.getQuantity()) {
 							JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison", "Oopss!", JOptionPane.INFORMATION_MESSAGE);
 						}else{
-							prisonerDAO.addPrisoner(prisoner);
+							prisonerDAO.addPrisoner(prisoner,acc.getUserID());
 							tableUpdatedCriminal(cri);
 						};
 					}
@@ -604,7 +604,7 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableUpdatedCriminal(Criminal cri) {
-						criminalDAO.updateCriminal(cri);
+						criminalDAO.updateCriminal(cri,acc.getUserID());
 						refresh();
 						criDetailFrame.dispose();
 						MainFrame.this.setVisible(true);

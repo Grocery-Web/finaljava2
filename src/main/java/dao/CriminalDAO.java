@@ -123,10 +123,10 @@ public class CriminalDAO {
 		return cri;
 	}
 	
-	public void updateCriminal(Criminal cri) {
+	public void updateCriminal(Criminal cri,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call updateCriminal(?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call updateCriminal(?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, cri.getPersonalId());
@@ -135,8 +135,9 @@ public class CriminalDAO {
 			ps.setString(4, cri.getHisOfViolent());
 			ps.setString(5, cri.getPunishment());
 			ps.setInt(6, cri.getRating());
-			ps.setInt(7, cri.getCriminalId());
-			
+			ps.setString(7, userId);
+			ps.setInt(8, cri.getCriminalId());
+			ps.executeUpdate();
 			if (ps.executeUpdate() > 0) {
 				JOptionPane.showMessageDialog(null, "Criminal has already updated", "Success", JOptionPane.INFORMATION_MESSAGE);
 			} else {

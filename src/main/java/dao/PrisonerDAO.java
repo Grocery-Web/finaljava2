@@ -56,10 +56,10 @@ public class PrisonerDAO {
 		return list;
 	}
 	
-	public void addPrisoner(Prisoner prisoner) {
+	public void addPrisoner(Prisoner prisoner,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call addPrisoner(?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call addPrisoner(?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, prisoner.getPrisonId());
@@ -73,6 +73,7 @@ public class PrisonerDAO {
 			ps.setInt(5, prisoner.getDuration());
 			ps.setBoolean(6, prisoner.isReleasedStatus());
 			ps.setString(7, prisoner.getType());
+			ps.setString(8, userId);
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "A new prisoner has been created", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {

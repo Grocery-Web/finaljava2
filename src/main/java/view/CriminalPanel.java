@@ -10,7 +10,6 @@ import java.util.List;
 import javax.swing.DefaultRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -18,6 +17,7 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import entity.Account;
 import entity.Criminal;
 
 public class CriminalPanel extends JPanel{
@@ -26,7 +26,7 @@ public class CriminalPanel extends JPanel{
 	private JPopupMenu popup;
 	private TableCriminalListener tableListener;
 	
-	public CriminalPanel(int privilege) {
+	public CriminalPanel() {
 		tableModel = new CriminalTableModel();
 		table = new JTable(tableModel);
 		popup = new JPopupMenu();

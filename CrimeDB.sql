@@ -24,7 +24,7 @@ create table Complaint (
 	place nvarchar(MAX),
 	declarantName nvarchar(50),
 	detail nvarchar(MAX),
-	userId int NULL,
+	userId varchar(20) NULL,
 	verifyStatus bit   /* approved or not */
 )
 go
@@ -39,7 +39,7 @@ create table Person (
 	image varchar(100),
 	nationality varchar(50),
 	job varchar(20),
-	userId int NULL,
+	userId varchar(20) NULL,
 	alive bit DEFAULT 1
 )
 
@@ -51,7 +51,7 @@ create table ComplaintDetail (
 	compId int,
 	constraint cpc foreign key (compId) references Complaint(id),
 	crimeType nvarchar(50),
-	userId int
+	userId varchar(20) NULL
 )
 go
 
@@ -68,7 +68,7 @@ create table Criminal (
 	constraint cp foreign key (personId) references Person(id),
 	constraint cc foreign key (complaintID) references Complaint(id),
 	rating int,
-	userId int
+	userId varchar(20) NULL
 )
 go
 
@@ -94,7 +94,7 @@ create table Prisoner (
 	duration int null,
 	releaseStatus bit null,
 	type nvarchar(50),  /* type of crime */
-	userId int,
+	userId varchar(20) NULL,
 	constraint pin foreign key (criminalID) references Criminal(id)
 )
 go
@@ -478,6 +478,7 @@ CREATE PROC updateCriminal
 	@hisOfViolent varchar(MAX),
 	@punishment varchar(100), 
 	@rating int,
+	@userId varchar(20),
 	@criminalId int
 AS
 BEGIN
@@ -487,7 +488,8 @@ BEGIN
 		appliedDate = @appliedDate, 
 		hisOfViolent = @hisOfViolent, 
 		punishment = @punishment,
-		rating = @rating
+		rating = @rating,
+		userId = @userId
 	WHERE id = @criminalId
 END
 GO
@@ -631,13 +633,15 @@ go
 
 --add prisoner
 create proc addPrisoner
-@prisonID int, @criminalID int, @startDate date, @endDate date, @duration int, @releaseStatus bit, @type nvarchar(50)
+@prisonID int, @criminalID int, @startDate date, @endDate date, @duration int, @releaseStatus bit, @type nvarchar(50),
+@userId varchar(20)
 as
 begin
-	insert into Prisoner (prisonId, criminalID, startDate, endDate, duration, releaseStatus, type)
-	values (@prisonId, @criminalID, @startDate, @endDate, @duration, @releaseStatus, @type)
+	insert into Prisoner (prisonId, criminalID, startDate, endDate, duration, releaseStatus, type, userId)
+	values (@prisonId, @criminalID, @startDate, @endDate, @duration, @releaseStatus, @type, @userId)
 end
 go
+
 
 --get Prisoners by Prisonlist ID
 create proc getAllPrisonerByPrisonListID
