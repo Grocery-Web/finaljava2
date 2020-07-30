@@ -74,21 +74,21 @@ public class Admin extends JFrame {
 	public JLabel lblAsterisk;
 	public JButton btnClear;
 	AccountDAO accDao = new AccountDAO();
-	public String userID;
 	public JLabel lblAdminPriv;
+	public Account acc;
 	
 	/**
 	 * Create the frame.
 	 */
 	
-	public Admin(String userID) {
-		this.userID = userID;
+	public Admin(Account login) {
+		this.acc = login;
 		setResizable(false);
 		setTitle("Welcome - Admin Portal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Admin.this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				accDao.updateAccLoginStatus(userID);
+				accDao.updateAccLoginStatus(login);
 			}
 		});
 		setBounds(100, 100, 757, 502);
@@ -388,7 +388,7 @@ public class Admin extends JFrame {
 		if (choice == 0) {
 			Login.main(null);
 			this.setVisible(false);
-			accDao.updateAccLoginStatus(userID);
+			accDao.updateAccLoginStatus(acc);
 		}
 	}
 	

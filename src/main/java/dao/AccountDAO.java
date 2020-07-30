@@ -8,7 +8,7 @@ import common.ConnectToProperties;
 import entity.Account;
 
 public class AccountDAO {
-	public int checkAcc(Account acc) {
+	public Account checkAcc(Account acc) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call checkAcc(?, ?)}");
@@ -18,32 +18,30 @@ public class AccountDAO {
 			ps.setString(2, acc.getPassword());
 			ResultSet rs = ps.executeQuery();
 			if (!rs.isBeforeFirst()) {
-				return -1;
+				return null;
 			} else {
 				while (rs.next()) {
+					acc.setUserID(rs.getString(1));
+					acc.setFullName(rs.getString(2));
+					acc.setEmail(rs.getString(3));
 					acc.setPrivilege(rs.getInt(5));
 					acc.setCheckLogin(rs.getBoolean(6));
 				}
-				
-				if (acc.isCheckLogin()) {
-					return -2;
-				}
-				return acc.getPrivilege();
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.INFORMATION_MESSAGE);
 		}
 		
-		return -1;
+		return acc;
 	}
 	
-	public void updateAccLoginStatus(String userID) {
+	public void updateAccLoginStatus(Account acc) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call updateAccLoginStatus(?)}");
 			) 
 		{
-			ps.setString(1, userID);
+			ps.setString(1, acc.getUserID());
 			ps.executeUpdate();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);

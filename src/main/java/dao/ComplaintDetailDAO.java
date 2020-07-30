@@ -75,12 +75,13 @@ public class ComplaintDetailDAO {
 		return map;
 	}
 
-	public void setComplaintDetail(ComplaintDetail comDetail) {
+	public void setComplaintDetail(ComplaintDetail comDetail,String userId) {
 		try (var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call setComplaintDetail(?,?,?)}");) {
+				PreparedStatement ps = connect.prepareCall("{call setComplaintDetail(?,?,?,?)}");) {
 			ps.setInt(1, comDetail.getPersonId());
 			ps.setInt(2, comDetail.getCompId());
 			ps.setString(3, comDetail.getCrimeType());
+			ps.setString(4, userId);
 			ps.executeUpdate();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);

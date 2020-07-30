@@ -92,7 +92,8 @@ public class MainFrame extends JFrame {
 	private PrisonerDetailFrame prisonerDetailFrame;
 	private RelevantPrisonerForm relPrisoner;
 	
-	private String userID;
+//  ENTITY
+	private Account acc;
 	/**
 	 * Launch the application.
 	 */
@@ -113,8 +114,9 @@ public class MainFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainFrame(int privilege, String userID) {
-		this.userID = userID;
+
+	public MainFrame(Account acc) {
+		this.acc = acc;
 		setTitle("Crime Management Dashboard");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -122,10 +124,10 @@ public class MainFrame extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		setJMenuBar(createMenuBar());
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		MainFrame.this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				accountDAO.updateAccLoginStatus(userID);
+				System.out.println(acc.toString());
+				accountDAO.updateAccLoginStatus(acc);
 			}
 		});
 		
@@ -134,15 +136,15 @@ public class MainFrame extends JFrame {
 		toolbar = new Toolbar();
 		panelCont = new JPanel();
 		personForm = new PersonFormPanel();
-		personPanel = new PersonPanel(privilege);
-		complaintPanel = new ComplaintsPanel(privilege);
+		personPanel = new PersonPanel(acc.getPrivilege());
+		complaintPanel = new ComplaintsPanel(acc.getPrivilege());
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
-		incidentPanel =  new IncidentsPanel(privilege);
-		criminalPanel = new CriminalPanel(privilege);
-		prisonListPanel = new PrisonListPanel(privilege);
-		prisonerPanel = new PrisonerPanel(privilege);
-		victimPanel = new VictimPanel(privilege);
+		incidentPanel =  new IncidentsPanel(acc.getPrivilege());
+		criminalPanel = new CriminalPanel();
+		prisonListPanel = new PrisonListPanel(acc.getPrivilege());
+		prisonerPanel = new PrisonerPanel(acc.getPrivilege());
+		victimPanel = new VictimPanel(acc.getPrivilege());
 
 //		CREATE DAO
 		personDAO = new PersonDAO();
@@ -238,7 +240,7 @@ public class MainFrame extends JFrame {
 		complaintForm.setFormListener(new FormComplaintListener() {
 			@Override
 			public void insertEventListener(Complaint cpt) {
-				complaintDAO.addComplaint(cpt);
+				complaintDAO.addComplaint(cpt,acc.getUserID());
 				refresh();
 			}
 		});
@@ -268,10 +270,10 @@ public class MainFrame extends JFrame {
 //						Set name of image in Person
 						per.setImage(personalID + ".png");
 
-						personDAO.addPerson(per);
+						personDAO.addPerson(per,acc.getUserID());
 						refresh();
 					}else {
-						personDAO.addPerson(per);
+						personDAO.addPerson(per,acc.getUserID());
 						refresh();
 					}
 
@@ -294,7 +296,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDetail(int cplId) {
 				Complaint complaint = complaintDAO.findComplaintById(cplId);
-				cplDetailFrame = new ComplaintDetailFrame(complaint,privilege);
+				cplDetailFrame = new ComplaintDetailFrame(complaint,acc.getPrivilege());
 				cplDetailFrame.setLocationRelativeTo(null);
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(cplId));
@@ -303,7 +305,7 @@ public class MainFrame extends JFrame {
 
 					@Override
 					public void tableEventUpdated(Complaint cpl,List<Integer> lstID) {
-						complaintDAO.updateComplaintById(cplId, cpl);
+						complaintDAO.updateComplaintById(cplId, cpl, acc.getUserID());
 						if(lstID.size()>0) {
 							comDetailDAO.removePerson(lstID,cplId);
 						}
@@ -314,7 +316,7 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri,List<Integer> lstID) {
-						complaintDAO.updateComplaintById(cplId, cpl);
+						complaintDAO.updateComplaintById(cplId, cpl, acc.getUserID());
 						if(lstID.size()>0) {
 							comDetailDAO.removePerson(lstID,cplId);
 						}
@@ -323,7 +325,7 @@ public class MainFrame extends JFrame {
 							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
 								criminal.setHisOfViolent(lastCriminal.getHisOfViolent());
 							}
-							criminalDAO.addCriminal(criminal);
+							criminalDAO.addCriminal(criminal,acc.getUserID());
 						}
 						cplDetailFrame.dispose();
 						refresh();
@@ -342,7 +344,7 @@ public class MainFrame extends JFrame {
 						"Do you really want to delete this account", "Confirm Exit", 
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
-					personDAO.deletePerson(id);	
+					personDAO.deletePerson(id,acc.getUserID());	
 					refresh();
 				}
 			}
@@ -370,8 +372,8 @@ public class MainFrame extends JFrame {
 									}
 								}
 								if(countCrimeType < 1) {
-									comDetailDAO.setComplaintDetail(comDetail);
-									criminalDAO.addCriminal(newCriminal);
+									comDetailDAO.setComplaintDetail(comDetail,acc.getUserID());
+									criminalDAO.addCriminal(newCriminal,acc.getUserID());
 									relCriminal.dispose();
 								}else {
 									JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
@@ -424,7 +426,7 @@ public class MainFrame extends JFrame {
 									}
 								}
 								if(count < 1) {
-									comDetailDAO.setComplaintDetail(comDetail);
+									comDetailDAO.setComplaintDetail(comDetail,acc.getUserID());
 									relComplain.dispose();
 								}else {
 									JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
@@ -463,7 +465,7 @@ public class MainFrame extends JFrame {
 									JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						victimDAO.linkNewVictim(victim);
+						victimDAO.linkNewVictim(victim, acc.getUserID());
 						victimForm.dispose();
 						refresh();
 					}
@@ -482,7 +484,7 @@ public class MainFrame extends JFrame {
 				if (history != null) {
 					history = history.replace("<br>***************<br>", "\n\n");
 				}
-				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history, privilege);
+				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history, acc.getPrivilege());
 				detailPersonFrame.setLocationRelativeTo(null);
 				detailPersonFrame.setVisible(true);
 				
@@ -494,7 +496,7 @@ public class MainFrame extends JFrame {
 								"Do you really want to delete this account", "Confirm Exit", 
 								JOptionPane.OK_CANCEL_OPTION);
 						if(action == JOptionPane.OK_OPTION) {
-							personDAO.deletePerson(id);
+							personDAO.deletePerson(id,acc.getUserID());
 							detailPersonFrame.setVisible(false);
 							refresh();
 							MainFrame.this.setVisible(true);
@@ -502,8 +504,8 @@ public class MainFrame extends JFrame {
 					}
 
 					@Override
-					public void updateEventListener(Person acc) {
-						personDAO.updatePersonByID(acc);
+					public void updateEventListener(Person per) {
+						personDAO.updatePersonByID(per, acc.getUserID());
 						detailPersonFrame.dispose();
 						refresh();
 					}
@@ -523,7 +525,7 @@ public class MainFrame extends JFrame {
 				List<Prisoner> prisonInList = prisonListDAO.getAllPrisonerByPrisonListID(id);
 				List<PrisonList> prisonlist = prisonListDAO.getAllPrisonList();
 				
-				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList, privilege);
+				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList, acc.getPrivilege());
 				prisonListDetailFrame.setLocationRelativeTo(null);
 				prisonListDetailFrame.setVisible(true);	
 				
@@ -534,11 +536,11 @@ public class MainFrame extends JFrame {
 						prisonListDAO.updatePrisonInfo(prl);
 						
 						if(listReleasedPrisoners.size() > 0) {
-							prisonerDAO.releaseListPrisoners(listReleasedPrisoners);
+							prisonerDAO.releaseListPrisoners(listReleasedPrisoners,acc.getUserID());
 						}
 						
 						if(listTransferedPrisoners.size() > 0) {
-							prisonerDAO.transferListPrisoner(listTransferedPrisoners);
+							prisonerDAO.transferListPrisoner(listTransferedPrisoners,acc.getUserID());
 						}
 						
 						JOptionPane.showMessageDialog(null, "All processes have been done", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -564,8 +566,8 @@ public class MainFrame extends JFrame {
 				incDetailFrame.setTableListener(new TableIncidentDetailListener() {
 
 					@Override
-					public void tableEventUpdated(Complaint inc) {
-						complaintDAO.updateComplaintById(id, inc);
+					public void tableEventUpdated(Complaint com) {
+						complaintDAO.updateComplaintById(id, com, acc.getUserID());
 						JOptionPane.showMessageDialog(null, "Update incident successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 						refresh();
 						incDetailFrame.dispose();
@@ -598,7 +600,7 @@ public class MainFrame extends JFrame {
 				
 				List<PrisonList> prisonlst = prisonListDAO.getAllPrisonList();
 
-				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst,privilege);
+				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst,acc.getPrivilege());
 				MainFrame.this.setVisible(false);
 				criDetailFrame.setVisible(true);
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {
@@ -609,7 +611,7 @@ public class MainFrame extends JFrame {
 						if(prison.getCapacity() == prison.getQuantity()) {
 							JOptionPane.showMessageDialog(null, "Prison reach limitations. Please choose another prison", "Oopss!", JOptionPane.INFORMATION_MESSAGE);
 						}else{
-							prisonerDAO.addPrisoner(prisoner);
+							prisonerDAO.addPrisoner(prisoner,acc.getUserID());
 							tableUpdatedCriminal(cri);
 						};
 					}
@@ -617,7 +619,7 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableUpdatedCriminal(Criminal cri) {
-						criminalDAO.updateCriminal(cri);
+						criminalDAO.updateCriminal(cri,acc.getUserID());
 						refresh();
 						criDetailFrame.dispose();
 						MainFrame.this.setVisible(true);
@@ -646,7 +648,7 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void tableEventRelease(int id) {
-				prisonerDAO.releasePrisoner(id);
+				prisonerDAO.releasePrisoner(id,acc.getUserID());
 				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
 				Date startDate = prisoner.getStartDate();
 				Date endDate = prisoner.getEndDate();
@@ -658,16 +660,11 @@ public class MainFrame extends JFrame {
 
 			}
 			
-			public long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
-			    long diffInMillies = date2.getTime() - date1.getTime();
-			    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
-			}
-			
 			@Override
 			public void tableEventTransfer(int id) {
 				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
 				List<PrisonList> prisonList = prisonListDAO.getAllAvailablePrisons();
-//				PrisonList currentPrison = prisonListDAO.getPrisonListByID(prisoner.getPrisonId());
+
 				for (int i = 0; i < prisonList.size(); i++) {
 					if (prisonList.get(i).getId() == prisoner.getPrisonId()) {
 						prisonList.remove(i);
@@ -678,7 +675,7 @@ public class MainFrame extends JFrame {
 				relPrisoner.setFormListener(new RelevantPrisonerFormListener() {
 					@Override
 					public void prisonerFormEventListener(Prisoner prisoner, PrisonList prison) {
-						prisonerDAO.transferPrisoner(id, prison.getId());
+						prisonerDAO.transferPrisoner(id, prison.getId(),acc.getUserID());
 						relPrisoner.dispose();
 						refresh();
 					}
@@ -746,7 +743,7 @@ public class MainFrame extends JFrame {
 				if (action == JOptionPane.OK_OPTION) {
 					Login.main(null);
 					MainFrame.this.setVisible(false);
-					accountDAO.updateAccLoginStatus(userID);
+					accountDAO.updateAccLoginStatus(acc);
 				}
 			}
 		});
@@ -803,6 +800,10 @@ public class MainFrame extends JFrame {
 		
 		prisonListPanel.setData(prisonListDAO.getAllPrisonList());
 		prisonListPanel.refresh();
-
+	}
+	
+	public long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+	    long diffInMillies = date2.getTime() - date1.getTime();
+	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 }

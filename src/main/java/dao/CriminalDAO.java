@@ -53,10 +53,10 @@ public class CriminalDAO {
 		return list;
 	}
 	
-	public void addCriminal(Criminal cri) {
+	public void addCriminal(Criminal cri,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, cri.getPersonalId());
@@ -65,6 +65,7 @@ public class CriminalDAO {
 			ps.setInt(4, cri.getRating());
 			ps.setDate(5, (Date) cri.getAppliedDate());
 			ps.setString(6, cri.getHisOfViolent());
+			ps.setString(7, userId);
 			ps.executeUpdate();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
@@ -123,10 +124,10 @@ public class CriminalDAO {
 		return cri;
 	}
 	
-	public void updateCriminal(Criminal cri) {
+	public void updateCriminal(Criminal cri,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call updateCriminal(?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call updateCriminal(?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, cri.getPersonalId());
@@ -135,8 +136,9 @@ public class CriminalDAO {
 			ps.setString(4, cri.getHisOfViolent());
 			ps.setString(5, cri.getPunishment());
 			ps.setInt(6, cri.getRating());
-			ps.setInt(7, cri.getCriminalId());
-			
+			ps.setString(7, userId);
+			ps.setInt(8, cri.getCriminalId());
+			ps.executeUpdate();
 			if (ps.executeUpdate() > 0) {
 				JOptionPane.showMessageDialog(null, "Criminal has already updated", "Success", JOptionPane.INFORMATION_MESSAGE);
 			} else {
