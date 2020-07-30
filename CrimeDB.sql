@@ -246,22 +246,23 @@ go
 /*insert new person*/
 create proc insertPerson
 @id int, @name nvarchar(50), @gender bit,  @dob date, @address nvarchar(MAX), @image varchar(100),
-@nationality varchar(50),@job varchar(20),@alive bit
+@nationality varchar(50),@job varchar(20),@userId varchar(20), @alive bit
 as
 begin
-	insert into Person (id, name, gender,dob,address,image,nationality,job, alive)
-	values(@id, @name, @gender, @dob, @address, @image, @nationality, @job, @alive)
+	insert into Person (id, name, gender,dob,address,image,nationality,job, userId, alive)
+	values(@id, @name, @gender, @dob, @address, @image, @nationality, @job, @userId, @alive)
 end
 go
 
 /*delete person*/
 
-CREATE PROC deletePerson
-	@id int
+create PROC deletePerson
+	@id int,
+	@userId varchar(20)
 AS
 BEGIN
 	UPDATE Person
-	SET alive = 0
+	SET alive = 0, userId = @userId
 	where id = @id
 END
 GO

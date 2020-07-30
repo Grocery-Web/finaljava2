@@ -255,10 +255,10 @@ public class MainFrame extends JFrame {
 //						Set name of image in Person
 						per.setImage(personalID + ".png");
 
-						personDAO.addPerson(per);
+						personDAO.addPerson(per,acc.getUserID());
 						refresh();
 					}else {
-						personDAO.addPerson(per);
+						personDAO.addPerson(per,acc.getUserID());
 						refresh();
 					}
 
@@ -329,7 +329,7 @@ public class MainFrame extends JFrame {
 						"Do you really want to delete this account", "Confirm Exit", 
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
-					personDAO.deletePerson(id);	
+					personDAO.deletePerson(id,acc.getUserID());	
 					refresh();
 				}
 			}
@@ -481,7 +481,7 @@ public class MainFrame extends JFrame {
 								"Do you really want to delete this account", "Confirm Exit", 
 								JOptionPane.OK_CANCEL_OPTION);
 						if(action == JOptionPane.OK_OPTION) {
-							personDAO.deletePerson(id);
+							personDAO.deletePerson(id,acc.getUserID());
 							detailPersonFrame.setVisible(false);
 							refresh();
 							MainFrame.this.setVisible(true);
