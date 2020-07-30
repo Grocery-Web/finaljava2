@@ -24,6 +24,7 @@ create table Complaint (
 	place nvarchar(MAX),
 	declarantName nvarchar(50),
 	detail nvarchar(MAX),
+	userId varchar(20) NULL,
 	verifyStatus bit   /* approved or not */
 )
 go
@@ -38,6 +39,7 @@ create table Person (
 	image varchar(100),
 	nationality varchar(50),
 	job varchar(20),
+	userId varchar(20) NULL,
 	alive bit DEFAULT 1
 )
 
@@ -48,7 +50,7 @@ create table ComplaintDetail (
 	constraint cdp foreign key (personId) references Person(id),
 	compId int,
 	constraint cpc foreign key (compId) references Complaint(id),
-	crimeType nvarchar(50)
+	crimeType nvarchar(50),
 )
 go
 
@@ -64,10 +66,10 @@ create table Criminal (
 	punishment varchar(100) CHECK (punishment in('administrative sanctions', 'imprisoner', 'in process')),
 	constraint cp foreign key (personId) references Person(id),
 	constraint cc foreign key (complaintID) references Complaint(id),
-	rating int
+	rating int,
+	userId varchar(20) NULL
 )
 go
-
 
 /* prison list table */
 create table PrisonList (
@@ -91,6 +93,7 @@ create table Prisoner (
 	duration int null,
 	releaseStatus bit null,
 	type nvarchar(50),  /* type of crime */
+	userId varchar(20) NULL,
 	constraint pin foreign key (criminalID) references Criminal(id)
 )
 go
@@ -104,6 +107,7 @@ create table Victim (
 	deathPlace nvarchar(MAX),
 	deathReason nvarchar(MAX),
 	complaintID int,
+	userId varchar(20) NULL,
 	constraint vid foreign key (complaintID) references Complaint(id),
 	constraint pid foreign key (personalID) references Person(id),
 )
@@ -473,6 +477,7 @@ CREATE PROC updateCriminal
 	@hisOfViolent varchar(MAX),
 	@punishment varchar(100), 
 	@rating int,
+	@userId varchar(20),
 	@criminalId int
 AS
 BEGIN
@@ -482,7 +487,8 @@ BEGIN
 		appliedDate = @appliedDate, 
 		hisOfViolent = @hisOfViolent, 
 		punishment = @punishment,
-		rating = @rating
+		rating = @rating,
+		userId = @userId
 	WHERE id = @criminalId
 END
 GO
@@ -545,17 +551,19 @@ go
 
 /* PROCEDURE VICTIM */
 -- Link new victim to a verified Incident
-CREATE PROC linkNewVictim
+
+create PROC linkNewVictim
 	@personalID int,
 	@status bit,
 	@deathTime datetime,
 	@deathPlace nvarchar(MAX),
 	@deathReason nvarchar(MAX),
-	@complaintID int
+	@complaintID int,
+	@userId varchar(20)
 AS
 BEGIN
-	INSERT INTO Victim (personalID, status, deathTime, deathPlace, deathReason, complaintID)
-	VALUES (@personalID, @status, @deathTime, @deathPlace, @deathReason, @complaintID)
+	INSERT INTO Victim (personalID, status, deathTime, deathPlace, deathReason, complaintID, userId)
+	VALUES (@personalID, @status, @deathTime, @deathPlace, @deathReason, @complaintID, @userId)
 
 	UPDATE Person
 	SET alive = @status
@@ -626,13 +634,15 @@ go
 
 --add prisoner
 create proc addPrisoner
-@prisonID int, @criminalID int, @startDate date, @endDate date, @duration int, @releaseStatus bit, @type nvarchar(50)
+@prisonID int, @criminalID int, @startDate date, @endDate date, @duration int, @releaseStatus bit, @type nvarchar(50),
+@userId varchar(20)
 as
 begin
-	insert into Prisoner (prisonId, criminalID, startDate, endDate, duration, releaseStatus, type)
-	values (@prisonId, @criminalID, @startDate, @endDate, @duration, @releaseStatus, @type)
+	insert into Prisoner (prisonId, criminalID, startDate, endDate, duration, releaseStatus, type, userId)
+	values (@prisonId, @criminalID, @startDate, @endDate, @duration, @releaseStatus, @type, @userId)
 end
 go
+
 
 --get Prisoners by Prisonlist ID
 create proc getAllPrisonerByPrisonListID
@@ -650,11 +660,16 @@ go
 
 create proc releasePrisonerByID 
 @id int,
-@date date
+@date date,
+@userId varchar(20)
 as
 begin
 	update Prisoner
-	set releaseStatus = 1, endDate = @date, type = 'Released ahead of term'
+	set 
+		releaseStatus = 1, 
+		endDate = @date, 
+		type = 'Released ahead of term',
+		userId = @userId
 	where id = @id
 end
 go
@@ -662,22 +677,24 @@ go
 create proc releaseListPrisonerByID 
 @id int,
 @date date,
-@duration int
+@duration int,
+@userId varchar(20)
 as
 begin
 	update Prisoner
-	set releaseStatus = 1, endDate = @date, duration = @duration, type = 'Released ahead of term'
+	set releaseStatus = 1, endDate = @date, duration = @duration, type = 'Released ahead of term', userId = @userId
 	where id = @id
 end
 go
 
 create proc transferPrisonerByID
 @prisonerID int,
-@toPrison int
+@toPrison int,
+@userId varchar(20)
 as
 begin
 	update Prisoner
-	set prisonId = @toPrison
+	set prisonId = @toPrison,userId = @userId
 	where id = @prisonerID
 end
 go
@@ -805,43 +822,43 @@ go
 /* INSERT DATA IN TABLE*/ 
 
 -- table Person
-insert into Person values (181, 'Thang', 1, '1999-08-05', 'HCM', '181.png', 'Vietnamese', 'Student',1)
-insert into Person values (182, 'Hoang', 1, '1989-02-15', 'HN', '182.png', 'Vietnamese', 'Teacher',1)
-insert into Person values (183, 'Son', 1, '1995-12-05', 'Da Nang', '183.png', 'Vietnamese', 'Engineer',1)
-insert into Person values (184, 'Kien', 1, '1997-10-21', 'HCM', '184.png', 'Vietnamese', 'Student',1)
-insert into Person values (152, 'Trung', 1, '1992-07-12', 'HN', '152.png', 'Vietnamese', 'Singer',1)
-insert into Person values (153, 'Jenny', 0, '1982-05-26', 'Lao Cai', '153.png', 'American', 'Tailor',1)
-insert into Person values (155, 'Nguyen', 1, '1985-12-12', 'HCM', '155.png', 'Vietnamese', 'Builder',1)
-insert into Person values (174, 'Thao', 0, '1996-06-09', 'HCM', '174.png', 'Vietnamese', 'Dancer',1)
-insert into Person values (175, 'Ha', 0, '1980-02-01', 'HN', '175.png', 'Vietnamese', 'Farmer',1)
-insert into Person values (176, 'Linh', 0, '2000-09-18', 'Can Tho', '176.png', 'Vietnamese', 'Student',1)
-insert into Person values (177, 'Hung', 1, '1983-11-29', 'Ha Tinh', '177.png', 'Vietnamese', 'Teacher',1)
-insert into Person values (115, 'Phong', 1, '1976-02-14', 'HCM', '115.png', 'Vietnamese', 'Doctor',1)
-insert into Person values (116, 'Xuan', 0, '1988-06-02', 'Thanh Hoa', '116.png', 'Vietnamese', 'Freelancer',1)
-insert into Person values (118, 'Hang', 0, '1986-11-10', 'HCM', '118.png', 'Vietnamese', 'Cashier',1)
-insert into Person values (121, 'Cuong', 1, '1996-04-26', 'HN', '121.png', 'Vietnamese', 'Pilot',1)
-insert into Person values (122, 'Tra', 0, '1990-07-17', 'HCM', '122.png', 'Vietnamese', 'Nurse',1)
-insert into Person values (125, 'Long', 1, '1986-10-20', 'HCM', '125.png', 'Vietnamese', 'Painter',1)
-insert into Person values (166, 'Ngoc', 0, '1992-08-07', 'Ca Mau', '166.png', 'Vietnamese', 'Secretary',1)
+insert into Person values (181, 'Thang', 1, '1999-08-05', 'HCM', '181.png', 'Vietnamese', 'Student',NULL,1)
+insert into Person values (182, 'Hoang', 1, '1989-02-15', 'HN', '182.png', 'Vietnamese', 'Teacher',NULL,1)
+insert into Person values (183, 'Son', 1, '1995-12-05', 'Da Nang', '183.png', 'Vietnamese', 'Engineer',NULL,1)
+insert into Person values (184, 'Kien', 1, '1997-10-21', 'HCM', '184.png', 'Vietnamese', 'Student',NULL,1)
+insert into Person values (152, 'Trung', 1, '1992-07-12', 'HN', '152.png', 'Vietnamese', 'Singer',NULL,1)
+insert into Person values (153, 'Jenny', 0, '1982-05-26', 'Lao Cai', '153.png', 'American', 'Tailor',NULL,1)
+insert into Person values (155, 'Nguyen', 1, '1985-12-12', 'HCM', '155.png', 'Vietnamese', 'Builder',NULL,1)
+insert into Person values (174, 'Thao', 0, '1996-06-09', 'HCM', '174.png', 'Vietnamese', 'Dancer',NULL,1)
+insert into Person values (175, 'Ha', 0, '1980-02-01', 'HN', '175.png', 'Vietnamese', 'Farmer',NULL,1)
+insert into Person values (176, 'Linh', 0, '2000-09-18', 'Can Tho', '176.png', 'Vietnamese', 'Student',NULL,1)
+insert into Person values (177, 'Hung', 1, '1983-11-29', 'Ha Tinh', '177.png', 'Vietnamese', 'Teacher',NULL,1)
+insert into Person values (115, 'Phong', 1, '1976-02-14', 'HCM', '115.png', 'Vietnamese', 'Doctor',NULL,1)
+insert into Person values (116, 'Xuan', 0, '1988-06-02', 'Thanh Hoa', '116.png', 'Vietnamese', 'Freelancer',NULL,1)
+insert into Person values (118, 'Hang', 0, '1986-11-10', 'HCM', '118.png', 'Vietnamese', 'Cashier',NULL,1)
+insert into Person values (121, 'Cuong', 1, '1996-04-26', 'HN', '121.png', 'Vietnamese', 'Pilot',NULL,1)
+insert into Person values (122, 'Tra', 0, '1990-07-17', 'HCM', '122.png', 'Vietnamese', 'Nurse',NULL,1)
+insert into Person values (125, 'Long', 1, '1986-10-20', 'HCM', '125.png', 'Vietnamese', 'Painter',NULL,1)
+insert into Person values (166, 'Ngoc', 0, '1992-08-07', 'Ca Mau', '166.png', 'Vietnamese', 'Secretary',NULL,1)
 go
 
 -- table Complaints
 insert into Complaint values ('Bomb Threats by Telephone', '2001-08-05 13:05:30', 'Ho Chi Minh', 'Thuy', 
 'Bomb threats or suspicious items should always be taken seriously. How quickly and safely you react to a bomb 
-threat could save lives, including your own. What should you do?',0)
+threat could save lives, including your own. What should you do?',NULL,0)
 insert into Complaint values ('Human Trafficking', '2018-12-01 01:55:12', 'Soc Trang', 'Cuc', 
 'Traffickers use force, fraud, or coercion to exploit their victims for labor or commercial sex. 
-Human trafficking happens around the world and in the VietNam?',0)
+Human trafficking happens around the world and in the VietNam?',NULL,0)
 insert into Complaint values ('Sexual Assault', '2007-07-13 07:07:33', 'Ho Chi Minh', 'Linda',
-'Sexual assault is any kind of unwanted sexual activity, from touching to rape',0)
+'Sexual assault is any kind of unwanted sexual activity, from touching to rape',NULL,0)
 insert into Complaint values ('File a Restraining Order', '2011-01-30 17:37:22', 'Ha Noi', 'Tan', 
-'Generally, you have to fill out paperwork and submit it to the county courthouse. If you need protection right away',0)
+'Generally, you have to fill out paperwork and submit it to the county courthouse. If you need protection right away',NULL,0)
 insert into Complaint values ('Report Child Pornography', '2018-05-05 21:09:36', 'Ninh Binh', 'Truc', 
 'Report suspected crime, like traffic violations and illegal drug use, to local authorities. Or you can report it to your 
-nearest state police office',0)
+nearest state police office',NULL,0)
 insert into Complaint values ('Vehicle Misuse or Reckless Driving', '2017-02-27 22:56:01', 'An Giang', 'Tra My', 
 'GSA leased vehicles all have license plates that have the following structure (GXX-XXXXX).  If the license plate does not begin with a G, 
-then it is not owned by GSA',0)
+then it is not owned by GSA',NULL,0)
 go
 
 

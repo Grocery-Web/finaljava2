@@ -64,10 +64,10 @@ public class VictimDAO {
 		return true;
 	}
 	
-	public void linkNewVictim(Victim victim) {
+	public void linkNewVictim(Victim victim, String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call linkNewVictim(?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call linkNewVictim(?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, victim.getPersonalId());
@@ -80,6 +80,7 @@ public class VictimDAO {
 			ps.setString(4, victim.getDeathPlace());
 			ps.setString(5, victim.getDeathReason());
 			ps.setInt(6, victim.getComplaintID());
+			ps.setString(7, userId);
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Successfully link the victim to incident", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {

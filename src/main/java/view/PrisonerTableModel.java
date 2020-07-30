@@ -93,10 +93,11 @@ public class PrisonerTableModel extends AbstractTableModel{
 	
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-	    if (db.isEmpty()) {
+		if (db.isEmpty()) {
 	        return Object.class;
 	    }
-	    return getValueAt(0, columnIndex).getClass();
+	    Object value=this.getValueAt(0,columnIndex);
+	    return (value==null?Object.class:value.getClass());
 	}
 	
 	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {

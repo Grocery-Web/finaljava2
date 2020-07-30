@@ -175,6 +175,7 @@ public class Login extends JFrame {
 		
 		AccountDAO accDao = new AccountDAO();
 		int checked = accDao.checkAcc(acc);
+		Account foundAcc = accDao.findAccbyInput(acc);
 		
 		switch (checked) {
 			case -1: {
@@ -193,14 +194,14 @@ public class Login extends JFrame {
 			}
 			
 			case 2: {
-				MainFrame mf = new MainFrame(2);
+				MainFrame mf = new MainFrame(foundAcc);
 				mf.setVisible(true);
 				this.setVisible(false);
 				break;
 			}
 			
 			case 3: {
-				MainFrame mf = new MainFrame(3);
+				MainFrame mf = new MainFrame(foundAcc);
 				mf.setVisible(true);
 				this.setVisible(false);
 				break;

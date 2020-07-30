@@ -56,10 +56,10 @@ public class PrisonerDAO {
 		return list;
 	}
 	
-	public void addPrisoner(Prisoner prisoner) {
+	public void addPrisoner(Prisoner prisoner,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call addPrisoner(?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call addPrisoner(?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, prisoner.getPrisonId());
@@ -73,6 +73,7 @@ public class PrisonerDAO {
 			ps.setInt(5, prisoner.getDuration());
 			ps.setBoolean(6, prisoner.isReleasedStatus());
 			ps.setString(7, prisoner.getType());
+			ps.setString(8, userId);
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "A new prisoner has been created", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
@@ -120,7 +121,7 @@ public class PrisonerDAO {
 		return prisoner;	
 	}
 	
-	public void releasePrisoner(int PrisonerID) {
+	public void releasePrisoner(int PrisonerID, String userId) {
 		
 		Date date = new Date();
 		Prisoner prisoner = new Prisoner();
@@ -135,11 +136,12 @@ public class PrisonerDAO {
 			
 			try (
 					var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-					PreparedStatement ps = connect.prepareCall("{call releasePrisonerByID(?,?)}");
+					PreparedStatement ps = connect.prepareCall("{call releasePrisonerByID(?,?,?)}");
 					)
 			{
 				ps.setInt(1, PrisonerID);
 				ps.setDate(2, new java.sql.Date(date.getTime()));
+				ps.setString(3, userId);
 				ps.executeUpdate();
 				JOptionPane.showMessageDialog(null, "Release Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
@@ -149,17 +151,18 @@ public class PrisonerDAO {
 		
 	}
 	
-	public void releaseListPrisoners(List<Prisoner> listReleasedPrisoners) {
+	public void releaseListPrisoners(List<Prisoner> listReleasedPrisoners,String userId) {
 		
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call releaseListPrisonerByID(?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call releaseListPrisonerByID(?,?,?,?)}");
 				)
 		{
 			for (Prisoner prisoner : listReleasedPrisoners) {
 				ps.setInt(1, prisoner.getPrisonerId());
 				ps.setDate(2, new java.sql.Date(prisoner.getEndDate().getTime()));
 				ps.setInt(3, prisoner.getDuration());
+				ps.setString(4, userId);
 				ps.addBatch();
 			}
 			ps.executeBatch();
@@ -172,15 +175,16 @@ public class PrisonerDAO {
 		
 	}
 	
-	public void transferPrisoner(int PrisonerID, int prisonId) {
+	public void transferPrisoner(int PrisonerID, int prisonId, String userId) {
 			
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?,?)}");
 				)
 		{
 			ps.setInt(1, PrisonerID);
 			ps.setInt(2, prisonId);
+			ps.setString(3, userId);
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Transfer successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
@@ -189,14 +193,14 @@ public class PrisonerDAO {
 		
 	}
 	
-	public void transferListPrisoner(List<Prisoner> listTransferedPrisoners) {
+	public void transferListPrisoner(List<Prisoner> listTransferedPrisoners, String userId) {
 		int count = 0;
 		ArrayList<String> list = new ArrayList<String>();
 		PrisonListDAO prisonDAO = new PrisonListDAO();
 		
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call transferPrisonerByID(?,?,?)}");
 				)
 		{
 			for (Prisoner prisoner : listTransferedPrisoners) {
@@ -210,6 +214,7 @@ public class PrisonerDAO {
 				}else {
 					ps.setInt(1, prisoner.getPrisonerId());
 					ps.setInt(2, prisoner.getPrisonId());
+					ps.setString(3, userId);
 					ps.addBatch();
 					++count;
 				}
