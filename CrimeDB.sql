@@ -659,11 +659,16 @@ go
 
 create proc releasePrisonerByID 
 @id int,
-@date date
+@date date,
+@userId varchar(20)
 as
 begin
 	update Prisoner
-	set releaseStatus = 1, endDate = @date, type = 'Released ahead of term'
+	set 
+		releaseStatus = 1, 
+		endDate = @date, 
+		type = 'Released ahead of term',
+		userId = @userId
 	where id = @id
 end
 go
@@ -671,22 +676,24 @@ go
 create proc releaseListPrisonerByID 
 @id int,
 @date date,
-@duration int
+@duration int,
+@userId varchar(20)
 as
 begin
 	update Prisoner
-	set releaseStatus = 1, endDate = @date, duration = @duration, type = 'Released ahead of term'
+	set releaseStatus = 1, endDate = @date, duration = @duration, type = 'Released ahead of term', userId = @userId
 	where id = @id
 end
 go
 
 create proc transferPrisonerByID
 @prisonerID int,
-@toPrison int
+@toPrison int,
+@userId varchar(20)
 as
 begin
 	update Prisoner
-	set prisonId = @toPrison
+	set prisonId = @toPrison,userId = @userId
 	where id = @prisonerID
 end
 go

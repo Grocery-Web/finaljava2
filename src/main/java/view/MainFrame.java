@@ -521,11 +521,11 @@ public class MainFrame extends JFrame {
 						prisonListDAO.updatePrisonInfo(prl);
 						
 						if(listReleasedPrisoners.size() > 0) {
-							prisonerDAO.releaseListPrisoners(listReleasedPrisoners);
+							prisonerDAO.releaseListPrisoners(listReleasedPrisoners,acc.getUserID());
 						}
 						
 						if(listTransferedPrisoners.size() > 0) {
-							prisonerDAO.transferListPrisoner(listTransferedPrisoners);
+							prisonerDAO.transferListPrisoner(listTransferedPrisoners,acc.getUserID());
 						}
 						
 						JOptionPane.showMessageDialog(null, "All processes have been done", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -633,7 +633,7 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void tableEventRelease(int id) {
-				prisonerDAO.releasePrisoner(id);
+				prisonerDAO.releasePrisoner(id,acc.getUserID());
 				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
 				Date startDate = prisoner.getStartDate();
 				Date endDate = prisoner.getEndDate();
@@ -645,16 +645,11 @@ public class MainFrame extends JFrame {
 
 			}
 			
-			public long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
-			    long diffInMillies = date2.getTime() - date1.getTime();
-			    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
-			}
-			
 			@Override
 			public void tableEventTransfer(int id) {
 				Prisoner prisoner = prisonerDAO.findPrisonerByID(id);
 				List<PrisonList> prisonList = prisonListDAO.getAllAvailablePrisons();
-//				PrisonList currentPrison = prisonListDAO.getPrisonListByID(prisoner.getPrisonId());
+
 				for (int i = 0; i < prisonList.size(); i++) {
 					if (prisonList.get(i).getId() == prisoner.getPrisonId()) {
 						prisonList.remove(i);
@@ -665,7 +660,7 @@ public class MainFrame extends JFrame {
 				relPrisoner.setFormListener(new RelevantPrisonerFormListener() {
 					@Override
 					public void prisonerFormEventListener(Prisoner prisoner, PrisonList prison) {
-						prisonerDAO.transferPrisoner(id, prison.getId());
+						prisonerDAO.transferPrisoner(id, prison.getId(),acc.getUserID());
 						relPrisoner.dispose();
 						refresh();
 					}
@@ -789,6 +784,10 @@ public class MainFrame extends JFrame {
 		
 		prisonListPanel.setData(prisonListDAO.getAllPrisonList());
 		prisonListPanel.refresh();
-
+	}
+	
+	public long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+	    long diffInMillies = date2.getTime() - date1.getTime();
+	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 }
