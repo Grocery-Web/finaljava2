@@ -8,7 +8,7 @@ import common.ConnectToProperties;
 import entity.Account;
 
 public class AccountDAO {
-	public int checkAcc(Account acc) {
+	public Account checkAcc(Account acc) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
 				PreparedStatement ps = connect.prepareCall("{call checkAcc(?, ?)}");
@@ -18,42 +18,34 @@ public class AccountDAO {
 			ps.setString(2, acc.getPassword());
 			ResultSet rs = ps.executeQuery();
 			if (!rs.isBeforeFirst()) {
-				return -1;
+				return null;
 			} else {
 				while (rs.next()) {
+					acc.setUserID(rs.getString(1));
+					acc.setFullName(rs.getString(2));
+					acc.setEmail(rs.getString(3));
 					acc.setPrivilege(rs.getInt(5));
+					acc.setCheckLogin(rs.getBoolean(6));
 				}
-				return acc.getPrivilege();
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.INFORMATION_MESSAGE);
 		}
 		
-		return -1;
+		return acc;
 	}
 	
-	public Account findAccbyInput(Account acc) {
-		Account foundAcc = new Account();
+	public void updateAccLoginStatus(Account acc) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call checkAcc(?, ?)}");
+				PreparedStatement ps = connect.prepareCall("{call updateAccLoginStatus(?)}");
 			) 
 		{
 			ps.setString(1, acc.getUserID());
-			ps.setString(2, acc.getPassword());
-			var rs = ps.executeQuery();
-			while (rs.next(	)) {
-				foundAcc.setUserID(rs.getString("UserID"));
-				foundAcc.setFullName(rs.getString("FullName"));
-				foundAcc.setEmail(rs.getString("Email"));
-				foundAcc.setPassword(rs.getString("PasswordHash"));
-				foundAcc.setPrivilege(rs.getInt("Privilege"));
-			}
+			ps.executeUpdate();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		return foundAcc;
 	}
 	
 	public boolean checkDuplicateUserID(String userID) {
