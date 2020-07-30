@@ -91,16 +91,11 @@ public class PrisonerTableModel extends AbstractTableModel{
 		}
 	}
 	
-//	@Override
-//	public Class<?> getColumnClass(int columnIndex) {
-//	    Class retVal = Object.class;
-//
-//	    if(getRowCount() > 0)
-//	    	System.out.println("0k");
-//	        retVal =  getValueAt(0, columnIndex).getClass();
-//
-//	    return retVal;
-//	}
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+	    Object value=this.getValueAt(0,columnIndex);
+	    return (value==null?Object.class:value.getClass());
+	}
 	
 	public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
 	    long diffInMillies = date2.getTime() - date1.getTime();
