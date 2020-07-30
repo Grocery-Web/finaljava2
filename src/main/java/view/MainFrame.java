@@ -3,14 +3,11 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +27,6 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import dao.AccountDAO;
@@ -78,7 +73,7 @@ public class MainFrame extends JFrame {
 	private PrisonListDAO prisonListDAO;
 	private VictimDAO victimDAO;
 	private PrisonerDAO prisonerDAO;
-	private AccountDAO accountDAO;
+	AccountDAO accountDAO = new AccountDAO();
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
@@ -126,11 +121,9 @@ public class MainFrame extends JFrame {
 		setJMenuBar(createMenuBar());
 		MainFrame.this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				System.out.println(acc.toString());
 				accountDAO.updateAccLoginStatus(acc);
 			}
 		});
-		
 		
 //		CREATE INTERNAL COMPONENTS 
 		toolbar = new Toolbar();
