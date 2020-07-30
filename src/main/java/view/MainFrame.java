@@ -38,6 +38,7 @@ import dao.PersonDAO;
 import dao.PrisonListDAO;
 import dao.PrisonerDAO;
 import dao.VictimDAO;
+import entity.Account;
 import entity.Complaint;
 import entity.ComplaintDetail;
 import entity.Criminal;
@@ -107,7 +108,7 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public MainFrame(int privilege) {
+	public MainFrame(Account acc) {
 		setTitle("Crime Management Dashboard");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -120,15 +121,15 @@ public class MainFrame extends JFrame {
 		toolbar = new Toolbar();
 		panelCont = new JPanel();
 		personForm = new PersonFormPanel();
-		personPanel = new PersonPanel(privilege);
-		complaintPanel = new ComplaintsPanel(privilege);
+		personPanel = new PersonPanel(acc.getPrivilege());
+		complaintPanel = new ComplaintsPanel(acc.getPrivilege());
 		complaintForm = new ComplaintFormPanel();
 		tabPane = new JTabbedPane();
-		incidentPanel =  new IncidentsPanel(privilege);
-		criminalPanel = new CriminalPanel(privilege);
-		prisonListPanel = new PrisonListPanel(privilege);
-		prisonerPanel = new PrisonerPanel(privilege);
-		victimPanel = new VictimPanel(privilege);
+		incidentPanel =  new IncidentsPanel(acc.getPrivilege());
+		criminalPanel = new CriminalPanel(acc.getPrivilege());
+		prisonListPanel = new PrisonListPanel(acc.getPrivilege());
+		prisonerPanel = new PrisonerPanel(acc.getPrivilege());
+		victimPanel = new VictimPanel(acc.getPrivilege());
 
 //		CREATE DAO
 		personDAO = new PersonDAO();
@@ -280,7 +281,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDetail(int cplId) {
 				Complaint complaint = complaintDAO.findComplaintById(cplId);
-				cplDetailFrame = new ComplaintDetailFrame(complaint,privilege);
+				cplDetailFrame = new ComplaintDetailFrame(complaint,acc.getPrivilege());
 				cplDetailFrame.setLocationRelativeTo(null);
 				cplDetailFrame.setVisible(true);
 				cplDetailFrame.setData(comDetailDAO.getPeopleListByComplaintId(cplId));
@@ -468,7 +469,7 @@ public class MainFrame extends JFrame {
 				if (history != null) {
 					history = history.replace("<br>***************<br>", "\n\n");
 				}
-				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history, privilege);
+				detailPersonFrame = new PersonDetailFrame(per, jailStatus, history, acc.getPrivilege());
 				detailPersonFrame.setLocationRelativeTo(null);
 				detailPersonFrame.setVisible(true);
 				
@@ -509,7 +510,7 @@ public class MainFrame extends JFrame {
 				List<Prisoner> prisonInList = prisonListDAO.getAllPrisonerByPrisonListID(id);
 				List<PrisonList> prisonlist = prisonListDAO.getAllPrisonList();
 				
-				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList, privilege);
+				prisonListDetailFrame = new PrisonListDetailFrame(prison, prisonlist, prisonInList, acc.getPrivilege());
 				prisonListDetailFrame.setLocationRelativeTo(null);
 				prisonListDetailFrame.setVisible(true);	
 				
@@ -584,7 +585,7 @@ public class MainFrame extends JFrame {
 				
 				List<PrisonList> prisonlst = prisonListDAO.getAllPrisonList();
 
-				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst,privilege);
+				criDetailFrame = new CriminalDetailsFrame(cri,crimeTypes,prisonlst,acc.getPrivilege());
 				MainFrame.this.setVisible(false);
 				criDetailFrame.setVisible(true);
 				criDetailFrame.setTableListener(new TableCriminalDetailsListener() {

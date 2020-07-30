@@ -32,6 +32,30 @@ public class AccountDAO {
 		return -1;
 	}
 	
+	public Account findAccbyInput(Account acc) {
+		Account foundAcc = new Account();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call checkAcc(?, ?)}");
+			) 
+		{
+			ps.setString(1, acc.getUserID());
+			ps.setString(2, acc.getPassword());
+			var rs = ps.executeQuery();
+			while (rs.next(	)) {
+				foundAcc.setUserID(rs.getString("UserID"));
+				foundAcc.setFullName(rs.getString("FullName"));
+				foundAcc.setEmail(rs.getString("Email"));
+				foundAcc.setPassword(rs.getString("PasswordHash"));
+				foundAcc.setPrivilege(rs.getInt("Privilege"));
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.INFORMATION_MESSAGE);
+		}
+		
+		return foundAcc;
+	}
+	
 	public boolean checkDuplicateUserID(String userID) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
