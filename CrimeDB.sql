@@ -51,6 +51,7 @@ create table ComplaintDetail (
 	compId int,
 	constraint cpc foreign key (compId) references Complaint(id),
 	crimeType nvarchar(50),
+	userId varchar(20) NULL
 )
 go
 
@@ -246,22 +247,23 @@ go
 /*insert new person*/
 create proc insertPerson
 @id int, @name nvarchar(50), @gender bit,  @dob date, @address nvarchar(MAX), @image varchar(100),
-@nationality varchar(50),@job varchar(20),@alive bit
+@nationality varchar(50),@job varchar(20),@userId varchar(20), @alive bit
 as
 begin
-	insert into Person (id, name, gender,dob,address,image,nationality,job, alive)
-	values(@id, @name, @gender, @dob, @address, @image, @nationality, @job, @alive)
+	insert into Person (id, name, gender,dob,address,image,nationality,job, userId, alive)
+	values(@id, @name, @gender, @dob, @address, @image, @nationality, @job, @userId, @alive)
 end
 go
 
 /*delete person*/
 
-CREATE PROC deletePerson
-	@id int
+create PROC deletePerson
+	@id int,
+	@userId varchar(20)
 AS
 BEGIN
 	UPDATE Person
-	SET alive = 0
+	SET alive = 0, userId = @userId
 	where id = @id
 END
 GO
@@ -276,6 +278,7 @@ CREATE PROC updatePerson
 	@nationality varchar(50),
 	@job varchar(20),
 	@alive bit,
+	@userId varchar(20),
 	@id int
 AS
 BEGIN
@@ -287,7 +290,8 @@ BEGIN
 		image = @image,
 		nationality = @nationality,
 		job = @job,
-		alive = @alive
+		alive = @alive,
+		userId = @userId
 		WHERE id = @id
 END
 GO
@@ -349,11 +353,12 @@ go
 
 -- insert a new Complaint
 create proc addComplaint
-@name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX),@verifyStatus bit
+@name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), 
+@detail nvarchar(MAX),@verifyStatus bit,@userId varchar(20)
 as
 begin
-	insert into Complaint (complaintName, datetime,place,declarantName,detail,verifyStatus)
-	values(@name, @datetime, @place, @declarantName, @detail, @verifyStatus)
+	insert into Complaint (complaintName, datetime,place,declarantName,detail,verifyStatus,userId)
+	values(@name, @datetime, @place, @declarantName, @detail, @verifyStatus, @userId)
 end
 go
 
@@ -377,11 +382,13 @@ go
 
 -- update Complaint by ID
 create proc updateComplaintById
-@id int, @name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), @detail nvarchar(MAX), @verifyStatus bit
+@id int, @name varchar(50), @datetime datetime,  @place nvarchar(MAX), @declarantName nvarchar(50), 
+@detail nvarchar(MAX), @verifyStatus bit, @userId varchar(20)
 as
 begin
 	update Complaint 
-	set complaintName = @name, datetime = @datetime, place = @place, declarantName = @declarantName, detail = @detail, verifyStatus = @verifyStatus
+	set complaintName = @name, datetime = @datetime, place = @place, declarantName = @declarantName, 
+	detail = @detail, verifyStatus = @verifyStatus, userId = @userId
 	where id = @id
 end
 go
@@ -391,11 +398,11 @@ go
 /* PROCEDURE COMPLAINT DETAIL*/
 -- insert detail
 create proc setComplaintDetail
-@personId int, @compId int,  @crimeType nvarchar(50)
+@personId int, @compId int,  @crimeType nvarchar(50),@userId varchar(20)
 as
 begin
-	insert into ComplaintDetail (personId, compId,crimeType)
-	values(@personId, @compId, @crimeType)
+	insert into ComplaintDetail (personId, compId,crimeType,userId)
+	values(@personId, @compId, @crimeType, @userId)
 end
 go
 
@@ -461,11 +468,12 @@ go
 
 -- insert a new Criminal
 create proc addCriminal
-@personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX)
+@personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX),
+@userId varchar(20)
 as
 begin
-	insert into Criminal (personId, complaintID, punishment, rating, appliedDate, hisOfViolent)
-	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent)
+	insert into Criminal (personId, complaintID, punishment, rating, appliedDate, hisOfViolent, userId)
+	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent, @userId)
 end
 go
 
@@ -875,3 +883,4 @@ INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
 	VALUES('user', 'USER', 'user@gmail.com', HASHBYTES('SHA2_512', 'user'), 3)
 
 /* END INSERT DATA IN TABLE*/ 
+

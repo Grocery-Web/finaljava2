@@ -86,10 +86,10 @@ public class ComplaintDAO {
 		return list;
 	}
 	
-	public void addComplaint(Complaint cpt) {
+	public void addComplaint(Complaint cpt,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call addComplaint(?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call addComplaint(?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setString(1, cpt.getName());
@@ -98,6 +98,7 @@ public class ComplaintDAO {
 			ps.setString(4, cpt.getDeclarantName());
 			ps.setString(5, cpt.getDetail());
 			ps.setBoolean(6, cpt.isStatus());
+			ps.setString(7, userId);
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Insert new complaint successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
@@ -145,10 +146,10 @@ public class ComplaintDAO {
 		return com;
 	}
 	
-	public void updateComplaintById(int id, Complaint cpl) {
+	public void updateComplaintById(int id, Complaint cpl, String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call updateComplaintById(?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call updateComplaintById(?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, id);
@@ -157,7 +158,8 @@ public class ComplaintDAO {
 			ps.setString(4, cpl.getPlace());
 			ps.setString(5, cpl.getDeclarantName());
 			ps.setString(6, cpl.getDetail());
-			ps.setBoolean(7, cpl.isStatus());			
+			ps.setBoolean(7, cpl.isStatus());	
+			ps.setString(8, userId);
 		
 			ps.executeUpdate();
 		} catch (Exception e) {

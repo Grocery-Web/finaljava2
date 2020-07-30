@@ -225,7 +225,7 @@ public class MainFrame extends JFrame {
 		complaintForm.setFormListener(new FormComplaintListener() {
 			@Override
 			public void insertEventListener(Complaint cpt) {
-				complaintDAO.addComplaint(cpt);
+				complaintDAO.addComplaint(cpt,acc.getUserID());
 				refresh();
 			}
 		});
@@ -255,10 +255,10 @@ public class MainFrame extends JFrame {
 //						Set name of image in Person
 						per.setImage(personalID + ".png");
 
-						personDAO.addPerson(per);
+						personDAO.addPerson(per,acc.getUserID());
 						refresh();
 					}else {
-						personDAO.addPerson(per);
+						personDAO.addPerson(per,acc.getUserID());
 						refresh();
 					}
 
@@ -290,7 +290,7 @@ public class MainFrame extends JFrame {
 
 					@Override
 					public void tableEventUpdated(Complaint cpl,List<Integer> lstID) {
-						complaintDAO.updateComplaintById(cplId, cpl);
+						complaintDAO.updateComplaintById(cplId, cpl, acc.getUserID());
 						if(lstID.size()>0) {
 							comDetailDAO.removePerson(lstID,cplId);
 						}
@@ -301,7 +301,7 @@ public class MainFrame extends JFrame {
 					
 					@Override
 					public void tableEventSubmited(Complaint cpl, List<Criminal> lstCri,List<Integer> lstID) {
-						complaintDAO.updateComplaintById(cplId, cpl);
+						complaintDAO.updateComplaintById(cplId, cpl, acc.getUserID());
 						if(lstID.size()>0) {
 							comDetailDAO.removePerson(lstID,cplId);
 						}
@@ -310,7 +310,7 @@ public class MainFrame extends JFrame {
 							if(lastCriminal.getHisOfViolent() != null && lastCriminal.getAppliedDate() != null) {
 								criminal.setHisOfViolent(lastCriminal.getHisOfViolent());
 							}
-							criminalDAO.addCriminal(criminal);
+							criminalDAO.addCriminal(criminal,acc.getUserID());
 						}
 						cplDetailFrame.dispose();
 						refresh();
@@ -329,7 +329,7 @@ public class MainFrame extends JFrame {
 						"Do you really want to delete this account", "Confirm Exit", 
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
-					personDAO.deletePerson(id);	
+					personDAO.deletePerson(id,acc.getUserID());	
 					refresh();
 				}
 			}
@@ -357,8 +357,8 @@ public class MainFrame extends JFrame {
 									}
 								}
 								if(countCrimeType < 1) {
-									comDetailDAO.setComplaintDetail(comDetail);
-									criminalDAO.addCriminal(newCriminal);
+									comDetailDAO.setComplaintDetail(comDetail,acc.getUserID());
+									criminalDAO.addCriminal(newCriminal,acc.getUserID());
 									relCriminal.dispose();
 								}else {
 									JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
@@ -411,7 +411,7 @@ public class MainFrame extends JFrame {
 									}
 								}
 								if(count < 1) {
-									comDetailDAO.setComplaintDetail(comDetail);
+									comDetailDAO.setComplaintDetail(comDetail,acc.getUserID());
 									relComplain.dispose();
 								}else {
 									JOptionPane.showMessageDialog(null, "This type of crime has already attached to this person, choose other ones!", "Error", 
@@ -481,7 +481,7 @@ public class MainFrame extends JFrame {
 								"Do you really want to delete this account", "Confirm Exit", 
 								JOptionPane.OK_CANCEL_OPTION);
 						if(action == JOptionPane.OK_OPTION) {
-							personDAO.deletePerson(id);
+							personDAO.deletePerson(id,acc.getUserID());
 							detailPersonFrame.setVisible(false);
 							refresh();
 							MainFrame.this.setVisible(true);
@@ -489,8 +489,8 @@ public class MainFrame extends JFrame {
 					}
 
 					@Override
-					public void updateEventListener(Person acc) {
-						personDAO.updatePersonByID(acc);
+					public void updateEventListener(Person per) {
+						personDAO.updatePersonByID(per, acc.getUserID());
 						detailPersonFrame.dispose();
 						refresh();
 					}
@@ -551,8 +551,8 @@ public class MainFrame extends JFrame {
 				incDetailFrame.setTableListener(new TableIncidentDetailListener() {
 
 					@Override
-					public void tableEventUpdated(Complaint inc) {
-						complaintDAO.updateComplaintById(id, inc);
+					public void tableEventUpdated(Complaint com) {
+						complaintDAO.updateComplaintById(id, com, acc.getUserID());
 						JOptionPane.showMessageDialog(null, "Update incident successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 						refresh();
 						incDetailFrame.dispose();

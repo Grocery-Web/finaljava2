@@ -100,10 +100,10 @@ public class PersonDAO {
 		return per;
 	}
 	
-	public void addPerson(Person per) {
+	public void addPerson(Person per,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call insertPerson(?,?,?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call insertPerson(?,?,?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, per.getPersonalId());
@@ -118,7 +118,8 @@ public class PersonDAO {
 			ps.setString(6, per.getImage());
 			ps.setString(7, per.getNationality());
 			ps.setString(8, per.getJob());
-			ps.setBoolean(9, per.getAlive());
+			ps.setString(9, userId);
+			ps.setBoolean(10, per.getAlive());
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Insert new person successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
@@ -126,13 +127,14 @@ public class PersonDAO {
 		}
 	}
 	
-	public void deletePerson(int id) {
+	public void deletePerson(int id,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call deletePerson(?)}");
+				PreparedStatement ps = connect.prepareCall("{call deletePerson(?,?)}");
 			) 
 		{
-			ps.setInt(1, id);;
+			ps.setInt(1, id);
+			ps.setString(2, userId);
 			if (ps.executeUpdate() > 0) {
 				JOptionPane.showMessageDialog(null, "Delete person successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 			} else {
@@ -147,10 +149,10 @@ public class PersonDAO {
 	    return new java.sql.Date(date.getTime());
 	}
 	
-	public void updatePersonByID (Person acc) {
+	public void updatePersonByID (Person acc,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call updatePerson(?,?,?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call updatePerson(?,?,?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setString(1, acc.getName());
@@ -164,8 +166,9 @@ public class PersonDAO {
 			ps.setString(5, acc.getImage());
 			ps.setString(6, acc.getNationality());
 			ps.setString(7, acc.getJob());	
-			ps.setBoolean(8, acc.getAlive());	
-			ps.setInt(9, acc.getPersonalId());
+			ps.setBoolean(8, acc.getAlive());
+			ps.setString(9, userId);
+			ps.setInt(10, acc.getPersonalId());
 			
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Update account successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
