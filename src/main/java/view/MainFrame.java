@@ -73,7 +73,7 @@ public class MainFrame extends JFrame {
 	private PrisonListDAO prisonListDAO;
 	private VictimDAO victimDAO;
 	private PrisonerDAO prisonerDAO;
-	AccountDAO accountDAO = new AccountDAO();
+	private AccountDAO accountDAO;
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
@@ -147,6 +147,7 @@ public class MainFrame extends JFrame {
 		prisonListDAO = new PrisonListDAO();
 		victimDAO = new VictimDAO();
 		prisonerDAO = new PrisonerDAO();
+		accountDAO = new AccountDAO();
 
 //		CARD LAYOUT
 		cardLayout = new CardLayout();
