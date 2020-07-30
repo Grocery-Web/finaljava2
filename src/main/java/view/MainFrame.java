@@ -8,6 +8,9 @@ import java.awt.GraphicsConfiguration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +34,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
+import dao.AccountDAO;
 import dao.ComplaintDAO;
 import dao.ComplaintDetailDAO;
 import dao.CriminalDAO;
@@ -74,6 +78,7 @@ public class MainFrame extends JFrame {
 	private PrisonListDAO prisonListDAO;
 	private VictimDAO victimDAO;
 	private PrisonerDAO prisonerDAO;
+	private AccountDAO accountDAO;
 
 //	EXTERNAL FRAME OR DIALOG
 	private ComplaintDetailFrame cplDetailFrame;
@@ -86,7 +91,9 @@ public class MainFrame extends JFrame {
 	private IncidentDetailFrame incDetailFrame;
 	private PrisonerDetailFrame prisonerDetailFrame;
 	private RelevantPrisonerForm relPrisoner;
-
+	
+//  ENTITY
+	private Account acc;
 	/**
 	 * Launch the application.
 	 */
@@ -107,8 +114,9 @@ public class MainFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	
+
 	public MainFrame(Account acc) {
+		this.acc = acc;
 		setTitle("Crime Management Dashboard");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -116,6 +124,13 @@ public class MainFrame extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		setJMenuBar(createMenuBar());
+		MainFrame.this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.out.println(acc.toString());
+				accountDAO.updateAccLoginStatus(acc);
+			}
+		});
+		
 		
 //		CREATE INTERNAL COMPONENTS 
 		toolbar = new Toolbar();
@@ -728,6 +743,7 @@ public class MainFrame extends JFrame {
 				if (action == JOptionPane.OK_OPTION) {
 					Login.main(null);
 					MainFrame.this.setVisible(false);
+					accountDAO.updateAccLoginStatus(acc);
 				}
 			}
 		});
