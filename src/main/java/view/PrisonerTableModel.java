@@ -93,6 +93,9 @@ public class PrisonerTableModel extends AbstractTableModel{
 	
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
+		if (db.isEmpty()) {
+	        return Object.class;
+	    }
 	    Object value=this.getValueAt(0,columnIndex);
 	    return (value==null?Object.class:value.getClass());
 	}

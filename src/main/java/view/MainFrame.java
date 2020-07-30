@@ -450,7 +450,7 @@ public class MainFrame extends JFrame {
 									JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						victimDAO.linkNewVictim(victim);
+						victimDAO.linkNewVictim(victim, acc.getUserID());
 						victimForm.dispose();
 						refresh();
 					}

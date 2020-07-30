@@ -51,7 +51,6 @@ create table ComplaintDetail (
 	compId int,
 	constraint cpc foreign key (compId) references Complaint(id),
 	crimeType nvarchar(50),
-	userId varchar(20) NULL
 )
 go
 
@@ -108,7 +107,7 @@ create table Victim (
 	deathPlace nvarchar(MAX),
 	deathReason nvarchar(MAX),
 	complaintID int,
-	userId int,
+	userId varchar(20) NULL,
 	constraint vid foreign key (complaintID) references Complaint(id),
 	constraint pid foreign key (personalID) references Person(id),
 )
@@ -552,17 +551,19 @@ go
 
 /* PROCEDURE VICTIM */
 -- Link new victim to a verified Incident
-CREATE PROC linkNewVictim
+
+create PROC linkNewVictim
 	@personalID int,
 	@status bit,
 	@deathTime datetime,
 	@deathPlace nvarchar(MAX),
 	@deathReason nvarchar(MAX),
-	@complaintID int
+	@complaintID int,
+	@userId varchar(20)
 AS
 BEGIN
-	INSERT INTO Victim (personalID, status, deathTime, deathPlace, deathReason, complaintID)
-	VALUES (@personalID, @status, @deathTime, @deathPlace, @deathReason, @complaintID)
+	INSERT INTO Victim (personalID, status, deathTime, deathPlace, deathReason, complaintID, userId)
+	VALUES (@personalID, @status, @deathTime, @deathPlace, @deathReason, @complaintID, @userId)
 
 	UPDATE Person
 	SET alive = @status
