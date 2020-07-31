@@ -5,13 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
-import java.awt.Button;
 import java.awt.SystemColor;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-
 import dao.AccountDAO;
 import entity.Account;
 
@@ -20,7 +17,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JPasswordField;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -170,46 +166,49 @@ public class Login extends JFrame {
 	
 	protected void btnLogIn_actionPerformed(ActionEvent e) {
 		Account acc = new Account();
+		AccountDAO accDao = new AccountDAO();
+		
 		acc.setUserID(txtUserID.getText());
 		acc.setPassword(new String(passwordField.getPassword()));
 		
-		AccountDAO accDao = new AccountDAO();
-		int checked = accDao.checkAcc(acc);
-		Account foundAcc = accDao.findAccbyInput(acc);
+		var login = accDao.checkAcc(acc);
 		
-		switch (checked) {
-			case -1: {
-				lblLogin.setText("User not found or incorrect password!");
-				lblLogin.setForeground(Color.RED);
-				break;
-			}
-
-			case 1: {
-				Admin admin = new Admin();
-				admin.setLocationRelativeTo(null);
-				admin.setVisible(true);
-				this.setVisible(false);
-				admin.loadData();
-				break;
-			}
+		if (login == null) {
+			// INVALID ACCOUNT
+			lblLogin.setText("User not found or incorrect password!");
+			lblLogin.setForeground(Color.RED);
 			
-			case 2: {
-				MainFrame mf = new MainFrame(foundAcc);
-				mf.setVisible(true);
-				this.setVisible(false);
-				break;
-			}
+		} else if (login.isCheckLogin()) {
+			// ALREADY LOGGED IN
+			lblLogin.setText("This account is already logged in!");
+			lblLogin.setForeground(Color.RED);
 			
-			case 3: {
-				MainFrame mf = new MainFrame(foundAcc);
-				mf.setVisible(true);
-				this.setVisible(false);
-				break;
-			}
+		} else if (login.getPrivilege() == 1) {
+			// ADMIN
+			accDao.updateAccLoginStatus(login);
+			Admin admin = new Admin(login);
+			admin.setLocationRelativeTo(null);
+			admin.setVisible(true);
+			this.setVisible(false);
+			admin.loadData();
+			
+		} else if (login.getPrivilege() == 2) {
+			// MASTER
+			accDao.updateAccLoginStatus(login);
+			MainFrame mf = new MainFrame(login);
+			mf.setVisible(true);
+			this.setVisible(false);
+			
+		} else if (login.getPrivilege() == 3) {
+			// USER
+			accDao.updateAccLoginStatus(login);
+			MainFrame mf = new MainFrame(login);
+			mf.setVisible(true);
+			this.setVisible(false);
 		}
 	}
 	
 	public int getPrivilege(int privilege) {
 		return privilege;
-	}	
+	}
 }
