@@ -121,6 +121,51 @@ public class PrisonerDAO {
 		return prisoner;	
 	}
 	
+	public Prisoner findPrisonerByPersonalID(int personalID) {
+		
+		Prisoner prisoner = new Prisoner();
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call findPrisonerByPersonalID(?)}");
+			) 
+		{
+			ps.setInt(1, personalID);
+			var rs = ps.executeQuery();
+			while (rs.next()) {
+				prisoner.setPrisonerId(rs.getInt("id"));
+				prisoner.setPrisonId(rs.getInt("prisonId"));
+				prisoner.setCriminalId(rs.getInt("CriminalID"));
+				prisoner.setStartDate(rs.getDate("startDate"));
+				prisoner.setEndDate(rs.getDate("endDate"));
+				prisoner.setDuration(rs.getInt("duration"));
+				prisoner.setReleasedStatus(rs.getBoolean("releaseStatus"));
+				prisoner.setType(rs.getString("type"));
+			}			
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		return prisoner;	
+	}
+	
+	public void releaseDeadPrisoner(Prisoner prisoner, String userId) {	
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call releaseDeadPrisonerByID(?,?,?,?)}");
+				)
+		{
+			ps.setInt(1, prisoner.getPrisonerId());
+			ps.setDate(2, new java.sql.Date(prisoner.getEndDate().getTime()));
+			ps.setInt(3, prisoner.getDuration());
+			ps.setString(4, userId);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Release Completed", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+		
+	}
+	
 	public void releasePrisoner(int PrisonerID, String userId) {
 		
 		Date date = new Date();
@@ -242,7 +287,6 @@ public class PrisonerDAO {
 			 ps.setInt(2, duration);
 			 ps.executeUpdate();
 		 } catch (Exception e) {
-				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
 		 }
 	}

@@ -691,6 +691,7 @@ begin
 end
 go
 
+--release term of imprisonment prisoner 
 create proc releasePrisonerByID 
 @id int,
 @date date,
@@ -707,6 +708,21 @@ begin
 end
 go
 
+--release dead prisoner 
+create proc releaseDeadPrisonerByID 
+@id int,
+@date date,
+@duration int,
+@userId varchar(20)
+as
+begin
+	update Prisoner
+	set releaseStatus = 1, endDate = @date, duration = @duration, type = 'Dead while serving in jail', userId = @userId
+	where id = @id
+end
+go
+
+--transfer list of prisoners by ID 
 create proc releaseListPrisonerByID 
 @id int,
 @date date,
@@ -720,6 +736,7 @@ begin
 end
 go
 
+--transfer one prisoner by ID 
 create proc transferPrisonerByID
 @prisonerID int,
 @toPrison int,
@@ -745,7 +762,7 @@ begin
 end
 go
 
--- find prisoner by id
+-- find prisoner by prisoner id
 create proc findPrisonerByID 
 @id int
 as 
@@ -756,6 +773,19 @@ begin
 	inner join Criminal cr on pr.criminalID = cr.id
 	inner join Person p on cr.personId = p.id
 	where @id = pr.id
+end
+go
+
+-- find prisoner by personal id
+create proc findPrisonerByPersonalID 
+@id int
+as 
+begin
+	select pr.*
+	from Prisoner pr
+	inner join Criminal cr on pr.criminalID = cr.id
+	inner join Person p on cr.personId = p.id
+	where p.id = @id
 end
 go
 
