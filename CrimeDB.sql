@@ -69,6 +69,7 @@ create table Criminal (
 	constraint cp foreign key (personId) references Person(id),
 	constraint cc foreign key (complaintID) references Complaint(id),
 	rating int,
+	alive bit,
 	userId varchar(20) NULL
 )
 go
@@ -487,18 +488,18 @@ begin
 	select p.*, cr.id as criminalId, cr.punishment, cr.rating, cpl.complaintName from Criminal cr
 	inner join Person p on cr.personId = p.id
 	inner join Complaint cpl on cr.complaintID = cpl.id
-	where cr.punishment like 'in process'
+	where cr.punishment like 'in process' and cr.alive = 1
 end
 go
 
 -- insert a new Criminal
 create proc addCriminal
 @personId int, @complaintID int, @punishment varchar(100), @rating int,@appliedDate date, @hisOfViolent varchar(MAX),
-@userId varchar(20)
+@alive bit, @userId varchar(20)
 as
 begin
-	insert into Criminal (personId, complaintID, punishment, rating, appliedDate, hisOfViolent, userId)
-	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent, @userId)
+	insert into Criminal (personId, complaintID, punishment, rating, appliedDate, hisOfViolent, alive, userId)
+	values(@personId, @complaintID, @punishment, @rating, @appliedDate, @hisOfViolent, @alive, @userId)
 end
 go
 
@@ -577,6 +578,20 @@ begin
 	select *
 	from Criminal 
 	where personId = @personId
+end
+go
+
+-- remove dead criminal while waiting for judging by personal Id
+create proc removeDeadCriminal
+@personalID int,
+@userId varchar(20)
+as
+begin
+	UPDATE Criminal
+	SET 
+		alive = 0,
+		userId = @userId
+	WHERE personId = @personalID
 end
 go
 
@@ -938,4 +953,3 @@ INSERT INTO Account (UserID, FullName, Email, PasswordHash, Privilege)
 	VALUES('user', 'USER', 'user@gmail.com', HASHBYTES('SHA2_512', 'user'), 3)
 
 /* END INSERT DATA IN TABLE*/ 
-
