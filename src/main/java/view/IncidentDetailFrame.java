@@ -287,10 +287,13 @@ public class IncidentDetailFrame extends JFrame {
 
 		// ALIGN TEXT IN CENTER
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 9; i++) {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+		
+		for (int i = 0; i < 8; i++) {
 			tableVictim.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 		

@@ -11,11 +11,12 @@ public class Criminal extends Person{
 	private String hisOfViolent;
 	private int rating;
 	private String complaintName;
+	private boolean alive;
 	
 	public Criminal() {}
 
 	public Criminal(int criminalId, int personalId, int complaintId, String punishment, Date appliedDate,
-			String hisOfViolent, int rating, String complaintName) {
+			String hisOfViolent, int rating, String complaintName, boolean alive) {
 		super();
 		this.criminalId = criminalId;
 		this.personalId = personalId;
@@ -25,6 +26,7 @@ public class Criminal extends Person{
 		this.hisOfViolent = hisOfViolent;
 		this.rating = rating;
 		this.complaintName = complaintName;
+		this.alive = alive;
 	}
 
 	public int getCriminalId() {
@@ -90,11 +92,20 @@ public class Criminal extends Person{
 	public void setComplaintName(String complaintName) {
 		this.complaintName = complaintName;
 	}
+	
+	public boolean isAlive() {
+		return alive;
+	}
+
+	public void setAlive(boolean alive) {
+		this.alive = alive;
+	}
 
 	@Override
 	public String toString() {
 		return "Criminal [criminalId=" + criminalId + ", personalId=" + personalId + ", complaintId=" + complaintId
 				+ ", punishment=" + punishment + ", appliedDate=" + appliedDate + ", hisOfViolent=" + hisOfViolent
-				+ ", rating=" + rating + ", complaintName=" + complaintName + "]";
+				+ ", rating=" + rating + ", complaintName=" + complaintName + ", alive=" + alive + "]";
 	}
+
 }

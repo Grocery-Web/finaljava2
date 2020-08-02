@@ -128,7 +128,7 @@ public class ComplaintDetailDAO {
 	}
 	
 	public List<Criminal> getCriminalListByIncidentId(int id) {
-
+		CriminalDAO criminalDAO = new CriminalDAO();
 		List<Criminal> list = new ArrayList<Criminal>();
 		
 
@@ -139,7 +139,6 @@ public class ComplaintDetailDAO {
 			var rs = ps.executeQuery();
 			List<Integer> personIdList = new ArrayList<Integer>();
 			while (rs.next()) {
-				CriminalDAO criminalDAO = new CriminalDAO();
 				int personId = rs.getInt("personId");
 				if (personIdList.contains(personId)) {
 					continue;

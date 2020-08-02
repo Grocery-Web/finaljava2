@@ -744,6 +744,7 @@ public class ComplaintDetailFrame extends JFrame {
 				}
 				;
 				cri.setRating(rating);
+				cri.setAlive(true);
 				list.add(cri);
 			}
 			

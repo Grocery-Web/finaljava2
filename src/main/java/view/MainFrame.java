@@ -87,6 +87,10 @@ public class MainFrame extends JFrame {
 	private PrisonerDetailFrame prisonerDetailFrame;
 	private RelevantPrisonerForm relPrisoner;
 	
+// CURRENT DATE
+	long millis = System.currentTimeMillis();
+	java.sql.Date date = new java.sql.Date(millis);
+	
 //  ENTITY
 	private Account acc;
 	/**
@@ -335,10 +339,26 @@ public class MainFrame extends JFrame {
 			@Override
 			public void tableEventDeleted(int id) {
 				int action = JOptionPane.showConfirmDialog(null, 
-						"Do you really want to delete this account", "Confirm Exit", 
+						"This action comfirms this person is registered to be a dead person. Do you really want to do that?", "Confirm", 
 						JOptionPane.OK_CANCEL_OPTION);
 				if(action == JOptionPane.OK_OPTION) {
-					personDAO.deletePerson(id,acc.getUserID());	
+					if (personDAO.checkPersonInJail(id) > 0) {
+						Prisoner prisoner = prisonerDAO.findPrisonerByPersonalID(id);
+						
+						// Recalculate duration and update end-date
+						Date startDate = prisoner.getStartDate();
+						Date endDate = date;
+						int getDuration = (int) getDateDiff(startDate, endDate, TimeUnit.DAYS);
+						prisoner.setDuration(getDuration);
+						prisoner.setEndDate(endDate);
+						
+						criminalDAO.removeDeadCriminal(id, acc.getUserID());
+						prisonerDAO.releaseDeadPrisoner(prisoner, acc.getUserID());
+					}else if(personDAO.checkPersonIsCriminal(id) > 0) {
+						criminalDAO.removeDeadCriminal(id, acc.getUserID());
+					}
+					
+					personDAO.deletePerson(id,acc.getUserID());
 					refresh();
 				}
 			}
@@ -487,9 +507,25 @@ public class MainFrame extends JFrame {
 					@Override
 					public void formEventListener(int id) {
 						int action = JOptionPane.showConfirmDialog(null, 
-								"Do you really want to delete this account", "Confirm Exit", 
+								"This action comfirms this person is registered to be a dead person. Do you really want to do that?", "Confirm", 
 								JOptionPane.OK_CANCEL_OPTION);
 						if(action == JOptionPane.OK_OPTION) {
+							if (personDAO.checkPersonInJail(id) > 0) {
+								Prisoner prisoner = prisonerDAO.findPrisonerByPersonalID(id);
+								
+								// Recalculate duration and update end-date
+								Date startDate = prisoner.getStartDate();
+								Date endDate = date;
+								int getDuration = (int) getDateDiff(startDate, endDate, TimeUnit.DAYS);
+								prisoner.setDuration(getDuration);
+								prisoner.setEndDate(endDate);
+								
+								criminalDAO.removeDeadCriminal(id, acc.getUserID());
+								prisonerDAO.releaseDeadPrisoner(prisoner, acc.getUserID());
+							}else if(personDAO.checkPersonIsCriminal(id) > 0) {
+								criminalDAO.removeDeadCriminal(id, acc.getUserID());
+							}
+							
 							personDAO.deletePerson(id,acc.getUserID());
 							detailPersonFrame.setVisible(false);
 							refresh();

@@ -12,9 +12,10 @@ import entity.Person;
 import dao.PersonDAO;
 
 public class IncidentDetailTableModel extends AbstractTableModel {
-
+	
 	private List<Criminal> db;
-	private String[] colNames = {"ID", "Name" , "Gender", "DOB", "Address", "Nationality", "Punishment", "Rating"};
+	
+	private String[] colNames = {"ID", "Name" , "Gender", "DOB", "Address", "Nationality", "Punishment", "Rating", "Status"};
 	
 	public IncidentDetailTableModel() {}
 	
@@ -37,7 +38,7 @@ public class IncidentDetailTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 8;
+		return 9;
 	}
 
 	@Override
@@ -68,6 +69,13 @@ public class IncidentDetailTableModel extends AbstractTableModel {
 		}
 		case 7: {
 			return criminal.getRating();
+		}
+		case 8: {
+			if(criminal.isAlive()) {
+				return "Alive";
+			}else {
+				return "Dead";
+			}
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + columnIndex);

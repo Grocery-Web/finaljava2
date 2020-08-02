@@ -56,7 +56,7 @@ public class CriminalDAO {
 	public void addCriminal(Criminal cri,String userId) {
 		try (
 				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
-				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?,?,?,?)}");
+				PreparedStatement ps = connect.prepareCall("{call addCriminal(?,?,?,?,?,?,?,?)}");
 			) 
 		{
 			ps.setInt(1, cri.getPersonalId());
@@ -65,7 +65,8 @@ public class CriminalDAO {
 			ps.setInt(4, cri.getRating());
 			ps.setDate(5, (Date) cri.getAppliedDate());
 			ps.setString(6, cri.getHisOfViolent());
-			ps.setString(7, userId);
+			ps.setBoolean(7, cri.isAlive());
+			ps.setString(8, userId);
 			ps.executeUpdate();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
@@ -149,6 +150,21 @@ public class CriminalDAO {
 		}
 	}
 	
+	public void removeDeadCriminal(int personalId,String userId) {
+		try (
+				var connect = DriverManager.getConnection(ConnectToProperties.getConnection());
+				PreparedStatement ps = connect.prepareCall("{call removeDeadCriminal(?,?)}");
+			) 
+		{
+			ps.setInt(1, personalId);
+			ps.setString(2, userId);
+
+			ps.executeUpdate();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	public Criminal findCriminalByPersonAndComplaintId(int personId, int complaintId) {
 		Criminal cri = new Criminal();
 		
@@ -177,6 +193,7 @@ public class CriminalDAO {
 					gender = Gender.female;
 				}
 				cri.setGender(gender);
+				cri.setAlive(rs.getBoolean("alive"));
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "info", JOptionPane.ERROR_MESSAGE);
@@ -211,4 +228,6 @@ public class CriminalDAO {
 		}
 		return list;
 	}
+	
+	
 }
